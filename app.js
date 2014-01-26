@@ -12,6 +12,7 @@ config.argv()
 
 
 // all environments
+app.engine('ejs', require('ejs-locals'));
 app.set('port', config.get('port'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
