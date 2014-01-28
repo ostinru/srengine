@@ -1,14 +1,10 @@
-var config = require('nconf');
+var config = require('./config');
+var logger = require('./lib/logger');
 var express = require('express');
 var http = require('http');
 var path = require('path');
 
 var app = express();
-
-config.argv()
-    .env()
-    .file({ file: 'config.json' });
-
 
 // all environments
 app.engine('ejs', require('ejs-locals'));
@@ -19,6 +15,7 @@ app.use(express.favicon('public/favicon.ico'));
 app.use(express.logger('dev'));
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.bodyParser());
 app.use(express.cookieParser('secret'));
 app.use(express.session({ secret: 'pew-pew'}));
 app.use(app.router);
