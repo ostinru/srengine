@@ -1,7 +1,9 @@
 exports.get = function (req, res, next) {
-    res.end('Not implemented yet');
+    // TODO: is it ok?
+    req.session.destroy();
+    res.redirect('/');
 };
-exports.post = function (req, res, next) {
-    res.end('Not implemented yet');
+exports.post = function(req, res, next) {
+    req.session.destroy();
+    res.redirect('/');
 };
-

@@ -1,1 +1,5 @@
-<center><p> topNavigation </p></center>
+<center>
+    <% if (user) { %>
+        <a href="" onclick="$('<form method=POST action=/logout>').submit();return false">Выйти</a>
+    <% } %>
+</center>

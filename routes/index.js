@@ -2,10 +2,12 @@
 var User = require('models/user').User;
 var HttpError = require('error').HttpError;
 var ObjectID = require('mongodb').ObjectID;
+var checkAuth = require('middleware/checkAuth');
+var checkAdmin = require('middleware/checkAdmin');
 
 module.exports = function(app) {
-	app.get('/', require('./root').get);
-	app.post('/', require('./root').post);
+	app.get('/', checkAuth, require('./root').get);
+	app.post('/', checkAuth, require('./root').post);
 	
 	app.get('/login', require('./login').get);
 	app.post('/login', require('./login').post);
@@ -13,14 +15,14 @@ module.exports = function(app) {
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/users', function (req, res, next) {
+    app.get('/users', checkAdmin, function (req, res, next) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
         })
     });
 
-    app.get('/user/:id', function (req, res, next) {
+    app.get('/user/:id', checkAdmin, function (req, res, next) {
         /*        try {
          var id = new ObjectID(req.params.id);
          } catch (e) {
