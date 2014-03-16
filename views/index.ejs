@@ -2,6 +2,8 @@
 <% block('title', 'SR 112') -%>
 
 <form id="game" method="post">
+	<h2><% problem.topic -%></h2>
+	<p><% problem.question -%></p>
 	<input type="text" name="answer"/>
 	<input type="submit"/>
 </form>

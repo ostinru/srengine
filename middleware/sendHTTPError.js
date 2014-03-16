@@ -4,6 +4,7 @@
 module.exports = function (req, res, next) {
 
     res.sendHttpError = function (error) {
+		// TODO: notify admins (?)
 
         res.status(error.status);
         if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {

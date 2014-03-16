@@ -1,4 +1,4 @@
-var logger = require('winston');
+var logger = require('lib/logger')(module);
 var async = require('async');
 var User = require('models/user').User;
 var HttpError = require('error').HttpError;

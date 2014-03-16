@@ -20,7 +20,11 @@ var schema = new Schema({
     created: {
         type: Date,
         default: Date.now
-    }
+    },
+	problemId: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true
+	}
 });
 
 schema.methods.encryptPassword = function (password) {
