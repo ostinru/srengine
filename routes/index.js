@@ -22,15 +22,8 @@ module.exports = function(app) {
         })
     });
 
-    app.get('/user/:id', checkAdmin, function (req, res, next) {
-        /*        try {
-         var id = new ObjectID(req.params.id);
-         } catch (e) {
-         next(404);
-         return;
-         }
-         */
-        User.findById(id, function (err, user) { // ObjectID
+    app.get('/user/:username', checkAdmin, function (req, res, next) {
+        User.findOne({'username' : req.params.username }, function (err, user) { // ObjectID
             if (err) return next(err);
             if (!user) {
                 return next(404);
@@ -38,5 +31,4 @@ module.exports = function(app) {
             res.json(user);
         });
     });
-
 }

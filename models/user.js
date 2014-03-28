@@ -1,5 +1,4 @@
 var crypto = require('crypto');
-
 var mongoose = require('lib/mongoose'),
     Schema = mongoose.Schema;
 
@@ -24,6 +23,10 @@ var schema = new Schema({
 	problemId: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true
+	},
+	admin: {
+		type: Boolean,
+		default: false
 	}
 });
 
@@ -44,6 +47,10 @@ schema.virtual('password')
 
 schema.methods.checkPassword = function (password) {
     return this.encryptPassword(password) === this.hashedPassword;
+};
+
+schema.methods.isAdmin = function () {
+    return this.admin === true;
 };
 
 schema.methods.getPublicFields = function() {

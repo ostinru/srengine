@@ -80,7 +80,7 @@ function createUsers(callback) {
     var users = [
         {username: 'vasya', password: '123', problemId: firstPageObjectId},
         {username: 'petya', password: '123', problemId: firstPageObjectId},
-        {username: 'admin', password: '123', problemId: firstPageObjectId},
+        {username: 'admin', password: '123', problemId: firstPageObjectId, admin: true},
     ];
 
     async.each(users, function(userData, callback) {
