@@ -8,7 +8,7 @@ module.exports = function(req, res, next) {
 		}
 
 		if (!req.user.isAdmin()) {
-			return next(new HttpError(401, "Access allowed only for administrators"));
+			return next(new HttpError(403, "Access allowed only for administrators"));
 		}
 
         next();
