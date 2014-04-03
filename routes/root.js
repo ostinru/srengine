@@ -4,16 +4,19 @@ var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 
 exports.get = function(req, res, next){
-	if (!req.user) {
-		res.sendHttpError(new HttpError(401));
-		return;
+    //login falled
+ 	if (!req.user) {
+         //res.sendHttpError(new HttpError(401));
+        res.redirect("/login");
+        return;
 	}
 	if (!req.user.problemId) {
 		res.sendHttpError(new HttpError(500));
 		return;
 	}
-	
-	var problemId = req.user.problemId;
+
+
+    var problemId = req.user.problemId;
 	
 	getProblem(problemId, function(err, problem) {
 		if (err) {

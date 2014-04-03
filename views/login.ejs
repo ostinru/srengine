@@ -1,4 +1,4 @@
-<% layout('layout/page.ejs') -%>
+<% layout('./layout/page.ejs') -%>
 <% block('title', 'SR 112') -%>
 
 <form class="form-horizontal login-form" action="/login" method="POST" name="login-form">
@@ -22,7 +22,7 @@
   </div>
 </form>
 
-<script>
+z<script>
   $(document.forms['login-form']).on('submit', function() {
     var form = $(this);
 
@@ -35,17 +35,17 @@
       method: "POST",
       complete: function() {
         $(":submit", form).button("reset");
-      },
-      statusCode: {
+      }
+ /*     statusCode: {
         200: function() {
-          form.html("Вы вошли в сайт").addClass('alert-success');
-          window.location.href = "/";
+          //form.html("Вы вошли в сайт").addClass('alert-success');
+          //window.location.href = "/";
         },
         403: function(jqXHR) {
           var error = JSON.parse(jqXHR.responseText);
           $('.error', form).html(error.message);
         }
-      }
+      }*/
     });
     return false;
   });

@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Йа пробничек карты</title>
+
+    <style type="text/css">
+        div#r1{
+            height:30px;
+        }
+        div#r2{
+            height:30px;
+        }
+        div#r3{
+            height:30px;
+        }
+    </style>
+</head>
+<body>
+<div class="row" id="r1">
+    <div onclick="someFunction(this);" class="11" style="border:3px solid black; width:25px; float:left;">11</div>
+    <div onclick="someFunction(this);" class="12" style="border:3px solid black;width:25px; float:left;">12</div>
+    <div onclick="someFunction(this);" class="13" style="border:3px solid black;width:25px; float:left;">13</div>
+    <div onclick="someFunction(this);" class="14" style="border:3px solid black;width:25px; float:left;">14</div>
+</div>
+
+<div class="row" id="r2">
+    <div onclick="someFunction(this);" class="21" style="border:3px solid black;width:25px; float:left;">21</div>
+    <div onclick="someFunction(this);" class="22" style="border:3px solid black;width:25px; float:left;">22</div>
+    <div onclick="someFunction(this);" class="23" style="border:3px solid black;width:25px; float:left;">23</div>
+    <div onclick="someFunction(this);" class="24" style="border:3px solid black;width:25px; float:left;">24</div>
+</div>
+<div class="row" id="r3">
+    <div onclick="someFunction(this);" class="31" style="border:3px solid black;width:25px; float:left;">31</div>
+    <div onclick="someFunction(this);" class="32" style="border:3px solid black;width:25px; float:left;">32</div>
+    <div onclick="someFunction(this);" class="33" style="border:3px solid black;width:25px; float:left;">33</div>
+    <div onclick="someFunction(this);" class="34" style="border:3px solid black;width:25px; float:left;">34</div>
+</div>
+<script>
+    function someFunction(obj) {
+        alert(obj.className); //Получаем класснэйм вот таким макаром. Класснэйм - ХУ, координата.
+    }
+</script>
+
+</body>
+</html>
