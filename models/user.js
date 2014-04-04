@@ -27,7 +27,12 @@ var schema = new Schema({
 	admin: {
 		type: Boolean,
 		default: false
-	}
+	},
+    position:
+    {
+       X: {type: Number, default: 8},
+       Y: {type: Number, default: 16}
+    }
 });
 
 schema.methods.encryptPassword = function (password) {
