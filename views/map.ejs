@@ -1,97 +1,95 @@
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Йа пробничек карты</title>
+<% layout('./layout/page.ejs') -%>
+<% block('title', 'SR 112') -%>
 
-    <style type="text/css">
-        div#r1{
-            margin-top:145px;
-            margin-left:40px;
-            height:32px;
-        }
-        div#r2{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r3{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r4{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r5{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r6{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r7{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r8{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r9{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r10{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r11{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r12{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r13{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r14{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r15{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r16{
-            height:32px;
-            margin-left:40px;
-        }
-        div#r17{
-            height:32px;
-            margin-left:40px;
-        }
-        .mapbody{
-            color: rgba(0, 0, 0, 0);
-            position:absolute;
-            margin-top:0px;
-            top:0px;
-            background: url(images/map4.jpg);
-            height:768px;
-            width:1024px;
-            font-size:12px;
-        }
-        .np{
-            background: rgba(255, 0, 0, 0.5);
-        }
-        .al{
-            background: rgba(255, 0, 0, 0.5);
-        }
-    </style>
-</head>
-<body>
+<style type="text/css">
+	div#r1{
+		margin-top:145px;
+		margin-left:40px;
+		height:32px;
+	}
+	div#r2{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r3{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r4{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r5{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r6{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r7{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r8{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r9{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r10{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r11{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r12{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r13{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r14{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r15{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r16{
+		height:32px;
+		margin-left:40px;
+	}
+	div#r17{
+		height:32px;
+		margin-left:40px;
+	}
+	.mapbody{
+		color: rgba(0, 0, 0, 0);
+		position:absolute;
+		margin-top:0px;
+		top:0px;
+		background: url(images/map4.jpg);
+		height:768px;
+		width:1024px;
+		font-size:12px;
+	}
+	.np{
+		background: rgba(255, 0, 0, 0.5);
+	}
+	.al{
+		background: rgba(255, 0, 0, 0.5);
+	}
+</style>
+
+
 <div class="mapbody">
 <div class="row" id="r1">
     <div onclick="someFunction(this);" class="1-1 np" style="border:1px solid black;height:30px; width:30px; float:left;"></div>
@@ -638,10 +636,22 @@
 
 </div>
 <script>
-    function someFunction(obj) {
-        alert(obj.className); //Получаем класснэйм вот таким макаром. Класснэйм - ХУ, координата.
-    }
+	function someFunction(obj) {
+		$.ajax({
+			url: "/map",
+			data: ("{ cell :" + obj.className + "}"),
+			method: "POST",
+			complete: function() {
+				console.log("complete", arguments); // TODO: error handling?
+			},
+			statusCode: {
+				200: function() {
+					console.log("200", arguments);
+				},
+				403: function(jqXHR) {
+					console.log("403", arguments);
+				}
+			}
+		});
+	}
 </script>
-
-</body>
-</html>

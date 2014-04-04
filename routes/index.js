@@ -32,8 +32,7 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/map', checkAuth, function(req,res,next){
-       res.render('map');
-    });
+    app.get('/map', checkAuth, require('./map').get);
+    app.post('/map', checkAuth, require('./map').post);
 
 }
