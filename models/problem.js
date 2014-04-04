@@ -27,12 +27,7 @@ var schema = new Schema({
 });
 
 schema.methods.check = function(userAnswer) {
-	for (var answer in answers) {
-		if (answer == userAnswer) {
-			return true;
-		}
-	};
-  return false;
+	return this.answers.indexOf(userAnswer) !== -1;
 };
 
 exports.Problem = mongoose.model('Problem', schema);

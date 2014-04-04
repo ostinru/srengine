@@ -13,13 +13,11 @@ exports.get = function(req, res, next){
         return;
     }
 
-
     var problemId = req.user.problemId;
 
     getProblem(problemId, function(err, problem) {
         if (err) {
-            res.sendHttpError(err); // TODO: is it ok?
-            return;
+            return res.sendHttpError(err); // TODO: is it ok?
         }
         res.locals.problem = problem;
         res.render('index');
@@ -28,7 +26,8 @@ exports.get = function(req, res, next){
 
 exports.post = function(req, res, next){
     logger.info('POST on "' + req.path + '": ', req.body);
-    if (!req.body.answer) {
+    var answer = req.body.answer;
+    if (!answer) {
         // TODO: fail
     }
     // 1) get user
@@ -51,11 +50,11 @@ exports.post = function(req, res, next){
             return;
         }
         // 3) check
-        if (problem.answers) {
-            // it was stub.
+        logger.debug('checking answer "' + answer + '". Correct answers: ' + problem.answers + '. result is ' + problem.check(answer));
+        if (problem.check(answer)) {
             // TODO: set next question:
             // TODO: reload page?
-            return;
+            return res.redirect('/map');
         }
         res.locals.problem = problem;
         res.render('index');
@@ -71,8 +70,7 @@ function getProblem(problemId, callback) {
         },
         function (problem, callback) {
             if (!problem) {
-                callback(new HttpError(403), null);
-                return;
+                return callback(new HttpError(403), null);
             }
             callback(null, problem);
         }
