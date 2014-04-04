@@ -31,4 +31,9 @@ module.exports = function(app) {
             res.json(user);
         });
     });
+
+    app.get('/map', checkAuth, function(req,res,next){
+       res.render('map');
+    });
+
 }
