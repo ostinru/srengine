@@ -32,7 +32,6 @@ exports.post = function(req, res, next) {
 
             req.session.user = user._id;
             console.log("SEND:", user.getPublicFields());
-            res.json(user.getPublicFields());
             res.redirect("/map");
         }
     );

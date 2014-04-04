@@ -15,7 +15,7 @@ module.exports = function(app) {
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/users', function (req, res, next) {
+    app.get('/users',checkAdmin, function (req, res, next) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
@@ -39,7 +39,7 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/map',function(req,res,next){
+    app.get('/map', checkAuth, function(req,res,next){
        res.render('map');
     });
 
