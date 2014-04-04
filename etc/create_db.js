@@ -9,7 +9,8 @@ async.series([
     dropDatabase,
     requireModels,
     createProblems,
-    createUsers
+    createUsers,
+    createFields
 ], function(err) {
     console.log(arguments);
     mongoose.disconnect();
@@ -28,6 +29,7 @@ function dropDatabase(callback) {
 function requireModels(callback) {
     require('models/user');
     require('models/problem');
+    require('models/fieldMap');
 
     async.each(Object.keys(mongoose.models), function(modelName, callback) {
         mongoose.models[modelName].ensureIndexes(callback);
@@ -65,8 +67,8 @@ function createProblems(callback) {
 				'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.',
 				'Недострой церкви на стрелке рек Костромы и Волги.',
 				'Найдите метку и смотрите на столбы.'
-			],
-		},
+			]
+		}
 	];
 	
 	async.each(problems, function(problemData, callback) {
@@ -86,5 +88,20 @@ function createUsers(callback) {
     async.each(users, function(userData, callback) {
         var user = new mongoose.models.User(userData);
         user.save(callback);
+    }, callback);
+}
+
+function createFields(callback) {
+
+    var fields = [
+        {ID : 815, X: 8,Y : 15 },
+        {ID : 816, X: 8,Y : 16 },
+        {ID : 814, X: 8,Y : 14 }
+    ];
+
+    async.each(fields, function(fieldData, callback) {
+
+        var field = new mongoose.models.FieldMap(fieldData);
+        field.save(callback);
     }, callback);
 }
