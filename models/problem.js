@@ -23,7 +23,11 @@ var schema = new Schema({
 	hints: [{
 		type: String,
 		required: false
-	}]
+	}],
+    coast: [{
+        type: Number,
+        deafult: 0
+    }]
 });
 
 schema.methods.check = function(userAnswer) {
