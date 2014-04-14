@@ -2,11 +2,6 @@ var mongoose = require('../lib/mongoose'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({
-        ID: {
-            type: Number,
-            unique: true,
-            required: true
-        },
         X: {
             type: Number,
             default:0
