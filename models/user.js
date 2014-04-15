@@ -16,23 +16,33 @@ var schema = new Schema({
         type: String,
         required: true
     },
-    created: {
-        type: Date,
-        default: Date.now
+    currentProblemId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false
     },
-	problemId: {
-		type: mongoose.Schema.Types.ObjectId,
-		required: true
-	},
-	admin: {
-		type: Boolean,
-		default: false
-	},
-    position:
-    {
+    admin: {
+        type: Boolean,
+        default: false
+    },
+    position: {
        X: {type: Number, default: 8},
        Y: {type: Number, default: 16}
-    }
+    },
+    problemHistory: [{
+            problemID: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            },
+            takenBonuses: [{
+                type: mongoose.Schema.Types.ObjectId,
+                required: false
+            }],
+            takenHints: [{
+                type: mongoose.Schema.Types.ObjectId,
+                required: false
+            }]
+        }
+    ]
 });
 
 schema.methods.encryptPassword = function (password) {
