@@ -3,7 +3,7 @@ var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 var FieldMap = require('models/fieldMap').FieldMap;
-
+var User = require('models/user').User;
 exports.get = function (req, res, next) {
     if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
         res.json(req.user.position);
@@ -21,6 +21,17 @@ exports.post = function (req, res, next) {
         if(isValid){
             req.user.position.X = req.body.position.X; //TODO validate X Y
             req.user.position.Y = req.body.position.Y;
+           /* запись истории
+            var query = {_id: req.user._id};
+            var update = {$push:{"problemHistory":{problemID:{},takenBonuses:{},takenHints:{}}}}
+            User.update(query,update,function(err){
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+            });
+             */
+
             req.user.save();
             logger.info("Тише едешь, дальше будешь ) Новые координаты сохранены.");
         }
