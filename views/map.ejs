@@ -26,7 +26,7 @@
     .field{
         border:1px solid black;
         height:44px;
-         width:44px;
+        width:44px;
         float:left;
     }
     .np{
@@ -92,6 +92,9 @@
                         var p = res[i];
                         console.log(p);
                         $("." + p.X + "-" + p.Y).removeClass("np");
+                        if(p.BS){
+                            $("." + p.X + "-" + p.Y).addClass("bs");
+                        }
                     }
                 },
                 403: function(jqXHR) {

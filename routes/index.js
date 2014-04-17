@@ -1,5 +1,7 @@
 // TODO: auth support
 var User = require('models/user').User;
+var Problem = require('models/problem').Problem;
+var FieldMap = require('models/fieldMap').FieldMap;
 var HttpError = require('error').HttpError;
 var ObjectID = require('mongodb').ObjectID;
 var checkAuth = require('middleware/checkAuth');
@@ -19,6 +21,18 @@ module.exports = function(app) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
+        })
+    });
+    app.get('/problems', checkAdmin, function (req, res, next) {
+        Problem.find({}, function (err, problems) {
+            if (err) return next(err);
+            res.json(problems);
+        })
+    });
+    app.get('/fieldsMap', checkAdmin, function (req, res, next) {
+        FieldMap.find({}, function (err, fieldsMap) {
+            if (err) return next(err);
+            res.json(fieldsMap);
         })
     });
 

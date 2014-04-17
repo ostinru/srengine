@@ -9,6 +9,15 @@ var schema = new Schema({
         Y: {
             type: Number,
             default:0
+        },
+        BS:
+        {
+            type: Boolean,
+            default: false
+        },
+        ProblemId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: false
         }
     })
     ;

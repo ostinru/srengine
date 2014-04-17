@@ -14,11 +14,11 @@ exports.get = function(req, res, next){
     if (!req.user) {
         return res.sendHttpError(new HttpError(401));
     }
-    if (!req.user.problemId) {
+    if (!req.user.currentProblemId) {
         return res.sendHttpError(new HttpError(500, 'There are no probem for current user'));
     }
 
-    var problemId = req.user.problemId;
+    var problemId = req.user.currentProblemId;
 
     Problem.getProblem(problemId, function(err, problem) {
         if (err) {

@@ -1,5 +1,6 @@
 var mongoose = require('lib/mongoose.js');
 var async = require('async');
+var Problem = require('models/problem').Problem;
 
 async.series([
     open,
@@ -35,8 +36,6 @@ function requireModels(callback) {
 
 function createProblems(callback) {
 
-    var Problem = require('models/problem').Problem;
-
     var problems = [
         {
             topic : 'Planet Express',
@@ -55,84 +54,8 @@ function createProblems(callback) {
             _id: Problem.getFirstPageObjectId()
         },
         {
+            _id: mongoose.Types.ObjectId(2),
             topic : 'Задание 2',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 3',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 4',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 5',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 6',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 7',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 8',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
-        },
-        {
-            topic : 'Задание 9',
             question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
             answers : ['PING', "ПИНГ"],
             cost: 50,
@@ -143,6 +66,24 @@ function createProblems(callback) {
             ]
         }
     ];
+
+    for(var i=2; i<10; i++) {
+        problems.push(
+            {
+                _id: mongoose.Types.ObjectId(i+1),
+                topic : 'Задание ' + (i+1).toString(),
+                question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
+                answers : ['PING', "ПИНГ"],
+                cost: 50,
+                hints: [
+                    { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
+                    { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
+                    { text: 'Найдите метку и смотрите на столбы.', cost: 10}
+                ]
+            });
+    }
+
+    console.log('problems created');
     
     async.each(problems, function(problemData, callback) {
         var problem = new mongoose.models.Problem(problemData);
@@ -152,13 +93,13 @@ function createProblems(callback) {
 
 function createUsers(callback) {
 
-    var Problem = require('models/problem').Problem;
-
     var users = [
-        {username: 'vasya', password: '123', problemId: Problem.getFirstPageObjectId() },
-        {username: 'petya', password: '123', problemId: Problem.getFirstPageObjectId() },
-        {username: 'admin', password: '123', problemId: Problem.getFirstPageObjectId(), admin: true}
+        {username: 'vasya', password: '123', currentProblemId: Problem.getFirstPageObjectId()},
+        {username: 'petya', password: '123', currentProblemId: Problem.getFirstPageObjectId() },
+        {username: 'admin', password: '123', currentProblemId: Problem.getFirstPageObjectId(), admin: true}
     ];
+
+    console.log('users created');
 
     async.each(users, function(userData, callback) {
         var user = new mongoose.models.User(userData);
@@ -168,15 +109,18 @@ function createUsers(callback) {
 
 function createFields(callback) {
 
-    var fields = [
-        {X: 2,Y : 1 }, {X: 2,Y : 2 }, {X: 2,Y : 3 }, {X: 2,Y : 4 }, {X: 2,Y : 5 }, {X: 2,Y : 6 }, {X: 2,Y : 7 },
-        {X: 3,Y : 1 }, {X: 3,Y : 2 }, {X: 3,Y : 3 }, {X: 3,Y : 4 }, {X: 3,Y : 5 }, {X: 3,Y : 6 }, {X: 3,Y : 7 }, {X: 3,Y : 8 },
-        {X: 4,Y : 1 }, {X: 4,Y : 2 }, {X: 4,Y : 3 }, {X: 4,Y : 4 }, {X: 4,Y : 5 }, {X: 4,Y : 6 }, {X: 4,Y : 7 }, {X: 4,Y : 8 },
-        {X: 5,Y : 1 }, {X: 5,Y : 2 }, {X: 5,Y : 3 }, {X: 5,Y : 4 }, {X: 5,Y : 5 }, {X: 5,Y : 6 }, {X: 5,Y : 7 }, {X: 5,Y : 8 },
-        {X: 6,Y : 1 }, {X: 6,Y : 2 }, {X: 6,Y : 3 }, {X: 6,Y : 4 }, {X: 6,Y : 5 }, {X: 6,Y : 6 }, {X: 6,Y : 7 }, {X: 6,Y : 8 },
-        {X: 7,Y : 2 }, {X: 7,Y : 3 }, {X: 7,Y : 4 }, {X: 7,Y : 5 }, {X: 7,Y : 6 }, {X: 7,Y : 7 }, {X: 7,Y : 8 }, {X: 7,Y : 9 }, {X: 7,Y : 10 },
-        {X: 8,Y : 2 }, {X: 8,Y : 3 }, {X: 8,Y : 4 }, {X: 8,Y : 5 }, {X: 8,Y : 6 }, {X: 7,Y : 7 }, {X: 8,Y : 8 }
-    ];
+    var fields = [];
+
+    for(var i=2; i<=8; i++) {
+        var k = 1;
+        for (var j=1; j<=8; j++)
+        {
+           fields.push({X:i, Y:j,ProblemId: mongoose.Types.ObjectId(i) });
+        }
+    }
+    fields.push({X:1, Y:1,BS:true});
+
+    console.log('fieldsMap created');
 
     async.each(fields, function(fieldData, callback) {
 

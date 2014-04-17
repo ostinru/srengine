@@ -4,10 +4,11 @@ var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 var FieldMap = require('models/fieldMap').FieldMap;
 var User = require('models/user').User;
+
 exports.get = function (req, res, next) {
     if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
 		if (req.query.full == 'true') {
-			FieldMap.find({ /* all */ }, 'X Y -_id', function(err, result) {
+			FieldMap.find({ /* all */ }, 'X Y BS -_id', function(err, result) {
 				if (err) {
 					logger.error(err);
 					return res.json({error: err});
@@ -44,6 +45,8 @@ exports.post = function (req, res, next) {
              */
 
             req.user.save();
+            //res.req.header("x-requested-with"); //TODO not so good?
+            res.redirect("/");
             logger.info("Тише едешь, дальше будешь ) Новые координаты сохранены.");
         }
         else {
