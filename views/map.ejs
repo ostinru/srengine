@@ -24,6 +24,18 @@
         -webkit-box-shadow: 0 0 20px #fff;
          box-shadow: 0px 0px 20px #fff;
     }
+    .modal {
+        position: fixed;
+        top: 100px;
+        display: block;
+        margin-left: 210px;
+        z-index: 2;
+        background-color: #fff;
+        width: 600px;
+        height: 250px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
     .mapbody{
         color: rgba(0, 0, 0, 0);
         position:absolute;
@@ -67,7 +79,7 @@
   <% } %>
 </div>
 
-<div id="modal"></div>
+<div id="modal" class="modal"></div>
 
 <script>
     function onFieldClick(obj, x, y) {
