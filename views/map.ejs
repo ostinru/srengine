@@ -44,11 +44,11 @@
 
 </style>
 
-<div class="mapbody">   
+<div class="mapbody">
   <% for (var i=1; i<=12; i++ ) { %>
     <div class="row" id="r<%= i %>">
       <% for (var j=1; j<=21; j++ ) { -%>
-        <div onclick="onFieldClick(this, <%= i + ', ' + j %>);" class="<%= i + '-' + j %> field"></div>
+        <div onclick="onFieldClick(this, <%= j + ', ' + i %>);" class="<%= j + '-' + i %> field"></div>
       <% } -%>
     </div>
   <% } %>
@@ -62,12 +62,8 @@
             url: "/map",
             data: { position : pos },
             method: "POST",
-            complete: function() {
-                console.log("complete", arguments); // TODO: error handling?
-            },
             statusCode: {
                 200: function(res) {
-                    console.log("post 200", arguments);
                     $(".me").removeClass("me");
                     $("." + res.position.X + "-" + res.position.Y).addClass("me");
                 },
@@ -90,7 +86,6 @@
                     $(".field").addClass("np");
                     for (var i=0; i< res.length; i++) {
                         var p = res[i];
-                        console.log(p);
                         $("." + p.X + "-" + p.Y).removeClass("np");
                         if(p.BS){
                             $("." + p.X + "-" + p.Y).addClass("bs");
@@ -109,7 +104,7 @@
             statusCode: {
                 200: function(res) {
                     $(".me").removeClass("me");
-                    $("." + res.Y + "-" + res.X).addClass("me");
+                    $("." + res.X + "-" + res.Y).addClass("me");
                 },
                 403: function(jqXHR) {
                     console.log("403", arguments);
