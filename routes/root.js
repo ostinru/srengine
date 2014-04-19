@@ -8,9 +8,9 @@ var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
 
 exports.get = function(req, res, next){
-    if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
+    /*if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
         return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
-    }
+    }*/
 
     if (!req.user) {
         return res.sendHttpError(new HttpError(401));
@@ -39,17 +39,21 @@ exports.get = function(req, res, next){
             _.find(problemHistory.hints,   function(hintId)  { return hintId.equals(item._id); });
         });
 
+        if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
+            res.locals.problem = publicProblem;
+            return res.render('index');
+        }
         res.json(publicProblem);
     });
 };
 
 exports.post = function(req, res, next) {
     logger.info('POST on "' + req.path + '": ', req.body);
-
+/*
     if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
         return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
     }
-
+*/
     // 1) get user
     var user = req.user;
     if (!user) {
@@ -64,7 +68,7 @@ exports.post = function(req, res, next) {
         return res.sendHttpError(new HttpError(403, "No answer"));
     }
 
-    Problem.getProblem(problemId, function (err, problem) {
+    Problem.findById(problemId, function (err, problem) {
         if (err) {
             return res.sendHttpError(err);
         }
@@ -107,7 +111,7 @@ exports.post = function(req, res, next) {
                 res.json({hint : hint});
             }
             else {
-                logger.debug('checking answer "' + answer + '". Correct answers: ' + problem.answers + '. result is ' + problem.check(answer));
+                logger.debug('checking answer "' + answer + '". Correct answers: ' + problem.answers + '. result is ' + !! problem.check(answer));
                 if (problem.check(answer)) {
                     // TODO: set next question:
                     return res.json({}); // TODO

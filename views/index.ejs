@@ -4,6 +4,14 @@
 <form id="game" method="post">
 	<h2><%= problem.topic -%></h2>
 	<p><%= problem.question -%></p>
+	<% if (problem.takenHints) { %>
+		<p>Подсказки</p>
+		<ul>
+		<% for (var i=0; i<problem.takenHints.length ; i++) { %>
+			<li><%= problem.takenHints[i] -%></li>
+		<% } -%>
+		</ul>
+	<% } -%>
 	<input type="text" name="answer"/>
 	<input type="submit"/>
 </form>
