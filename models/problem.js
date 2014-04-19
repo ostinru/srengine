@@ -55,7 +55,7 @@ schema.methods.checkBonuses = function(userBonus) {
 };
 
 schema.statics.getProblem = function(problemId, callback) {
-    this.findById(problemId).exec(callback);
+    return this.findById(problemId,callback);
 };
 
 schema.statics.getGlobalProblem = function(callback) {

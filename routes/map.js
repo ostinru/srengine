@@ -47,11 +47,7 @@ exports.post = function (req, res, next) {
             req.user.save();
             //res.req.header("x-requested-with"); //TODO not so good?
             res.redirect("/");
-            logger.info("Тише едешь, дальше будешь ) Новые координаты сохранены.");
         }
-        else {
-            logger.info("воу-воу! не так быстро! отказано в переходе");
-        };
         res.json({ error: null, position: req.user.position });
     });
 };
