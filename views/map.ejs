@@ -179,7 +179,7 @@ function renderForm() {
                     formHTML += '<p>Подсказки</p>';
                     formHTML += '<ul>';
                     for (var i=0; i<problem.takenHints.length ; i++) {
-                        formHTML += '<li>' + problem.takenHints[i] + '</li>'
+                        formHTML += '<li>' + problem.takenHints[i].text + '</li>'
                     }
                     formHTML += '</ul>';
                 }

@@ -28,18 +28,25 @@ exports.get = function(req, res, next){
             return res.sendHttpError(err); // TODO: is it ok?
         }
 
-        var problemHistory = user.getProblemHistory(problemId);
-
         var publicProblem = {
             topic : problem.topic,
             question : problem.question
         };
-        publicProblem.takenBonuses = problemHistory && _.filter(problem.bonuses, function(item) {
-            _.find(problemHistory.bonuses, function(bonusId) { return bonusId.equals(item._id); });
+
+        var problemHistory = user.getProblemHistory(problemId);
+
+        // add bonuses
+        var bonusesIds = problemHistory && _.filter(problem.bonuses, function(item) {
+            return _.find(problemHistory.takenBonuses, function(bonusId) {
+                return bonusId.equals(item._id); });
         });
-        publicProblem.takenHints = problemHistory && _.filter(problem.hints, function(item, cb) {
-            _.find(problemHistory.hints,   function(hintId)  { return hintId.equals(item._id); });
+        publicProblem.takenBonuses = inlinePublicBonuses(bonusesIds, problem.bonuses);
+        
+        // add hints
+        var hintsIds = problemHistory && _.filter(problem.hints, function(item, cb) {
+            return _.find(problemHistory.takenHints,   function(hintId)  { return hintId.equals(item._id); });
         });
+        publicProblem.takenHints = inlinePublicHints(hintsIds, problem.hints);
 
         if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
             res.locals.problem = publicProblem;
@@ -167,8 +174,25 @@ normalizeAnswer = function(answer) {
     return answer;
 };
 
+inlinePublicBonuses = function(bonuses) {
+    return _.map(bonuses, function(bonus) {
+        return {
+            text: bonus.text,
+            cost: bonus.cost
+        };
+    });
+};
+
+inlinePublicHints = function(hints) {
+    return _.map(hints, function(hint) {
+        return {
+            text: hint.text,
+            cost: hint.cost
+        };
+    });
+};
+
 hasBonus = function(bonusId, takenBonuses) {
-	logger.debug('loocking for %s in', bonusId, takenBonuses);
     return !! _.find(takenBonuses, function(item) {
         if (bonusId.equals(item)) {
             return item;
