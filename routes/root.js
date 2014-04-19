@@ -33,10 +33,10 @@ exports.get = function(req, res, next){
             question : problem.question
         };
         publicProblem.takenBonuses = problemHistory && _.filter(problem.bonuses, function(item) {
-            _.find(problemHistory.bonuses, function(bonusId) { return bonusId == item._id; });
+            _.find(problemHistory.bonuses, function(bonusId) { return bonusId.equals(item._id); });
         });
         publicProblem.takenHints = problemHistory && _.filter(problem.hints, function(item, cb) {
-            _.find(problemHistory.hints,   function(hintId)  { return hintId  == item._id; });
+            _.find(problemHistory.hints,   function(hintId)  { return hintId.equals(item._id); });
         });
 
         res.json(publicProblem);
@@ -126,7 +126,7 @@ exports.post = function(req, res, next) {
 
 getProblemHistory = function(user, problemId) {
     return _.find(user.problemHistory, function(item) {
-        return item.problemId == problemId;
+        return problemId.equals(item.problemId);
     });
 }
 
