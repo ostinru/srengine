@@ -8,7 +8,7 @@
         margin-left:38px;
     }
     div#r1{
-        margin-top:145px;
+        margin-top:20px;
         margin-left:38px;
         height:45px;
     }
@@ -55,12 +55,9 @@
 
 </style>
 
-<div id="modal"></div>
-
-
-<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
 
 <div class="mapbody">
+	<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
   <% for (var i=1; i<=12; i++ ) { %>
     <div class="row" id="r<%= i %>">
       <% for (var j=1; j<=21; j++ ) { -%>
@@ -69,6 +66,8 @@
     </div>
   <% } %>
 </div>
+
+<div id="modal"></div>
 
 <script>
     function onFieldClick(obj, x, y) {
@@ -82,6 +81,7 @@
                 200: function(res) {
                     $(".me").removeClass("me");
                     $("." + res.position.X + "-" + res.position.Y).addClass("me");
+                    renderForm();
                     $('#modal').trigger('openModal');
                 },
                 403: function(jqXHR) {
@@ -144,7 +144,45 @@ $(function() {
 });
 
 $('#listimage').click(function(e){
+    renderForm();
     $('#modal').trigger('openModal');
     e.preventDefault();
 });
+
+function renderForm() {
+    var modal = $('#modal');
+    modal.empty();
+
+    $.ajax({
+        url: "/",
+        data: "",
+        method: "GET",
+        statusCode: {
+            200: function(problem) {
+                var formHTML = '';
+                formHTML += '<form id="game" method="post">';
+                formHTML += '<h2>' + problem.topic + '</h2>';
+                formHTML += '<p>' + problem.question + '</p>';
+                if (problem.takenHints) {
+                    formHTML += '<p>Подсказки</p>';
+                    formHTML += '<ul>';
+                    for (var i=0; i<problem.takenHints.length ; i++) {
+                        formHTML += '<li>' + problem.takenHints[i] + '</li>'
+                    }
+                    formHTML += '</ul>';
+                }
+                formHTML += '<input type="text" name="answer"/>';
+                formHTML += '<input type="submit" formmethod="post" formaction="/" />';
+                formHTML += '</form>'
+
+                modal.append(formHTML);
+            },
+            403: function(jqXHR) {
+                console.log("403", arguments);
+            }
+        }
+    });
+    
+    
+};
 </script>
