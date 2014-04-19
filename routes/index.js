@@ -7,11 +7,11 @@ var checkAuth = require('middleware/checkAuth');
 var checkAdmin = require('middleware/checkAdmin');
 
 module.exports = function(app) {
-	app.get('/', checkAuth, require('./root').get);
-	app.post('/', checkAuth, require('./root').post);
-	
-	app.get('/login', require('./login').get);
-	app.post('/login', require('./login').post);
+    app.get('/', checkAuth, require('./root').get);
+    app.post('/', checkAuth, require('./root').post);
+    
+    app.get('/login', require('./login').get);
+    app.post('/login', require('./login').post);
 
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);

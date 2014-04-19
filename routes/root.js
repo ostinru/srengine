@@ -6,6 +6,7 @@ var _ = require('underscore');
 
 var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
+var SKIPPROBLEM_KEY_WORD = "автопереход";
 
 exports.get = function(req, res, next){
     /*if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
@@ -19,14 +20,15 @@ exports.get = function(req, res, next){
         return res.sendHttpError(new HttpError(500, 'There are no probem for current user'));
     }
 
-    var problemId = req.user.problemId;
+    var user = req.user;
+    var problemId = user.problemId;
 
     Problem.findById(problemId, function(err, problem) {
         if (err) {
             return res.sendHttpError(err); // TODO: is it ok?
         }
-        
-        var problemHistory = getProblemHistory(req.user, problemId);
+
+        var problemHistory = user.getProblemHistory(problemId);
 
         var publicProblem = {
             topic : problem.topic,
@@ -54,7 +56,6 @@ exports.post = function(req, res, next) {
         return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
     }
 */
-    // 1) get user
     var user = req.user;
     if (!user) {
         return res.sendHttpError(new HttpError(401));
@@ -77,63 +78,108 @@ exports.post = function(req, res, next) {
                 return res.sendHttpError(err);
             }
 
-            var problemHistory = getProblemHistory(req.user, problemId);
+            var problemHistory = user.getProblemHistory(problemId);
             answer = normalizeAnswer(answer);
-
+            //
+            // check bonuses
+            //
             if (answer.indexOf(BONUS_KEY_WORD) == 0) {
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-                var bonus;
-                if (bonus = problem.checkBonuses(bonusStr)) {
-                    problemHistory.takenBonuses.push(bonus._id);
-                    user.save(); // TODO: markModified(?)
-                }
-                else if (bonus = globalProblem.checkBonuses(bonusStr)) {
-                    problemHistory.takenBonuses.push(bonus._id);
-                    user.save(); // TODO: markModified(?)
+                var bonus = problem.checkBonuses(bonusStr) || globalProblem.checkBonuses(bonusStr);
+                if (bonus) {
+                    logger.debug('User %s got bonus %s', user.username, bonus.text);
+                    if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
+                        problemHistory.takenBonuses.push(bonus._id);
+                        user.markModified('problemHistory');
+                        user.save(function(err) {
+                            if (err) {
+                                res.json(err);
+                            }
+                            res.json(bonus);
+                        });
+                    }
+                    else {
+                        res.json({});
+                    }
                 }
                 else {
                     return res.sendHttpError(new HttpError("No such bonus '"+bonusStr+"'"));
                 }
             }
+            //
+            // check hints
+            //
             else if (answer.indexOf(HINT_KEY_WORD) == 0) {
                 var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
                 var hintNumber = parseInt(hintNumberStr);
                 if (isNaN(hintNumber)) {
                     return res.sendHttpError(new HttpError("Can't parse hint numer '" + hintNumberStr + "'"));
                 }
-                // TODO: work with only  "подсказка 2"
                 var hint = problem.hints[hintNumber - 1];
                 if (hint === undefined) {
                     return res.sendHttpError(new HttpError("No such hint for this problem"));
                 }
-                problemHistory.takenHints.push(hint._id);
-                user.save(); // TODO: markModified(?)
+                if (! hasHint(hint._id, problemHistory.takenHints)) {
+                    problemHistory.takenHints.push(hint._id);
+                    user.save(); // TODO: markModified(?)
+                }
                 res.json({hint : hint});
             }
+            //
+            // skip problem
+            //
+            else if (answer == SKIPPROBLEM_KEY_WORD) {
+                logger.debug('User %s skip problem.', user.username);
+                user.problemId = undefined; // be ready to do nest steps
+                user.save(function(err) {
+                    if (err) {
+                        res.json(err);
+                    }
+                    res.json({})
+                });
+            }
+            //
+            // check answer
+            //
             else {
                 logger.debug('checking answer "' + answer + '". Correct answers: ' + problem.answers + '. result is ' + !! problem.check(answer));
                 if (problem.check(answer)) {
-                    // TODO: set next question:
-                    return res.json({}); // TODO
-                }
-                else if (globalProblem.check(answer)) {
-                    // TODO: set next question:
-                    return res.json({}); // TODO
+                    problemHistory.solved = true;
+                    user.markModified('problemHistory');
+                    user.problemId = undefined; // be ready to do nest steps
+                    user.save(function(err) {
+                        if (err) {
+                            res.json(err);
+                        }
+                        res.json({})
+                    });
                 }
                 else {
                     return res.sendHttpError(new HttpError("No such answer '" + answer + "'"));
                 }
             }
+            
         });
     });
 };
 
-getProblemHistory = function(user, problemId) {
-    return _.find(user.problemHistory, function(item) {
-        return problemId.equals(item.problemId);
-    });
-}
-
 normalizeAnswer = function(answer) {
     return answer;
-}
+};
+
+hasBonus = function(bonusId, takenBonuses) {
+	logger.debug('loocking for %s in', bonusId, takenBonuses);
+    return !! _.find(takenBonuses, function(item) {
+        if (bonusId.equals(item)) {
+            return item;
+        }
+    });
+};
+
+hasHint = function(hintId, takenHints) {
+    return !! _.find(takenHints, function(item) {
+        if (hintId.equals(item)) {
+            return item;
+        }
+    });
+};

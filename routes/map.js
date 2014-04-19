@@ -35,30 +35,36 @@ exports.post = function (req, res, next) {
             logger.info("Игроку %s отказано в переходе на клетку", req.user.username, newPosition);
             return res.json({ error: err, position: req.user.position });
         }
-        if (! isValidStep(req.user.position, newPosition)) {
-            logger.info("Игроку %s отказано в переходе на клетку", req.user.username, newPosition);
+
+        var user = req.user;
+
+        if (user.problemId) {
+          return res.json({ error: "Вам нужно 'закрыть' уровень. Например, 'автопереход'-ом.", position: user.position });
+        }
+        if (! isValidStep(user.position, newPosition)) {
+            logger.info("Игроку %s отказано в переходе на клетку", user.username, newPosition);
             return res.json({ error: err, position: req.user.position });
         }
-        
-        req.user.position = newPosition;
-        req.user.problemId = field.ProblemId;
-        req.user.save(function (err) {
-            if (err) {
-                logger.error("Новые координаты игрока %s не сохранены", req.user.username, err);
-            }
-            logger.info("Новые координаты игрока %s сохранены.", req.user.username, newPosition);
-            return res.json({ error: err, position: req.user.position });
-        });
-/*
-            var query = {_id: req.user._id};
-            var update = {$push:{"problemHistory":{problemId:{},takenBonuses:[],takenHints:[]}}};
-            User.update(query, update, function(err){
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
+
+        user.position = newPosition;
+        user.problemId = field.ProblemId;
+        if (! user.getProblemHistory(field.ProblemId)) {
+            user.problemHistory.push({
+                problemId: field.ProblemId,
+                takenBonuses:[],
+                takenHints:[]
             });
-*/
+            user.markModified('problemHistory');
+            logger.debug(user.problemHistory);
+        }
+
+        user.save(function (err) {
+            if (err) {
+                logger.error("Новые координаты игрока %s не сохранены", user.username, err);
+            }
+            logger.info("Новые координаты игрока %s сохранены.", user.username, newPosition);
+            return res.json({ error: err, position: user.position });
+        });
     });
 };
 
