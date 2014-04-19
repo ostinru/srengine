@@ -1,4 +1,3 @@
-// TODO: auth support
 var User = require('models/user').User;
 var Problem = require('models/problem').Problem;
 var FieldMap = require('models/fieldMap').FieldMap;
@@ -37,8 +36,13 @@ module.exports = function(app) {
     });
 
     app.get('/user/:username', checkAdmin, function (req, res, next) {
-        User.findOne({'username' : req.params.username }, function (err, user) { // ObjectID
-            if (err) return next(err);
+        User
+        .findOne({'username' : req.params.username })
+        .populate('problemHistory')
+        .exec(function (err, user) {
+            if (err) {
+                return next(err);
+            }
             if (!user) {
                 return next(404);
             }

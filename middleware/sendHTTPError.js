@@ -1,6 +1,3 @@
-/**
- * Created by Outsourc on 09.02.14.
- */
 module.exports = function (req, res, next) {
 
     res.sendHttpError = function (error) {

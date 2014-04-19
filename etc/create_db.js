@@ -2,10 +2,13 @@ var mongoose = require('lib/mongoose.js');
 var async = require('async');
 var Problem = require('models/problem').Problem;
 
+var ids = [];
+
 async.series([
     open,
     dropDatabase,
     requireModels,
+    generateIds,
     createProblems,
     createUsers,
     createFields
@@ -34,6 +37,13 @@ function requireModels(callback) {
     }, callback);
 }
 
+function generateIds(callback) {
+    for(var i=0; i<100; i++) {
+        ids.push(mongoose.Types.ObjectId(1));
+    }
+    callback(null);
+}
+
 function createProblems(callback) {
 
     var problems = [
@@ -51,27 +61,15 @@ function createProblems(callback) {
                 { text: 'ГИПНОЖАБА', cost: 20 },
                 { text: 'ДОНБОТ', cost: 20}
             ],
-            _id: Problem.getFirstPageObjectId()
-        },
-        {
-            _id: mongoose.Types.ObjectId(2),
-            topic : 'Задание 2',
-            question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-            answers : ['PING', "ПИНГ"],
-            cost: 50,
-            hints: [
-                { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                { text: 'Найдите метку и смотрите на столбы.', cost: 10}
-            ]
+            _id: ids[0]
         }
     ];
 
-    for(var i=2; i<10; i++) {
+    for(var i=1; i<10; i++) {
         problems.push(
             {
-                _id: mongoose.Types.ObjectId(i+1),
-                topic : 'Задание ' + (i+1).toString(),
+                _id: ids[i],
+                topic : 'Задание ' + (i).toString(),
                 question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
                 answers : ['PING', "ПИНГ"],
                 cost: 50,
@@ -82,8 +80,6 @@ function createProblems(callback) {
                 ]
             });
     }
-
-    console.log('problems created');
     
     async.each(problems, function(problemData, callback) {
         var problem = new mongoose.models.Problem(problemData);
@@ -94,12 +90,10 @@ function createProblems(callback) {
 function createUsers(callback) {
 
     var users = [
-        {username: 'vasya', password: '123', currentProblemId: Problem.getFirstPageObjectId()},
-        {username: 'petya', password: '123', currentProblemId: Problem.getFirstPageObjectId() },
-        {username: 'admin', password: '123', currentProblemId: Problem.getFirstPageObjectId(), admin: true}
+        {username: 'vasya', password: '123' },
+        {username: 'petya', password: '123' },
+        {username: 'admin', password: '123', admin: true}
     ];
-
-    console.log('users created');
 
     async.each(users, function(userData, callback) {
         var user = new mongoose.models.User(userData);
@@ -115,12 +109,10 @@ function createFields(callback) {
         var k = 1;
         for (var j=1; j<=8; j++)
         {
-           fields.push({X:i, Y:j,ProblemId: mongoose.Types.ObjectId(i) });
+           fields.push({X:i, Y:j, ProblemId: ids[i] });
         }
     }
-    fields.push({X:1, Y:1,BS:true});
-
-    console.log('fieldsMap created');
+    fields.push({X:1, Y:1, BS:true});
 
     async.each(fields, function(fieldData, callback) {
 

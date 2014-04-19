@@ -12,13 +12,24 @@
         margin-left:38px;
         height:45px;
     }
-
+    .listimage{
+        margin-top:95px;
+        margin-left:43px;
+        width:40px;
+        height:30px;
+        cursor:pointer;
+    }
+    img.list:hover{
+        -moz-box-shadow: 0 0 20px #fff;
+        -webkit-box-shadow: 0 0 20px #fff;
+         box-shadow: 0px 0px 20px #fff;
+    }
     .mapbody{
         color: rgba(0, 0, 0, 0);
         position:absolute;
         margin-top:0px;
         top:0px;
-        background: url(images/map4.jpg);
+        background: url(images/map5.jpg);
         height:768px;
         width:1024px;
         font-size:12px;
@@ -44,11 +55,16 @@
 
 </style>
 
-<div class="mapbody">   
+<div id="modal"></div>
+
+
+<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
+
+<div class="mapbody">
   <% for (var i=1; i<=12; i++ ) { %>
     <div class="row" id="r<%= i %>">
       <% for (var j=1; j<=21; j++ ) { -%>
-        <div onclick="onFieldClick(this, <%= i + ', ' + j %>);" class="<%= i + '-' + j %> field"></div>
+        <div onclick="onFieldClick(this, <%= j + ', ' + i %>);" class="<%= j + '-' + i %> field"></div>
       <% } -%>
     </div>
   <% } %>
@@ -62,14 +78,11 @@
             url: "/map",
             data: { position : pos },
             method: "POST",
-            complete: function() {
-                console.log("complete", arguments); // TODO: error handling?
-            },
             statusCode: {
                 200: function(res) {
-                    console.log("post 200", arguments);
                     $(".me").removeClass("me");
                     $("." + res.position.X + "-" + res.position.Y).addClass("me");
+                    $('#modal').trigger('openModal');
                 },
                 403: function(jqXHR) {
                     console.log("403", arguments);
@@ -90,7 +103,6 @@
                     $(".field").addClass("np");
                     for (var i=0; i< res.length; i++) {
                         var p = res[i];
-                        console.log(p);
                         $("." + p.X + "-" + p.Y).removeClass("np");
                         if(p.BS){
                             $("." + p.X + "-" + p.Y).addClass("bs");
@@ -109,7 +121,7 @@
             statusCode: {
                 200: function(res) {
                     $(".me").removeClass("me");
-                    $("." + res.Y + "-" + res.X).addClass("me");
+                    $("." + res.X + "-" + res.Y).addClass("me");
                 },
                 403: function(jqXHR) {
                     console.log("403", arguments);
@@ -117,4 +129,22 @@
             }
         });
     });
+</script>
+
+<script type="text/javascript">
+$(function() {
+    $('#modal').easyModal({
+        top: 100,
+        autoOpen: false,
+        overlayOpacity: 0.3,
+        overlayColor: "#333",
+        overlayClose: false,
+        closeOnEscape: true
+    });
+});
+
+$('#listimage').click(function(e){
+    $('#modal').trigger('openModal');
+    e.preventDefault();
+});
 </script>

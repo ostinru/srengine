@@ -16,7 +16,7 @@ var schema = new Schema({
         type: String,
         required: true
     },
-    currentProblemId: {
+    problemId: {
         type: mongoose.Schema.Types.ObjectId,
         required: false
     },
@@ -29,9 +29,14 @@ var schema = new Schema({
        Y: {type: Number, default: 5}
     },
     problemHistory: [{
-            problemID: {
+            problemId: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true
+                required: true,
+                ref: 'Probem'
+            },
+            solved: {
+                type: Boolean,
+                default: false
             },
             takenBonuses: [{
                 type: mongoose.Schema.Types.ObjectId,
