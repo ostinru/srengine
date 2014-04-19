@@ -8,6 +8,7 @@
 					"keepAlive": 1
 				}
 			}
-		}
+		},
+		"debug": true
 	}
 }
