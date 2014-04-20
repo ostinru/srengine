@@ -200,7 +200,7 @@ function renderForm() {
     .done(function(problem) {
         console.log(arguments);
         var formHTML = '';
-        formHTML += '<form id="game" method="post">';
+        formHTML += '<form id="game">';
         formHTML += '<h2>' + problem.topic + '</h2>';
         formHTML += '<p>' + problem.question + '</p>';
         if (problem.takenHints.length) {
@@ -226,6 +226,11 @@ function renderForm() {
 
         modal.append(formHTML);
         modal.trigger('openModal');
+        
+        $("#game").on("submit", function(e) {
+            e.preventDefault();
+            postAnswer();
+        });
     })
     .fail(function(jqXHR) {
         console.log(jqXHR.status + " " + jqXHR.message);
