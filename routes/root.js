@@ -25,7 +25,7 @@ exports.get = function(req, res, next){
 
     Problem.findById(problemId, function(err, problem) {
         if (err) {
-            return res.sendHttpError(err); // TODO: is it ok?
+            return res.sendHttpError(new HttpError(404, err)); // TODO: is it ok?
         }
 
         var publicProblem = {
@@ -78,11 +78,11 @@ exports.post = function(req, res, next) {
 
     Problem.findById(problemId, function (err, problem) {
         if (err) {
-            return res.sendHttpError(err);
+            return res.sendHttpError(new HttpError(500, err));
         }
         Problem.getGlobalProblem(function(err, globalProblem) {
             if (err) {
-                return res.sendHttpError(err);
+                return res.sendHttpError(new HttpError(500, err));
             }
 
             var problemHistory = user.getProblemHistory(problemId);
@@ -100,17 +100,17 @@ exports.post = function(req, res, next) {
                         user.markModified('problemHistory');
                         user.save(function(err) {
                             if (err) {
-                                res.json(err);
+                                res.sendHttpError(new HttpError(500, err));
                             }
-                            res.json(bonus);
+                            return res.json({ status : "Success", bonus : bonus });
                         });
                     }
                     else {
-                        res.json({});
+                        return res.json({ status : "Success", bonus : bonus });
                     }
                 }
                 else {
-                    return res.sendHttpError(new HttpError("No such bonus '"+bonusStr+"'"));
+                    return res.sendHttpError(new HttpError(404, "No such bonus '"+bonusStr+"'"));
                 }
             }
             //
@@ -120,17 +120,22 @@ exports.post = function(req, res, next) {
                 var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
                 var hintNumber = parseInt(hintNumberStr);
                 if (isNaN(hintNumber)) {
-                    return res.sendHttpError(new HttpError("Can't parse hint numer '" + hintNumberStr + "'"));
+                    return res.sendHttpError(new HttpError(500, "Can't parse hint numer '" + hintNumberStr + "'"));
                 }
                 var hint = problem.hints[hintNumber - 1];
                 if (hint === undefined) {
-                    return res.sendHttpError(new HttpError("No such hint for this problem"));
+                    return res.sendHttpError(new HttpError(404, "No such hint for this problem"));
                 }
                 if (! hasHint(hint._id, problemHistory.takenHints)) {
                     problemHistory.takenHints.push(hint._id);
-                    user.save(); // TODO: markModified(?)
+                    user.save(function(err) {
+						if (err) {
+							return res.sendHttpError(new HttpError(500, err));
+						}
+						return res.json({ status : "Success", hint : hint});
+					}); // TODO: markModified(?)
                 }
-                res.json({hint : hint});
+                return res.json({ status : "Success", hint : hint});
             }
             //
             // skip problem
@@ -140,9 +145,9 @@ exports.post = function(req, res, next) {
                 user.problemId = undefined; // be ready to do nest steps
                 user.save(function(err) {
                     if (err) {
-                        res.json(err);
+                        res.sendHttpError(new HttpError(500, err));
                     }
-                    res.json({})
+                    return res.json({ status : "Success", skipProblem : true});
                 });
             }
             //
@@ -156,16 +161,15 @@ exports.post = function(req, res, next) {
                     user.problemId = undefined; // be ready to do nest steps
                     user.save(function(err) {
                         if (err) {
-                            res.json(err);
+                            res.sendHttpError(new HttpError(500, err));
                         }
-                        res.json({})
+                        res.json({ status : "Success", correctAnswer: true})
                     });
                 }
                 else {
-                    return res.sendHttpError(new HttpError("No such answer '" + answer + "'"));
+                    return res.sendHttpError(new HttpError(404, "No such answer '" + answer + "'"));
                 }
             }
-            
         });
     });
 };

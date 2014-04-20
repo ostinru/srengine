@@ -27,8 +27,8 @@ exports.get = function (req, res, next) {
 exports.post = function (req, res, next) {
     logger.info('POST on "' + req.path + '": ', req.body);
     if (!req.body.position) {
-		res.json('position not set');
-	}
+        return res.sendHttpError(new HttpError(400, 'Position not set'));
+    }
     var newPosition = {
         X: req.body.position.X,
         Y: req.body.position.Y
