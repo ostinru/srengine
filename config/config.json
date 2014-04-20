@@ -1,5 +1,7 @@
 {
-	"port": 3000,
+    "startTime": "2014-04-20 10:49 GMT+0400",
+    "finishTime":"2014-04-20 10:50 GMT+0400",
+    "port": 2000,
 	"mongoose": {
 		"uri": "mongodb://localhost/srengine",
 		"options": {
@@ -8,7 +10,7 @@
 					"keepAlive": 1
 				}
 			}
-		},
-		"debug": true
-	}
+		}
+    },
+	"debug": true
 }
