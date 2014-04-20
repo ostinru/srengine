@@ -8,7 +8,7 @@
         margin-left:38px;
     }
     div#r1{
-        margin-top:145px;
+        margin-top:20px;
         margin-left:38px;
         height:45px;
     }
@@ -23,6 +23,18 @@
         -moz-box-shadow: 0 0 20px #fff;
         -webkit-box-shadow: 0 0 20px #fff;
          box-shadow: 0px 0px 20px #fff;
+    }
+    .modal {
+        position: fixed;
+        top: 100px;
+        display: block;
+        margin-left: 210px;
+        z-index: 2;
+        background-color: #fff;
+        width: 600px;
+        height: 250px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
     .mapbody{
         color: rgba(0, 0, 0, 0);
@@ -55,12 +67,9 @@
 
 </style>
 
-<div id="modal"></div>
-
-
-<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
 
 <div class="mapbody">
+	<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
   <% for (var i=1; i<=12; i++ ) { %>
     <div class="row" id="r<%= i %>">
       <% for (var j=1; j<=21; j++ ) { -%>
@@ -69,6 +78,8 @@
     </div>
   <% } %>
 </div>
+
+<div id="modal" class="modal"></div>
 
 <script>
     function onFieldClick(obj, x, y) {
@@ -82,7 +93,7 @@
                 200: function(res) {
                     $(".me").removeClass("me");
                     $("." + res.position.X + "-" + res.position.Y).addClass("me");
-                    $('#modal').trigger('openModal');
+                    renderForm();
                 },
                 403: function(jqXHR) {
                     console.log("403", arguments);
@@ -144,7 +155,85 @@ $(function() {
 });
 
 $('#listimage').click(function(e){
-    $('#modal').trigger('openModal');
+    renderForm();
     e.preventDefault();
 });
+
+function renderForm() {
+    var modal = $('#modal');
+    modal.empty();
+
+    postAnswer = function() {
+        console.log("POST on /");
+        $.ajax({
+            url: "/",
+            data: $("#game").serialize(),
+            method: "POST"
+        })
+        .done(function(resp) {
+            if (resp.correctAnswer) {
+                modal.trigger('closeModal');
+                alert("done");
+            }
+            else if (resp.skipProblem) {
+                modal.trigger('closeModal');
+                alert("skip");
+            }
+            else if (resp.hint || resp.bonus) {
+                modal.trigger('closeModal');
+                renderForm();
+            }
+        })
+        .fail(function(resp) {
+            var errorEl = $("#error");
+            errorEl.empty();
+            errorEl.text(resp.status + ': ' + resp.responseJSON.message);
+        });
+    };
+
+
+    $.ajax({
+        url: "/",
+        data: "",
+        method: "GET"
+    })
+    .done(function(problem) {
+        console.log(arguments);
+        var formHTML = '';
+        formHTML += '<form id="game">';
+        formHTML += '<h2>' + problem.topic + '</h2>';
+        formHTML += '<p>' + problem.question + '</p>';
+        if (problem.takenHints.length) {
+            formHTML += '<p>Подсказки</p>';
+            formHTML += '<ul>';
+            for (var i=0; i<problem.takenHints.length ; i++) {
+                formHTML += '<li>' + problem.takenHints[i].text + '</li>'
+            }
+            formHTML += '</ul>';
+        }
+        if (problem.takenBonuses.length) {
+            formHTML += '<p>Бонусы</p>';
+            formHTML += '<ul>';
+            for (var i=0; i<problem.takenBonuses.length ; i++) {
+                formHTML += '<li>' + problem.takenBonuses[i].text + '</li>'
+            }
+            formHTML += '</ul>';
+        }
+        formHTML += '<div id="error"></div>';
+        formHTML += '<input type="text" name="answer"/>';
+        formHTML += '<input type="button" value="Ввод" onclick="postAnswer();"/>';
+        formHTML += '</form>'
+
+        modal.append(formHTML);
+        modal.trigger('openModal');
+        
+        $("#game").on("submit", function(e) {
+            e.preventDefault();
+            postAnswer();
+        });
+    })
+    .fail(function(jqXHR) {
+        console.log(jqXHR.status + " " + jqXHR.message);
+    });
+};
 </script>

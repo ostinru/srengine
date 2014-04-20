@@ -2,9 +2,7 @@ var mongoose = require('../lib/mongoose'),
     _ = require('underscore'),
     Schema = mongoose.Schema;
 
-var firstPageObjectId = new mongoose.Types.ObjectId();
-var lastPageObjectId = new mongoose.Types.ObjectId();
-var globalObjectId = new mongoose.Types.ObjectId();
+var globalObjectId = new mongoose.Types.ObjectId('5352ac6e16d755755806e9f2');
 
 var schema = new Schema({
     topic: {
@@ -54,20 +52,12 @@ schema.methods.check = function(userAnswer) {
 
 schema.methods.checkBonuses = function(userBonus) {
     return _.find(this.bonuses, function(item) {
-        return item == userAnswer;
+        return item.text == userBonus;
     });
 };
 
 schema.statics.getGlobalProblem = function(callback) {
     this.findById(globalObjectId, callback);
-};
-
-schema.statics.getFirstPageObjectId = function() {
-    return firstPageObjectId;
-};
-
-schema.statics.getLastPageObjectId = function() {
-    return lastPageObjectId;
 };
 
 schema.statics.getGlobalObjectId = function() {

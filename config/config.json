@@ -1,6 +1,6 @@
 {
-    "startTime": "2014-04-20 10:49 GMT+0400",
-    "finishTime":"2014-04-20 10:50 GMT+0400",
+    "startTime": "2014-01-01 10:49 GMT+0400",
+    "finishTime":"2014-12-31 10:50 GMT+0400",
     "port": 3000,
 	"mongoose": {
 		"uri": "mongodb://localhost/srengine",

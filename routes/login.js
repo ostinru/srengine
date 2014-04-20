@@ -8,7 +8,6 @@ exports.get = function (req, res, next) {
 };
 
 exports.post = function (req, res, next) {
-    logger.info('POST on "' + req.path + '": ', req.body);
     async.waterfall([
         function (callback) {
             User.findOne({ username: req.body.username }).exec(callback);
@@ -31,12 +30,7 @@ exports.post = function (req, res, next) {
             }
 
             req.session.user = user._id;
-            if (user.isAdmin()) {
-                res.redirect("/statistics");
-            }
-            else {
-                res.redirect("/map");
-            }
+            res.redirect("/map");
         }
     );
 

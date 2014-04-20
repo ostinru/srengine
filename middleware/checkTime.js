@@ -4,9 +4,8 @@ var startTime = Date.parse(config.get('startTime'));
 var finishTime = Date.parse(config.get('finishTime'));
 
 module.exports = function (req, res, next) {
-    logger.info("checkTime");
     if (!isTimeOfGame()){
-    res.redirect('/stub');
+        res.redirect('/stub');
         return;
     }
     next();

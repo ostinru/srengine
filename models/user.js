@@ -1,6 +1,7 @@
-var crypto = require('crypto');
-var mongoose = require('lib/mongoose'),
-    Schema = mongoose.Schema;
+var crypto = require('crypto'),
+	mongoose = require('lib/mongoose'),
+    Schema = mongoose.Schema,
+    _ = require('underscore');
 
 var schema = new Schema({
     username: {
@@ -80,5 +81,12 @@ schema.methods.getPublicFields = function() {
         id: this.id
     };
 };
+
+schema.methods.getProblemHistory = function(problemId) {
+    // return problemHistory or undefined
+    return _.find(this.problemHistory, function(item) {
+        return problemId.equals(item.problemId);
+    });
+}
 
 exports.User = mongoose.model('User', schema);

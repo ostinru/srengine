@@ -38,7 +38,7 @@ function requireModels(callback) {
 }
 
 function generateIds(callback) {
-    for(var i=0; i<100; i++) {
+    for(var i=0; i<=100; i++) {
         ids.push(mongoose.Types.ObjectId(1));
     }
     callback(null);
@@ -48,20 +48,27 @@ function createProblems(callback) {
 
     var problems = [
         {
-            topic : 'Planet Express',
-            question : '«Вот это фоуртуна! - воскликнул Бендер. - Все на зеро!» «И как это тебе удается?» - поинтересовалась Лила. «Несколько бутылок пива - вот моя фоурмула успеха, - ответил Бендер. - И никаких тебе найнотехнологий!» «Да, ты сегодня явный файворит, - сказал Лила. - Эйто настоящий успех!». «Еще фишек, пор файвор, - обратился Бендер к крупье. - Мне нужно выиграть еще немного денег на севениры!» «Устроили тут благотворительный фоурум, - неожиданно наехал сосед Бендера по столу на крупье. - Эйто респектабельное место, а не прибежище для всяких там роботов». «Да я тебя в козерога загну! - рассердился Бендер. - Сейчас я тебе устрою файв о-клок ти!»\n На локации агенты.',
-            answers : ['ОТМОРОЗОК'],
-            cost: 50,
-            hints: [
-                { text: 'Ищем английские цифры в словах. P.S. В некоторых словах без ошибок они тоже есть.', cost: 10 },
-                { text: 'Развалюха в Стрельниково (Долгота: 40° 49\' 58» Широта: 57° 48\' 05»)', cost: 10 },
-                { text: 'Соберите все символы и расшифруйте.', cost: 10 }
-            ],
+            topic : 'GlobalProblem',
+            question : 'The Ultimate Question of Life, the Universe, and Everything',
+            answers : ['42'],
+            cost: 0,
+            hints: [],
             bonuses: [
-                { text: 'ГИПНОЖАБА', cost: 20 },
-                { text: 'ДОНБОТ', cost: 20}
+                { text: 'global1', cost: 20 },
+                { text: 'global2', cost: 20}
             ],
-            _id: ids[0]
+            _id: Problem.getGlobalObjectId()
+        }, {
+            topic : 'Base 1',
+            question : 'Move to XX.XXX YY.YYY',
+            answers : ['answer'],
+            cost: 100,
+            hints: [],
+            bonuses: [
+                { text: 'base1', cost: 20 },
+                { text: 'base2', cost: 20}
+            ],
+            _id: ids[100]
         }
     ];
 
@@ -77,6 +84,9 @@ function createProblems(callback) {
                     { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
                     { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
                     { text: 'Найдите метку и смотрите на столбы.', cost: 10}
+                ],
+                bonuses: [
+                    { text: 'ъ', cost: 20 },
                 ]
             });
     }
@@ -90,30 +100,15 @@ function createProblems(callback) {
 function createUsers(callback) {
 
     var users = [
-        {username: 'vasya', password: '123',problemHistory: [
-            {
-                problemId: ids[0],
-                solved:true,
-                takenBonuses:[],
-                takenHints:[]
-            },
-            {
-                problemId: ids[1],
-                solved:true,
-                takenBonuses:[],
-                takenHints:[]
-            },
-            {
-                problemId: ids[2],
-                solved:true,
-                takenBonuses:[],
-                takenHints:[]
-            }
-        ]},
-
+        {username: 'vasya', password: '123' },
         {username: 'petya', password: '123' },
         {username: 'admin', password: '123', admin: true}
     ];
+    
+    for (var i=0; i<20; i++) {
+        users.push({username : 'user'+i, password : '123'});
+        users.push({username : 'nft'+i, password : '123'});
+    }
 
     async.each(users, function(userData, callback) {
         var user = new mongoose.models.User(userData);
@@ -132,7 +127,7 @@ function createFields(callback) {
            fields.push({X:i, Y:j, ProblemId: ids[i] });
         }
     }
-    fields.push({X:1, Y:1, BS:true});
+    fields.push({X:1, Y:1, BS:true, ProblemId: ids[100]});
 
     async.each(fields, function(fieldData, callback) {
 
