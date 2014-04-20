@@ -57,4 +57,6 @@ module.exports = function(app) {
 
     app.get('/stub',require('./stub').get);
 
+    app.get('/statistics', checkAdmin, require('./statistics').get);
+
  }
