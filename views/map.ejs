@@ -228,7 +228,7 @@ function renderForm() {
         modal.trigger('openModal');
     })
     .fail(function(jqXHR) {
-        alert("ERROR: " + jqXHR.status + " " + jqXHR.message);
+        console.log(jqXHR.status + " " + jqXHR.message);
     });
 };
 </script>

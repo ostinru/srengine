@@ -38,6 +38,10 @@ exports.post = function (req, res, next) {
             logger.info("Игроку %s отказано в переходе на клетку", req.user.username, newPosition);
             return res.json({ error: err, position: req.user.position });
         }
+        if (! field) {
+            // we can't visit this field
+            return res.json({ error: err, position: req.user.position });
+        }
 
         var user = req.user;
 
