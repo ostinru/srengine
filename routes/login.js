@@ -30,12 +30,7 @@ exports.post = function (req, res, next) {
             }
 
             req.session.user = user._id;
-            if (user.isAdmin()) {
-                res.redirect("/statistics");
-            }
-            else {
-                res.redirect("/map");
-            }
+            res.redirect("/map");
         }
     );
 

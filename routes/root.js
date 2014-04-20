@@ -9,9 +9,9 @@ var HINT_KEY_WORD = "подсказка";
 var SKIPPROBLEM_KEY_WORD = "автопереход";
 
 exports.get = function(req, res, next){
-    /*if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
-        return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
-    }*/
+    if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
+        return res.redirect("/map");
+    }
 
     if (!req.user) {
         return res.sendHttpError(new HttpError(401));
@@ -48,20 +48,15 @@ exports.get = function(req, res, next){
         });
         publicProblem.takenHints = inlinePublicHints(hintsIds, problem.hints);
 
-        if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
-            res.locals.problem = publicProblem;
-            return res.render('index');
-        }
         res.json(publicProblem);
     });
 };
 
 exports.post = function(req, res, next) {
-/*
     if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
         return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
     }
-*/
+
     var user = req.user;
     if (!user) {
         return res.sendHttpError(new HttpError(401));
