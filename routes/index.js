@@ -8,11 +8,11 @@ var checkAdmin = require('middleware/checkAdmin');
 var checkTime = require('middleware/checkTime');
 
 module.exports = function(app) {
-	app.get('/', checkAuth,checkTime, require('./root').get);
-	app.post('/', checkAuth, require('./root').post);
+    app.get('/', checkAuth, checkTime, require('./root').get);
+    app.post('/', checkAuth, checkTime, require('./root').post);
 
-	app.get('/login', require('./login').get);
-	app.post('/login', require('./login').post);
+    app.get('/login', require('./login').get);
+    app.post('/login', require('./login').post);
 
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
@@ -52,8 +52,8 @@ module.exports = function(app) {
     });
 
 
-    app.get('/map', checkAuth,checkTime, require('./map').get);
-    app.post('/map', checkAuth, require('./map').post);
+    app.get('/map', checkAuth, checkTime, require('./map').get);
+    app.post('/map', checkAuth, checkTime, require('./map').post);
 
     app.get('/statistics', checkAdmin, require('./statistics').get);
 

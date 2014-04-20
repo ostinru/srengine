@@ -5,7 +5,7 @@ var finishTime = Date.parse(config.get('finishTime'));
 
 module.exports = function (req, res, next) {
     if (!isTimeOfGame()){
-    res.redirect('/stub');
+        res.redirect('/stub');
         return;
     }
     next();
