@@ -54,8 +54,8 @@ exports.post = function (req, res, next) {
         }
 
         user.position = newPosition;
-        user.problemId = field.ProblemId;
         if (! user.getProblemHistory(field.ProblemId)) {
+            user.problemId = field.ProblemId;
             user.problemHistory.push({
                 problemId: field.ProblemId,
                 takenBonuses:[],
