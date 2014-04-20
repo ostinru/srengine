@@ -8,7 +8,6 @@ exports.get = function(req, res, next) {
 };
 
 exports.post = function(req, res, next) {
-    logger.info('POST on "' + req.path + '": ', req.body);
     async.waterfall([
             function(callback) {
                 User.findOne({ username: req.body.username }).exec(callback);
@@ -18,6 +17,7 @@ exports.post = function(req, res, next) {
                     res.sendHttpError(new HttpError(403));
                 } else {
                     if (user.checkPassword(req.body.password)) {
+                        logger.debug('[%s] logged in', user.username);
                         callback(null, user);
                     } else {
                         res.sendHttpError(new HttpError(403));

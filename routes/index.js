@@ -55,8 +55,6 @@ module.exports = function(app) {
     app.get('/map', checkAuth,checkTime, require('./map').get);
     app.post('/map', checkAuth, require('./map').post);
 
-    app.get('/stub',require('./stub').get);
-
     app.get('/statistics', checkAdmin, require('./statistics').get);
 
  }

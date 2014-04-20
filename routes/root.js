@@ -57,7 +57,6 @@ exports.get = function(req, res, next){
 };
 
 exports.post = function(req, res, next) {
-    logger.info('POST on "' + req.path + '": ', req.body);
 /*
     if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
         return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
@@ -67,6 +66,7 @@ exports.post = function(req, res, next) {
     if (!user) {
         return res.sendHttpError(new HttpError(401));
     }
+
     var problemId = user.problemId;
     if (!problemId) {
         return res.sendHttpError(new HttpError(500));
@@ -94,7 +94,7 @@ exports.post = function(req, res, next) {
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
                 var bonus = problem.checkBonuses(bonusStr) || globalProblem.checkBonuses(bonusStr);
                 if (bonus) {
-                    logger.debug('User %s got bonus %s', user.username, bonus.text);
+                    logger.debug('[%s] got bonus %s', user.username, bonus.text);
                     if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
                         problemHistory.takenBonuses.push(bonus._id);
                         user.markModified('problemHistory');
@@ -126,14 +126,15 @@ exports.post = function(req, res, next) {
                 if (hint === undefined) {
                     return res.sendHttpError(new HttpError(404, "No such hint for this problem"));
                 }
+                logger.debug('[%s] got hint #%s', user.username, hintNumber);
                 if (! hasHint(hint._id, problemHistory.takenHints)) {
                     problemHistory.takenHints.push(hint._id);
                     user.save(function(err) {
-						if (err) {
-							return res.sendHttpError(new HttpError(500, err));
-						}
-						return res.json({ status : "Success", hint : hint});
-					}); // TODO: markModified(?)
+                        if (err) {
+                            return res.sendHttpError(new HttpError(500, err));
+                        }
+                        return res.json({ status : "Success", hint : hint});
+                    }); // TODO: markModified(?)
                 }
                 return res.json({ status : "Success", hint : hint});
             }
@@ -141,7 +142,7 @@ exports.post = function(req, res, next) {
             // skip problem
             //
             else if (answer == SKIPPROBLEM_KEY_WORD) {
-                logger.debug('User %s skip problem.', user.username);
+                logger.debug('[%s] skip problem.', user.username);
                 user.problemId = undefined; // be ready to do nest steps
                 user.save(function(err) {
                     if (err) {
@@ -154,8 +155,8 @@ exports.post = function(req, res, next) {
             // check answer
             //
             else {
-                logger.debug('checking answer "' + answer + '". Correct answers: ' + problem.answers + '. result is ' + !! problem.check(answer));
                 if (problem.check(answer)) {
+                    logger.debug('[%s] answer problem.', user.username);
                     problemHistory.solved = true;
                     user.markModified('problemHistory');
                     user.problemId = undefined; // be ready to do nest steps

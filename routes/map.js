@@ -25,7 +25,7 @@ exports.get = function (req, res, next) {
 }
 
 exports.post = function (req, res, next) {
-    logger.info('POST on "' + req.path + '": ', req.body);
+    var user = req.user;
     if (!req.body.position) {
         return res.sendHttpError(new HttpError(400, 'Position not set'));
     }
@@ -33,24 +33,23 @@ exports.post = function (req, res, next) {
         X: req.body.position.X,
         Y: req.body.position.Y
     };
+
     FieldMap.findOne(newPosition, function (err, field) {
         if (err) {
-            logger.info("Игроку %s отказано в переходе на клетку", req.user.username, newPosition);
-            return res.json({ error: err, position: req.user.position });
+            logger.info("[%] отказано в переходе на клетку", user.username, newPosition);
+            return res.json({ error: err, position: user.position });
         }
         if (! field) {
             // we can't visit this field
-            return res.json({ error: err, position: req.user.position });
+            return res.json({ error: err, position: user.position });
         }
-
-        var user = req.user;
 
         if (user.problemId) {
           return res.json({ error: "Вам нужно 'закрыть' уровень. Например, 'автопереход'-ом.", position: user.position });
         }
         if (! isValidStep(user.position, newPosition)) {
-            logger.info("Игроку %s отказано в переходе на клетку", user.username, newPosition);
-            return res.json({ error: err, position: req.user.position });
+            logger.info("[%s] отказано в переходе на клетку", user.username, newPosition);
+            return res.json({ error: err, position: user.position });
         }
 
         user.position = newPosition;
@@ -66,9 +65,9 @@ exports.post = function (req, res, next) {
 
         user.save(function (err) {
             if (err) {
-                logger.error("Новые координаты игрока %s не сохранены", user.username, err);
+                logger.error("[%s] Новые координаты не сохранены", user.username, err);
             }
-            logger.info("Новые координаты игрока %s сохранены.", user.username, newPosition);
+            logger.info("[%s] Новые координаты  сохранены.", user.username, newPosition);
             return res.json({ error: err, position: user.position });
         });
     });
