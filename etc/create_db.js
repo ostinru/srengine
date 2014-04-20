@@ -104,6 +104,11 @@ function createUsers(callback) {
         {username: 'petya', password: '123' },
         {username: 'admin', password: '123', admin: true}
     ];
+    
+    for (var i=0; i<20; i++) {
+        users.push({username : 'user'+i, password : '123'});
+        users.push({username : 'nft'+i, password : '123'});
+    }
 
     async.each(users, function(userData, callback) {
         var user = new mongoose.models.User(userData);
