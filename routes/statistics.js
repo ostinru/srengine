@@ -33,7 +33,7 @@ exports.get = function (req, res, next) {
                             var hint = _.find(problem.hints, function (hint) {
                                 return hintId.equals(hint._id);
                             });
-                            return memo + bonus.cost;
+                            return memo + hint.cost;
                         }, 0);
                         return memo + problem.cost + totalBonus - totalHint;
                     }
