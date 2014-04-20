@@ -100,7 +100,27 @@ function createProblems(callback) {
 function createUsers(callback) {
 
     var users = [
-        {username: 'vasya', password: '123' },
+        {username: 'vasya', password: '123',problemHistory: [
+            {
+                problemId: ids[0],
+                solved:true,
+                takenBonuses:[],
+                takenHints:[]
+            },
+            {
+                problemId: ids[1],
+                solved:true,
+                takenBonuses:[],
+                takenHints:[]
+            },
+            {
+                problemId: ids[2],
+                solved:true,
+                takenBonuses:[],
+                takenHints:[]
+            }
+        ]},
+
         {username: 'petya', password: '123' },
         {username: 'admin', password: '123', admin: true}
     ];
