@@ -3,35 +3,40 @@ var async = require('async');
 var User = require('models/user').User;
 var HttpError = require('error').HttpError;
 
-exports.get = function(req, res, next) {
+exports.get = function (req, res, next) {
     res.render('login');
 };
 
-exports.post = function(req, res, next) {
+exports.post = function (req, res, next) {
     logger.info('POST on "' + req.path + '": ', req.body);
     async.waterfall([
-            function(callback) {
-                User.findOne({ username: req.body.username }).exec(callback);
-            },
-            function(user, callback) {
-                if (!user) {
-                    res.sendHttpError(new HttpError(403));
+        function (callback) {
+            User.findOne({ username: req.body.username }).exec(callback);
+        },
+        function (user, callback) {
+            if (!user) {
+                res.sendHttpError(new HttpError(403));
+            } else {
+                if (user.checkPassword(req.body.password)) {
+                    callback(null, user);
                 } else {
-                    if (user.checkPassword(req.body.password)) {
-                        callback(null, user);
-                    } else {
-                        res.sendHttpError(new HttpError(403));
-                    }
+                    res.sendHttpError(new HttpError(403));
                 }
             }
-        ],
-        function(err, user) {
+        }
+    ],
+        function (err, user) {
             if (err) {
                 return next(err);
             }
 
             req.session.user = user._id;
-            res.redirect("/map");
+            if (user.isAdmin()) {
+                res.redirect("/statistics");
+            }
+            else {
+                res.redirect("/map");
+            }
         }
     );
 

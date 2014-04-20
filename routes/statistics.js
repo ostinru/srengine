@@ -19,28 +19,35 @@ exports.get = function (req, res, next) {
             }
             _.each(users, function (user) {
                 var total = _.reduce(user.problemHistory, function (memo, structProblem) {
-                    var problem = _.find(problems, function (problem) {
-                        return structProblem.problemId.equals(problem._id);
-                    });
-                    var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
-                        var bonus = _.find(problem.bonuses, function (bonus) {
-                            return bonusId.equals(bonus._id);
+                    if (structProblem.solved) {
+                        var problem = _.find(problems, function (problem) {
+                            return structProblem.problemId.equals(problem._id);
                         });
-                        return memo + bonus.cost;
-                    }, 0);
-                    var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
-                        var hint = _.find(problem.hints, function (hint) {
-                            return hintId.equals(hint._id);
-                        });
-                        return memo + bonus.cost;
-                    }, 0);
-                    return memo + problem.cost + totalBonus - totalHint;
+                        var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
+                            var bonus = _.find(problem.bonuses, function (bonus) {
+                                return bonusId.equals(bonus._id);
+                            });
+                            return memo + bonus.cost;
+                        }, 0);
+                        var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
+                            var hint = _.find(problem.hints, function (hint) {
+                                return hintId.equals(hint._id);
+                            });
+                            return memo + bonus.cost;
+                        }, 0);
+                        return memo + problem.cost + totalBonus - totalHint;
+                    }
+                    else {
+                        return memo
+                    }
                 }, 0);
 
-                var userStatistic = {'user': user.username, 'total': total};
+                var userStatistic = {'user': user.username, 'total': total, 'history': user.problemHistory};
                 allStatistic.push(userStatistic);
             });
-            allStatistic.sort(function(a, b) {return b.total - a.total});
+            allStatistic.sort(function (a, b) {
+                return b.total - a.total
+            });
             res.json(allStatistic);
         })
     });
