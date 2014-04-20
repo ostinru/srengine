@@ -62,7 +62,6 @@ exports.post = function (req, res, next) {
                 takenHints:[]
             });
             user.markModified('problemHistory');
-            logger.debug(user.problemHistory);
         }
 
         user.save(function (err) {

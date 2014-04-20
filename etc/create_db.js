@@ -38,7 +38,7 @@ function requireModels(callback) {
 }
 
 function generateIds(callback) {
-    for(var i=0; i<100; i++) {
+    for(var i=0; i<=100; i++) {
         ids.push(mongoose.Types.ObjectId(1));
     }
     callback(null);
@@ -58,6 +58,17 @@ function createProblems(callback) {
                 { text: 'global2', cost: 20}
             ],
             _id: Problem.getGlobalObjectId()
+        }, {
+            topic : 'Base 1',
+            question : 'Move to XX.XXX YY.YYY',
+            answers : ['answer'],
+            cost: 100,
+            hints: [],
+            bonuses: [
+                { text: 'base1', cost: 20 },
+                { text: 'base2', cost: 20}
+            ],
+            _id: ids[100]
         }
     ];
 
@@ -111,7 +122,7 @@ function createFields(callback) {
            fields.push({X:i, Y:j, ProblemId: ids[i] });
         }
     }
-    fields.push({X:1, Y:1, BS:true});
+    fields.push({X:1, Y:1, BS:true, ProblemId: ids[100]});
 
     async.each(fields, function(fieldData, callback) {
 
