@@ -1,0 +1,64 @@
+<% layout('./layout/page.ejs') -%>
+<% block('title', 'SR 112') -%>
+
+<form id="promblem" method="post">
+	<p>TOPIC: <input type="text" name="topic" value="<%= problem.topic %>" /></p>
+	<p>Q:<input type="textarea" name="question" value="<%= problem.question %>"/></p>
+	<p>COST:<input type="number" name="cost" value="<%= problem.cost %>"/></p>
+	<ul id="answers_list">
+		<p>A:<button type="button" onclick="addAnswer();">Add Answer</button></p>
+		<% for (var i=0; i<problem.answers.length; i++) { %>
+			<li>
+				<input type="textarea" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
+				<button type="button" onclick="removeAnswer(this);">Remove</button>
+			</li>
+		<% } %>
+	</ul>
+    <br/>
+	<ul id="bonuses_list">
+		<p>B:<button type="button" onclick="addBonus();">Add Bonus</button></p>
+		<% for (var i=0; i<problem.bonuses.length; i++) { %>
+			<li>
+				T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
+				C:<input type="number" name="bonus<%= i -%>_cost" value="<%= problem.bonuses[i].cost %>"/>
+				<button type="button" onclick="removeBonus(this);">Remove</button>
+			</li>
+		<% } %>
+	</ul>
+    <br/>
+	<ul id="hints_list">
+		<p>H:<button type="button" onclick="addHint();">Add Hint</button></p>
+		<% for (var i=0; i<problem.hints.length; i++) { %>
+			<li>
+				T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
+				C:<input type="number" name="bonus<%= i -%>_cost" value="<%= problem.hints[i].cost %>"/>
+				<button type="button" onclick="removeHint(this);">Remove</button>
+		<% } %>
+	</ul>
+    <br/>
+	<input type="submit"/>
+</form>
+
+<script>
+function removeAnswer() {
+	console.log(arguments);
+}
+function removeBonus() {
+	console.log(arguments);
+}
+function removeHint() {
+	console.log(arguments);
+}
+function addAnswer() {
+	console.log(arguments);
+	$("#answers_list").append("aa");
+}
+function addBonus() {
+	console.log(arguments);
+	$("#bonuses_list").append("aa");
+}
+function addHint() {
+	console.log(arguments);
+	$("#hints_list").append("aa");
+}
+</script>
