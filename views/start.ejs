@@ -1,0 +1,34 @@
+﻿<% layout('./layout/page2.ejs') -%>
+<% block('title', 'SR 112') -%>
+
+<style  type="text/css">
+    .imgbody{
+        background: url('images/i21.jpg');
+        width:640px;
+        height:480px;
+    }
+</style>
+
+<div class="imgbody"><div class="countdown-styled" style="margin-right:50px; margin-left:450px; top:50px;"></div></div>
+
+  
+   <script type="text/javascript">
+    $(function() {
+      $('.countdown-styled').countdown({
+		date: new Date("April 20, 2014 23:44:15"), //а здесь настраивается дата/время, до которой считать. 
+        render: function(data) {
+          var el = $(this.el);
+          el.empty()
+            .append("<div>" + this.leadingZeros(data.hours, 2) + " <span>hrs</span></div>")
+            .append("<div>" + this.leadingZeros(data.min, 2) + " <span>min</span></div>")
+            .append("<div>" + this.leadingZeros(data.sec, 2) + " <span>sec</span></div>");
+        },
+		onEnd: function() {
+		alert('Время вышло!'); ///Сюда запихивать вызов функции, запрашивающей сервак по окончанию действия таймера
+		}
+      });
+
+
+
+    });
+    </script>
