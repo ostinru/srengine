@@ -85,7 +85,7 @@ exports.post = function(req, res, next) {
             //
             // check bonuses
             //
-            if (answer.indexOf(BONUS_KEY_WORD) == 0) {
+            if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
                 var bonus = problem.checkBonuses(bonusStr) || globalProblem.checkBonuses(bonusStr);
                 if (bonus) {
