@@ -1,9 +1,18 @@
 <% layout('./layout/page.ejs') -%>
 <% block('title', 'SR 112') -%>
 
+<style type="text/css">
+    input[type="textarea"] {
+        width : 500px;
+    }
+    input[type="number"] {
+        width : 50px;
+    }
+</style>
+
 <form id="promblem" method="post">
 	<p>TOPIC: <input type="text" name="topic" value="<%= problem.topic %>" /></p>
-	<p>Q:<input type="textarea" name="question" value="<%= problem.question %>"/></p>
+	<p>Q:<input type="textarea" name="question" value="<%= problem.question %>" style="width:600px"/></p>
 	<p>COST:<input type="number" name="cost" value="<%= problem.cost %>"/></p>
 	<ul id="answers_list">
 		<p>A:<button type="button" onclick="addAnswer();">Add Answer</button></p>
@@ -20,7 +29,7 @@
 		<% for (var i=0; i<problem.bonuses.length; i++) { %>
 			<li>
 				T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
-				C:<input type="number" name="bonus<%= i -%>_cost" value="<%= problem.bonuses[i].cost %>"/>
+				C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
 				<button type="button" onclick="removeBonus(this);">Remove</button>
 			</li>
 		<% } %>
@@ -31,34 +40,48 @@
 		<% for (var i=0; i<problem.hints.length; i++) { %>
 			<li>
 				T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
-				C:<input type="number" name="bonus<%= i -%>_cost" value="<%= problem.hints[i].cost %>"/>
+				C:<input type="number" name="hint_cost<%= i -%>" value="<%= problem.hints[i].cost %>"/>
 				<button type="button" onclick="removeHint(this);">Remove</button>
+            </li>
 		<% } %>
 	</ul>
     <br/>
 	<input type="submit"/>
 </form>
 
+
 <script>
-function removeAnswer() {
-	console.log(arguments);
+function removeAnswer(btn) {
+	$(btn).parent().remove();
+	fixNames("#answers_list", "answer");
 }
-function removeBonus() {
-	console.log(arguments);
+function removeBonus(btn) {
+	$(btn).parent().remove();
+	fixNames("#bonuses_list", "bonus", "bonus_cost");
 }
-function removeHint() {
-	console.log(arguments);
+function removeHint(btn) {
+	$(btn).parent().remove();
+	fixNames("#hints_list", "hint", "hint_cost");
 }
 function addAnswer() {
 	console.log(arguments);
-	$("#answers_list").append("aa");
+	$("#answers_list").append('<li><input type="textarea" name="answer" value=""/><button type="button" onclick="removeAnswer(this);">Remove</button></li>');
+	fixNames("#answers_list", "answer");
 }
 function addBonus() {
 	console.log(arguments);
-	$("#bonuses_list").append("aa");
+	$("#bonuses_list").append('<li>T:<input type="textarea" name="bonus" value=""/> C:<input type="number" name="bonus_cost" value="0"/><button type="button" onclick="removeBonus(this);">Remove</button></li>');
+	fixNames("#bonuses_list", "bonus", "bonus_cost");
 }
 function addHint() {
 	console.log(arguments);
-	$("#hints_list").append("aa");
+	$("#hints_list").append('<li>T:<input type="textarea" name="hint" value=""/> C:<input type="number" name="bonus_cost" value="1"/><button type="button" onclick="removeHint(this);">Remove</button></li>');
+	fixNames("#hints_list", "hint", "hint_cost");
+}
+function fixNames(selector, prefix1, prefix2) {
+	$(selector).children("li").each(function (index, el) {
+		$(el).children('[type="textarea"]').attr("name", prefix1 + index);
+		$(el).children('[type="number"]').attr("name", prefix2 + index);
+	});
 }
 </script>
