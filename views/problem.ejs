@@ -19,7 +19,6 @@
 		<% for (var i=0; i<problem.answers.length; i++) { %>
 			<li>
 				<input type="textarea" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
-				<button type="button" onclick="removeAnswer(this);">Remove</button>
 			</li>
 		<% } %>
 	</ul>
@@ -30,7 +29,6 @@
 			<li>
 				T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
 				C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
-				<button type="button" onclick="removeBonus(this);">Remove</button>
 			</li>
 		<% } %>
 	</ul>
@@ -41,7 +39,6 @@
 			<li>
 				T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
 				C:<input type="number" name="hint_cost<%= i -%>" value="<%= problem.hints[i].cost %>"/>
-				<button type="button" onclick="removeHint(this);">Remove</button>
             </li>
 		<% } %>
 	</ul>

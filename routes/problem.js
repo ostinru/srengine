@@ -25,8 +25,53 @@ exports.get = function(req, res, next){
 };
 
 exports.post = function(req, res, next) {
-    if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
-        return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
-    }
-    // TODO: save problem
+    Problem.findById(req.params.problemId, function(err, problem) {
+        // we trust to our admins
+        problem.topic = req.body.topic;
+        problem.question = req.body.question;
+        
+        problem.answers = [];
+        var i = 0;
+        while (true) {
+            if (req.body['answer' + i] === undefined) {
+                break;
+            }
+            problem.answers.push(req.body['answer' + i]);
+            i++;
+        }
+        problem.markModified('answer');
+        
+        problem.cost = req.body.cost;
+        
+        problem.bonuses = [];
+        var i = 0;
+        while (true) {
+            if (req.body['bonus' + i] === undefined) {
+                break;
+            }
+            problem.bonuses.push({
+                text : req.body['bonus' + i],
+                cost : req.body['bonus_cost' + i]
+            });
+            i++;
+        }
+        problem.markModified('bonus');
+        
+        problem.hints = [];
+        var i = 0;
+        while (true) {
+            if (req.body['hint' + i] === undefined) {
+                break;
+            }
+            problem.hints.push({
+                text : req.body['hint' + i],
+                cost : req.body['hint_cost' + i]
+            });
+            i++;
+        }
+        problem.markModified('hint');
+
+        problem.save();
+        res.redirect(req.get('referer'));
+    });
 };
