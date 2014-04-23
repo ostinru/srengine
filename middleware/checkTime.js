@@ -4,13 +4,17 @@ var startTime = Date.parse(config.get('startTime'));
 var finishTime = Date.parse(config.get('finishTime'));
 
 module.exports = function (req, res, next) {
-    if (!isTimeOfGame()){
-        res.redirect('/stub');
+    if (Date.now() < startTime) {
+        res.locals.timeStart = Date.parse(config.get('startTime'));
+        res.render('start');
         return;
     }
+    else {
+        if (Date.now() > finishTime) {
+            res.render('finish');
+            return;
+        }
+    }
     next();
-};
+}
 
-function isTimeOfGame() {
-     return(Date.now() > startTime && Date.now() < finishTime);
-};
