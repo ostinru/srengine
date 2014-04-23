@@ -18,6 +18,8 @@ exports.get = function (req, res, next) {
                 return next(err);
             }
             _.each(users, function (user) {
+
+                var history = [];
                 var total = _.reduce(user.problemHistory, function (memo, structProblem) {
                     if (structProblem.solved) {
                         var problem = _.find(problems, function (problem) {
@@ -35,20 +37,35 @@ exports.get = function (req, res, next) {
                             });
                             return memo + hint.cost;
                         }, 0);
-                        return memo + problem.cost + totalBonus - totalHint;
+                        var problemTotal = problem.cost + totalBonus - totalHint;
+                        history.push({'topic':problem.topic,'total':problemTotal,
+                            'numbBonuses':structProblem.takenBonuses.length,
+                            'numbHints':structProblem.takenHints.length});
+                        return memo + problemTotal;
                     }
                     else {
                         return memo
                     }
                 }, 0);
 
-                var userStatistic = {'user': user.username, 'total': total, 'history': user.problemHistory};
+                _.each(problems,function(problem){
+                    var findProblem = _.find(user.problemHistory, function (structProblem) {
+                        return structProblem.problemId.equals(problem._id);
+                    });
+                    if(!findProblem){
+                      history.push({'topic':problem.topic,'total':0,'numbBonuses':"",'numbHints':""});
+                    }
+                });
+                var userStatistic = {'user': user.username, 'total': total, 'history': history};
                 allStatistic.push(userStatistic);
             });
             allStatistic.sort(function (a, b) {
                 return b.total - a.total
             });
-            res.json(allStatistic);
+            //res.json(allStatistic);
+            res.locals.problems = problems;
+            res.locals.allStatistic = allStatistic;
+            res.render('statistics');
         })
     });
 }

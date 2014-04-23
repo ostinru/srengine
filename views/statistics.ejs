@@ -1,0 +1,61 @@
+<% layout('./layout/page2.ejs') -%>
+<% block('title', 'SR 112') -%>
+
+<style type="text/css">
+td.skip {
+background: #A9A9A9;
+color:#ffffff;
+}
+
+td, tr, table
+{
+vertical-align:top;
+text-align:left;
+background: #ffffff;
+}
+
+</style>
+
+<table border ="1" cellspacing="3" cellpadding="3">
+
+    <tr class="center">
+        <td class="center" rowspan="2">Место</td>
+        <td class="center" rowspan="2">Команда</td>
+        <td class="center" rowspan="2">Общий счет</td>
+
+        <% for (var i=0; i<problems.length; i++) { %>
+        <td class="center" colspan="3">Задание <%= i+1 -%></td>
+        <% } %>
+    </tr>
+    <tr>
+        <% for (var j=0; j<problems.length; j++) { %>
+        <td width="3%"> балл  </td>
+        <td width="3%"> бон   </td>
+        <td width="3%"> подск </td>
+        <% } %>
+    </tr>
+
+    <% for (var i=0; i<allStatistic.length; i++) { %>
+    <% var team = allStatistic[i]; %>
+    <tr>
+        <td class="center" rowspan="2"> <%= i+1 -%></td>
+        <td class="center" rowspan="2"> <%= team.user -%></a></td>
+        <td class="center" rowspan="2"> <%= team.total -%></a></td>
+        <% var history = team.history;%>
+        <% for (var j=0; j<history.length; j++) { %>
+            <td class="center" colspan="3"> <%= history[j].topic -%></td>
+        <% } %>
+    </tr>
+    <tr>
+         <% var history = team.history;%>
+        <% for (var j=0; j<history.length; j++) { %>
+        <td width="3%"> <%= history[j].total -%></td>
+        <td width="3%"> <%= history[j].numbBonuses -%></td>
+        <td width="3%"> <%= history[j].numbHints -%></td>
+        <% } %>
+    </tr>
+    <% } %>
+
+
+</table>
+
