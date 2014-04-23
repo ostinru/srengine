@@ -48,7 +48,8 @@ var schema = new Schema({
                 required: false
             }]
         }
-    ]
+    ],
+    lastActivity : Number
 });
 
 schema.methods.encryptPassword = function (password) {

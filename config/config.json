@@ -12,5 +12,6 @@
 			}
 		}
     },
-	"debug": true
+	"debug": true,
+	"bruteforcetime" : 20
 }
