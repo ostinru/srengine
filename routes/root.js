@@ -95,7 +95,7 @@ exports.post = function(req, res, next) {
                         user.markModified('problemHistory');
                         user.save(function(err) {
                             if (err) {
-                                res.sendHttpError(new HttpError(500, err));
+                                return res.sendHttpError(new HttpError(500, err));
                             }
                             return res.json({ status : "Success", bonus : bonus });
                         });
@@ -141,7 +141,7 @@ exports.post = function(req, res, next) {
                 user.problemId = undefined; // be ready to do nest steps
                 user.save(function(err) {
                     if (err) {
-                        res.sendHttpError(new HttpError(500, err));
+                        return res.sendHttpError(new HttpError(500, err));
                     }
                     return res.json({ status : "Success", skipProblem : true});
                 });
@@ -157,9 +157,9 @@ exports.post = function(req, res, next) {
                     user.problemId = undefined; // be ready to do nest steps
                     user.save(function(err) {
                         if (err) {
-                            res.sendHttpError(new HttpError(500, err));
+                            return res.sendHttpError(new HttpError(500, err));
                         }
-                        res.json({ status : "Success", correctAnswer: true})
+                        return res.json({ status : "Success", correctAnswer: true})
                     });
                 }
                 else {
