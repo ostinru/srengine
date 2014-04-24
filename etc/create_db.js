@@ -81,12 +81,13 @@ function createProblems(callback) {
                 answers : ['PING', "ПИНГ"],
                 cost: 50,
                 hints: [
-                    { text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                    { text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                    { text: 'Найдите метку и смотрите на столбы.', cost: 10}
+                    { _id:ids[i+20],text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
+                    { _id:ids[i+21],text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
+                    { _id:ids[i+22],text: 'Найдите метку и смотрите на столбы.', cost: 10}
                 ],
                 bonuses: [
-                    { text: 'ъ', cost: 20 },
+                    { _id:ids[i+23],text: 'ъ', cost: 20 },
+                    { _id:ids[i+24],text: 'ъ', cost: 20 },
                 ]
             });
     }
@@ -100,7 +101,38 @@ function createProblems(callback) {
 function createUsers(callback) {
 
     var users = [
-        {username: 'vasya', password: '123' },
+        {username: 'vasya', password: '123',problemHistory: [
+            {
+                problemId: ids[1],
+                solved:true,
+                takenBonuses:[
+                    ids[1+23],
+                    ids[1+24]
+                ],
+                takenHints:[
+                    ids[1+20],
+                    ids[1+21],
+                    ids[1+22],
+                ]
+            },
+            {
+                problemId: ids[2],
+                solved:true,
+                takenBonuses:[
+                    ids[2+23],
+                ],
+                takenHints:[
+                    ids[2+20],
+                ]
+            },
+            {
+                problemId: ids[3],
+                solved:true,
+                takenBonuses:[],
+                takenHints:[]
+            }
+        ]},
+        //{username: 'vasya', password: '123' },
         {username: 'petya', password: '123' },
         {username: 'admin', password: '123', admin: true}
     ];
