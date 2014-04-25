@@ -22,8 +22,6 @@
     .admintextholder{
         background: rgba(255, 255, 255, 0.3);
         color:red;
-    }
-    .admintextholder{
         margin-left:15px;
         border:0px;
         font-size:14px;
@@ -252,30 +250,16 @@ function renderForm() {
 </script>
 
 <script>
-
-    subscribe();
-
-    function subscribe() {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "/subscribe", true);
-
-        xhr.onreadystatechange = function() {
-            if (this.readyState != 4) return;
-
-            if (this.status != 200) {
-                setTimeout(subscribe, 500);
-                return;
-            }
-
+    function checkAdminMessages() {
+        $.getJSON("/message", function(messages) {
             var elem = document.getElementById("admintextholder");
-            elem.value = this.responseText;
-
-            subscribe();
-        };
-
-        xhr.send(null);
-    }
-
-
+            var value = "";
+            for (var i=0; i<messages.length; i++) {
+                value += messages[i].message + "; ";
+            }
+            elem.value = value;
+        });
+    };
+    checkAdminMessages();
+    setInterval(checkAdminMessages, 10000);
 </script>

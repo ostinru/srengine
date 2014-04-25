@@ -3,51 +3,14 @@
 
 <p class="lead">Сообщения от администраторов</p>
 
-<form id="publish" class="form-inline">
+<form id="publish" class="form-inline" method="post">
     <input type="text" name="message"/>
     <input type="submit" class="btn btn-primary" value="Отправить"/>
 </form>
 
-<ul id="messages"></ul>
-
-<script>
-
-    publish.onsubmit = function() {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("POST", "/publish", true);
-
-        xhr.send(JSON.stringify({message: this.elements.message.value}));
-
-        this.elements.message.value = '';
-
-        return false;
-    };
-
-    subscribe();
-
-    function subscribe() {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "/subscribe", true);
-
-        xhr.onreadystatechange = function() {
-            if (this.readyState != 4) return;
-
-            if (this.status != 200) {
-                setTimeout(subscribe, 500);
-                return;
-            }
-
-            var li = document.createElement('li');
-            li.appendChild(document.createTextNode(this.responseText));
-            messages.appendChild(li);
-
-            subscribe();
-        };
-
-        xhr.send(null);
-    }
-
-
-</script>
+<table border="1">
+<tr><td>Timestamp</td><td>message</td></tr>
+<% for (var i=0; i< messages.length; i++) { %> 
+<tr><td><%= messages[i].timestamp -%> </td><td> <%= messages[i].message -%></td></tr>
+<% } %>
+</table>
