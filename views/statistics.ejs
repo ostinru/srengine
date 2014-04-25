@@ -43,10 +43,10 @@
         <td class="center" rowspan="2">Команда</td>
         <td class="center" rowspan="2">Общий счет</td>
 
-        <% for (var i=0; i<problems.length-1; i++) { %>
-        <td class="center" colspan="3">Задание <%= i+1 -%></td>
-        <% } %>
         <td class="center" colspan="3">Глобальный бонус</td>
+        <% for (var i=1; i<problems.length; i++) { %>
+        <td class="center" colspan="3">Задание <%= i -%></td>
+        <% } %>
 
     </tr>
     <tr>
