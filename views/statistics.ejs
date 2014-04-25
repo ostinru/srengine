@@ -66,7 +66,7 @@
         <% var history = team.history;%>
         <% for (var j=0; j<history.length; j++) { %>
             <% if (history[j].solved) {%>
-            <td class="center" colspan="3"> <%= history[j].topic + \" " + history[j].timeStart + " - " + history[j].timeFinish -%></td>
+            <td class="center" colspan="3"> <%= history[j].topic + " " + history[j].timeStart + " - " + history[j].timeFinish -%></td>
         <% } else {%>
         <td class = "skip" class="center" colspan="3"> <%= history[j].topic + " " + history[j].timeStart + " - " + history[j].timeFinish -%></td>
         <% } %>
