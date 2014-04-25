@@ -14,25 +14,24 @@ exports.post = function (req, res, next) {
         },
         function (user, callback) {
             if (!user) {
-                res.sendHttpError(new HttpError(403));
+                callback(new HttpError(403));
             } else {
                 if (user.checkPassword(req.body.password)) {
                     callback(null, user);
                 } else {
-                    res.sendHttpError(new HttpError(403));
+                    callback(new HttpError(403));
                 }
             }
         }
     ],
-        function (err, user) {
-            if (err) {
-                return next(err);
-            }
-
-            req.session.user = user._id;
-            res.redirect("/map");
+    function (err, user) {
+        if (err) {
+            return next(err);
         }
-    );
+
+        req.session.user = user._id;
+        res.redirect("/map");
+    });
 
 };
 
