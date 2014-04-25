@@ -100,9 +100,4 @@ schema.methods.getProblemHistory = function(problemId) {
     });
 }
 
-schema.statics.isEndOfGame = function(user){
-    if(!user) return undefined;
-    user.problemHistory.count() == Problem.count();
-};
-
 exports.User = mongoose.model('User', schema);

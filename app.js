@@ -57,28 +57,11 @@ app.use(function (err, req, res, next) {
     }
 });
 
-function sendFile(fileName, res) {
-    var fileStream = fs.createReadStream(fileName);
-    fileStream
-        .on('error', function() {
-            res.statusCode = 500;
-            res.end("Server error");
-        })
-        .pipe(res)
-        .on('close', function() {
-            fileStream.destroy();
-        });
-}
-
 //сообщения от админов
 app.use(function(req,res,next){
     var urlParsed = url.parse(req.url);
 
     switch (urlParsed.pathname) {
-        case '/':
-            sendFile("index.html", res);
-            break;
-
         case '/subscribe':
             chat.subscribe(req, res);
             break;
