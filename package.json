@@ -25,6 +25,7 @@
         "mongoose": "*",
         "async": "*",
         "mongodb": "*",
-        "underscore": "*"
+        "underscore": "*",
+        "dateformat": "*"
     }
 }

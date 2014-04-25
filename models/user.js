@@ -2,6 +2,9 @@ var crypto = require('crypto'),
 	mongoose = require('lib/mongoose'),
     Schema = mongoose.Schema,
     _ = require('underscore');
+var config = require('../config');
+var Problem = require('models/problem').Problem;
+var defaultTime = new Date(config.get('startTime'));
 
 var schema = new Schema({
     username: {
@@ -46,7 +49,15 @@ var schema = new Schema({
             takenHints: [{
                 type: mongoose.Schema.Types.ObjectId,
                 required: false
-            }]
+            }],
+            timeStart:{
+                type: Date,
+                default: defaultTime
+            },
+            timeFinish:{
+                type: Date,
+                default: defaultTime
+            }
         }
     ]
 });
@@ -88,5 +99,10 @@ schema.methods.getProblemHistory = function(problemId) {
         return problemId.equals(item.problemId);
     });
 }
+
+schema.statics.isEndOfGame = function(user){
+    if(!user) return undefined;
+    user.problemHistory.count() == Problem.count();
+};
 
 exports.User = mongoose.model('User', schema);

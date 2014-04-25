@@ -139,6 +139,7 @@ exports.post = function(req, res, next) {
             else if (answer == SKIPPROBLEM_KEY_WORD) {
                 logger.debug('[%s] skip problem.', user.username);
                 user.problemId = undefined; // be ready to do nest steps
+                problemHistory.timeFinish = Date.now();
                 user.save(function(err) {
                     if (err) {
                         res.sendHttpError(new HttpError(500, err));
@@ -155,6 +156,7 @@ exports.post = function(req, res, next) {
                     problemHistory.solved = true;
                     user.markModified('problemHistory');
                     user.problemId = undefined; // be ready to do nest steps
+                    problemHistory.timeFinish = Date.now();
                     user.save(function(err) {
                         if (err) {
                             res.sendHttpError(new HttpError(500, err));

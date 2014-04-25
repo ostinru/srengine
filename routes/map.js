@@ -58,7 +58,8 @@ exports.post = function (req, res, next) {
             user.problemHistory.push({
                 problemId: field.ProblemId,
                 takenBonuses:[],
-                takenHints:[]
+                takenHints:[],
+                timeStart: Date.now()
             });
             user.markModified('problemHistory');
         }
