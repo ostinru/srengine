@@ -15,9 +15,18 @@
     .listimage{
         margin-top:95px;
         margin-left:43px;
-        width:40px;
+        width:970px;
         height:30px;
         cursor:pointer;
+    }
+    .admintextholder{
+        background: rgba(255, 255, 255, 0.3);
+        color:red;
+    }
+    .admintextholder{
+        margin-left:15px;
+        border:0px;
+        font-size:14px;
     }
     img.list:hover{
         -moz-box-shadow: 0 0 20px #fff;
@@ -69,7 +78,10 @@
 
 
 <div class="mapbody">
-	<div class="listimage" id="listimage"><img class="list" id="list" src="images/list.png"></img> </div>
+	<div class="listimage" id="listimage">
+        <img class="list" id="list" src="images/list.png"></img>
+        <input class="admintextholder" id="admintextholder" size="140" readonly type="text" ></input>
+    </div>
   <% for (var i=1; i<=12; i++ ) { %>
     <div class="row" id="r<%= i %>">
       <% for (var j=1; j<=21; j++ ) { -%>
@@ -236,4 +248,33 @@ function renderForm() {
         console.log(jqXHR.status + " " + jqXHR.message);
     });
 };
+</script>
+
+<script>
+
+    subscribe();
+
+    function subscribe() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "/subscribe", true);
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState != 4) return;
+
+            if (this.status != 200) {
+                setTimeout(subscribe, 500);
+                return;
+            }
+
+            var elem = document.getElementById("admintextholder");
+            elem.value = this.responseText;
+
+            subscribe();
+        };
+
+        xhr.send(null);
+    }
+
+
 </script>
