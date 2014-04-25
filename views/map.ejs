@@ -35,15 +35,16 @@
     }
     .modal {
         position: fixed;
-        top: 100px;
         display: block;
         margin-left: 210px;
         z-index: 2;
         background-color: #fff;
         width: 600px;
-        height: 250px;
+        height: 400px;
         padding-left: 20px;
         padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
     .mapbody{
         color: rgba(0, 0, 0, 0);
@@ -157,7 +158,7 @@
 <script type="text/javascript">
 $(function() {
     $('#modal').easyModal({
-        top: 100,
+        top: 30,
         autoOpen: false,
         overlayOpacity: 0.3,
         overlayColor: "#333",
