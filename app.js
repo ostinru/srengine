@@ -5,6 +5,10 @@ var http = require('http');
 var path = require('path');
 var HttpError = require('error').HttpError;
 
+var fs = require('fs');
+var url = require('url');
+var chat = require('./chat');
+
 var app = express();
 
 // all environments
@@ -50,6 +54,48 @@ app.use(function (err, req, res, next) {
             err = new HttpError(500);
             res.sendHttpError(err);
         }
+    }
+});
+
+//сообщения от админов
+app.use(function(req,res,next){
+    var urlParsed = url.parse(req.url);
+
+    switch (urlParsed.pathname) {
+        case '/subscribe':
+            chat.subscribe(req, res);
+            break;
+
+        case '/publish':
+            var body = '';
+
+            req
+                .on('readable', function() {
+                    body += req.read();
+
+                    if (body.length > 1e4) {
+                        res.statusCode = 413;
+                        res.end("So big message!");
+                    }
+                })
+                .on('end', function() {
+                    try {
+                        body = JSON.parse(body);
+                    } catch (e) {
+                        res.statusCode = 400;
+                        res.end("Bad Request");
+                        return;
+                    }
+
+                    chat.publish(body.message);
+                    res.end("ok");
+                });
+
+            break;
+
+        default:
+            res.statusCode = 404;
+            res.end("Not found");
     }
 });
 
