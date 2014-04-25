@@ -92,7 +92,7 @@ app.use(function(req,res,next){
 
                     if (body.length > 1e4) {
                         res.statusCode = 413;
-                        res.end("Your message is too big for my little chat");
+                        res.end("So big message!");
                     }
                 })
                 .on('end', function() {
