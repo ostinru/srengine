@@ -9,22 +9,19 @@ module.exports = function (req, res, next) {
         if(count-1 === req.user.problemHistory.length){
             logger.info("finish");
             res.render('finish');
-            return;
         }
         else{
             if (Date.now() < startTime) {
                 res.locals.timeStart = Date.parse(config.get('startTime'));
                 res.render('start');
-                return;
             }
             else {
                 if (Date.now() > finishTime) {
                     logger.info("finish");
                     res.render('finish');
-                    return;
                 }
+                else  next();
             }
         }
     });
-    next();
 }
