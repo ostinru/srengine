@@ -1,5 +1,5 @@
-﻿<% layout('./layout/page2.ejs') - %>
-<% block('title', 'SR 112') - %>
+﻿<% layout('./layout/page2.ejs') -%>
+<% block('title', 'SR 112') -%>
 
 <style type="text/css">
     .imgbody {
@@ -17,7 +17,7 @@
 <script type="text/javascript">
     $(function () {
         $('.countdown-styled').countdown({
-            date: new Date(<%=timeStart -%>), //а здесь настраивается дата/время, до которой считать.
+            date: new Date(<%=timeStart -%>),
             render: function (data) {
                 var el = $(this.el);
                 el.empty()
