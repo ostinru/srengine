@@ -35,8 +35,7 @@ var schema = new Schema({
     problemHistory: [{
             problemId: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'Probem'
+                required: true
             },
             solved: {
                 type: Boolean,
@@ -59,7 +58,8 @@ var schema = new Schema({
                 default: defaultTime
             }
         }
-    ]
+    ],
+    lastActivity : Number
 });
 
 schema.methods.encryptPassword = function (password) {

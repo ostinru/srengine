@@ -6,10 +6,11 @@ var ObjectID = require('mongodb').ObjectID;
 var checkAuth = require('middleware/checkAuth');
 var checkAdmin = require('middleware/checkAdmin');
 var checkTime = require('middleware/checkTime');
+var antiBruteforce = require('middleware/antiBruteforce');
 
 module.exports = function(app) {
     app.get('/', checkAuth, checkTime, require('./root').get);
-    app.post('/', checkAuth, checkTime, require('./root').post);
+    app.post('/', checkAuth, checkTime, antiBruteforce, require('./root').post);
 
     app.get('/login', require('./login').get);
     app.post('/login', require('./login').post);
@@ -26,7 +27,6 @@ module.exports = function(app) {
     app.get('/user/:username', checkAdmin, function (req, res, next) {
         User
         .findOne({'username' : req.params.username })
-        .populate('problemHistory')
         .exec(function (err, user) {
             if (err) {
                 return next(err);
