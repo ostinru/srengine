@@ -32,8 +32,7 @@ var schema = new Schema({
     problemHistory: [{
             problemId: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'Probem'
+                required: true
             },
             solved: {
                 type: Boolean,

@@ -27,7 +27,6 @@ module.exports = function(app) {
     app.get('/user/:username', checkAdmin, function (req, res, next) {
         User
         .findOne({'username' : req.params.username })
-        .populate('problemHistory')
         .exec(function (err, user) {
             if (err) {
                 return next(err);
