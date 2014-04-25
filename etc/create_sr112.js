@@ -45,6 +45,24 @@ function generateIds(callback) {
 }
 
 function createProblems(callback) {
+    //example of problem:
+    /*{
+        topic: 'Бабдиты',
+            question:
+        'наводканабазу',
+            answers: ['закрывающийкод'],
+        cost: 0,
+        hints: [
+        { text: 'Хостел', cost: 0}
+    ],
+        bonuses: [
+        { text: 'излучение', cost: 0 },
+        { text: 'катастрофа', cost: 0},
+        { text: 'соска', cost: 0},
+        { text: 'баблоотпчелятины', cost: 0}
+    ],
+        _id: ids[11]
+    }*/
 
     var problems = [
         {
@@ -239,7 +257,7 @@ function createProblems(callback) {
             answers: ['закрывающийкод'],
             cost: 0,
             hints: [
-                { text: '', cost: 0}
+                { text: 'подсказка', cost: 0}
             ],
             bonuses: [
                 { text: 'двустволка', cost: 0 },
@@ -257,10 +275,10 @@ function createProblems(callback) {
             topic: 'Монолит',
             question:
                 'наводканабазу',
-            answers: ['закрывающийкод'],
+            answers: ['закрывающийко2'],
             cost: 0,
             hints: [
-                { text: '', cost: 0}
+                { text: 'подсказка', cost: 0}
             ],
             bonuses: [
                 { text: 'живность', cost: 0 },
@@ -276,7 +294,7 @@ function createProblems(callback) {
             answers: ['закрывающийкод'],
             cost: 0,
             hints: [
-                { text: '', cost: 0}
+                { text: 'подсказка', cost: 0}
             ],
             bonuses: [
                 { text: 'вштанах', cost: 0 },
@@ -292,7 +310,7 @@ function createProblems(callback) {
             answers: ['закрывающийкод'],
             cost: 0,
             hints: [
-                { text: '', cost: 0}
+                { text: 'подсказка', cost: 0}
             ],
             bonuses: [
                 { text: 'сушеныйгеракл', cost: 0 },
@@ -301,15 +319,25 @@ function createProblems(callback) {
             ],
             _id: ids[15]
         },
+        {
+            topic : 'Глобальный бонус',
+            question : 'Оценка за костюмы + количество артефактов',
+            answers : ['42'],
+            cost: 0,
+            hints: [],
+            bonuses: [],
+            _id: Problem.getGlobalObjectId()
+        }
     ];
 
-    async.each(problems, function (problemData, callback) {
+     async.each(problems, function (problemData, callback) {
         var problem = new mongoose.models.Problem(problemData);
         problem.save(callback);
     }, callback);
 }
 
 function createUsers(callback) {
+    //example of user: {username: 'admin', password: '123123123', admin: true}
 
     var users = [
         {username: 'vasya', password: '123'},
@@ -317,31 +345,36 @@ function createUsers(callback) {
         {username: 'admin', password: '123', admin: true}
     ];
 
-    for (var i = 0; i < 20; i++) {
-        users.push({username: 'user' + i, password: '123'});
-        users.push({username: 'nft' + i, password: '123'});
-    }
-
     async.each(users, function (userData, callback) {
         var user = new mongoose.models.User(userData);
+        user.problemHistory.push({problemId: Problem.getGlobalObjectId(),solved:true});
         user.save(callback);
     }, callback);
 }
 
 function createFields(callback) {
+    //example of fieldmap: {X:1, Y:1, BS:false, ProblemId: ids[1]}
 
-    var fields = [];
+    var fields = [
+        {X: 8, Y: 1},{X: 9, Y: 1},{X: 10, Y: 1},{X: 11, Y: 1},{X: 12, Y: 1},{X: 13, Y: 1},{X: 14, Y: 1},
+        {X: 1, Y: 2},{X: 2, Y: 2},{X: 3, Y: 2},{X: 4, Y: 2},{X: 5, Y: 2},{X: 6, Y: 2},{X: 7, Y: 2},{X: 10, Y: 2},{X: 11, Y: 2},{X: 12, Y: 2},{X: 13, Y: 2},{X: 14, Y: 2},{X: 15, Y: 2},{X: 16, Y: 2},{X: 17, Y: 2},{X: 18, Y: 2},
+        {X: 1, Y: 3},{X: 2, Y: 3},{X: 3, Y: 3},{X: 4, Y: 3},{X: 5, Y: 3},{X: 6, Y: 3},{X: 7, Y: 3},{X: 8, Y: 3},{X: 10, Y: 3},{X: 11, Y: 3},{X: 12, Y: 3},{X: 13, Y: 3},{X: 14, Y: 3},{X: 15, Y: 3},{X: 16, Y: 3},{X: 17, Y: 3},{X: 18, Y: 3},{X: 19, Y: 3},
+        {X: 1, Y: 4},{X: 2, Y: 4},{X: 3, Y: 4},{X: 4, Y: 4},{X: 5, Y: 4},{X: 6, Y: 4},{X: 7, Y: 4},{X: 8, Y: 4},{X: 10, Y: 4},{X: 11, Y: 4},{X: 12, Y: 4},{X: 13, Y: 4},{X: 14, Y: 4},{X: 15, Y: 4},{X: 16, Y: 4},{X: 17, Y: 4},{X: 18, Y: 4},{X: 19, Y: 4},{X: 20, Y: 4},
+        {X: 1, Y: 5},{X: 2, Y: 5},{X: 3, Y: 5},{X: 4, Y: 5},{X: 5, Y: 5},{X: 6, Y: 5},{X: 7, Y: 5},{X: 8, Y: 5},{X: 10, Y: 5, BS: true},{X: 11, Y: 5},{X: 12, Y: 5},{X: 13, Y: 5},{X: 14, Y: 5},{X: 15, Y: 5},{X: 16, Y: 5},{X: 17, Y: 5},{X: 18, Y: 5},{X: 19, Y: 5},{X: 20, Y: 5},
+        {X: 1, Y: 6},{X: 2, Y: 6},{X: 3, Y: 6},{X: 4, Y: 6},{X: 5, Y: 6},{X: 6, Y: 6},{X: 7, Y: 6},{X: 8, Y: 6},{X: 10, Y: 6},{X: 11, Y: 6},{X: 12, Y: 6},{X: 13, Y: 6},{X: 14, Y: 6},{X: 15, Y: 6},{X: 16, Y: 6},{X: 17, Y: 6},{X: 18, Y: 6},{X: 19, Y: 6},{X: 20, Y: 6},
+        {X: 2, Y: 7, BS: true},{X: 3, Y: 7},{X: 4, Y: 7},{X: 5, Y: 7},{X: 6, Y: 7},{X: 7, Y: 7},{X: 8, Y: 7},{X: 9, Y: 7},{X: 10, Y: 7},{X: 11, Y: 7},{X: 12, Y: 7},{X: 13, Y: 7},{X: 14, Y: 7},{X: 15, Y: 7},{X: 16, Y: 7},{X: 17, Y: 7},{X: 18, Y: 7},{X: 19, Y: 7, BS: true},{X: 20, Y: 7},
+        {X: 2, Y: 8},{X: 3, Y: 8},{X: 4, Y: 8},{X: 5, Y: 8},{X: 6, Y: 8},{X: 7, Y: 8},{X: 8, Y: 8},{X: 10, Y: 8},{X: 11, Y: 8},{X: 12, Y: 8},{X: 13, Y: 8},{X: 14, Y: 8},{X: 15, Y: 8},{X: 16, Y: 8},{X: 17, Y: 8},{X: 18, Y: 8},{X: 19, Y: 8},{X: 20, Y: 8},
+        {X: 10, Y: 9},{X: 11, Y: 9},{X: 12, Y: 9},{X: 13, Y: 9},{X: 14, Y: 9},{X: 15, Y: 9},{X: 16, Y: 9},{X: 17, Y: 9},{X: 18, Y: 9},{X: 19, Y: 9},{X: 20, Y: 9},
+        {X: 9, Y: 10},{X: 10, Y: 10},{X: 11, Y: 10},{X: 12, Y: 10},{X: 13, Y: 10},{X: 14, Y: 10},{X: 15, Y: 10},{X: 16, Y: 10},{X: 17, Y: 10},{X: 18, Y: 10},{X: 19, Y: 10},{X: 20, Y: 10},
+        {X: 9, Y: 11},{X: 10, Y: 11},{X: 11, Y: 11},{X: 12, Y: 11},{X: 13, Y: 11},{X: 14, Y: 11},{X: 15, Y: 11},{X: 16, Y: 11},{X: 17, Y: 11},{X: 18, Y: 11, BS: true},{X: 19, Y: 11},{X: 20, Y: 11},
+        {X: 8, Y: 12},{X: 9, Y: 12},{X: 10, Y: 12},{X: 11, Y: 12},{X: 12, Y: 12},{X: 13, Y: 12},{X: 14, Y: 12},{X: 15, Y: 12},{X: 16, Y: 12},{X: 17, Y: 12},{X: 18, Y: 12}
+    ];
 
-    for (var i = 2; i <= 8; i++) {
-        var k = 1;
-        for (var j = 1; j <= 8; j++) {
-            fields.push({X: i, Y: j, ProblemId: ids[i] });
-        }
-    }
-    fields.push({X: 1, Y: 1, BS: true, ProblemId: ids[100]});
 
     async.each(fields, function (fieldData, callback) {
-
+        if(!fieldData.ProblemId){
+            fieldData.ProblemId = Problem.getGlobalObjectId();
+        }
         var field = new mongoose.models.FieldMap(fieldData);
         field.save(callback);
     }, callback);
