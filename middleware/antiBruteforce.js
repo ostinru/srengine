@@ -10,7 +10,10 @@ module.exports = function(req, res, next) {
     }
     
     user.lastActivity = Date.now();
-    user.save(function() {
-        next();
+    user.save(function(err) {
+        if (err) {
+            logger.error(err);
+        }
+        next(); // but in any case we should work
     });
 };
