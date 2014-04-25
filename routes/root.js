@@ -3,6 +3,7 @@ var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 var _ = require('underscore');
+var config = require('../config');
 
 var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
@@ -41,7 +42,7 @@ exports.get = function(req, res, next){
                 return bonusId.equals(item._id); });
         });
         publicProblem.takenBonuses = inlinePublicBonuses(bonusesIds, problem.bonuses);
-        
+
         // add hints
         var hintsIds = problemHistory && _.filter(problem.hints, function(item, cb) {
             return _.find(problemHistory.takenHints,   function(hintId)  { return hintId.equals(item._id); });
@@ -86,6 +87,9 @@ exports.post = function(req, res, next) {
             // check bonuses
             //
             if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
+                if (checkBruteForce(user)) {
+                    return res.sendHttpError(new HttpError(429, "Too many requests"));
+                }
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
                 var bonus = problem.checkBonuses(bonusStr) || globalProblem.checkBonuses(bonusStr);
                 if (bonus) {
@@ -105,6 +109,11 @@ exports.post = function(req, res, next) {
                     }
                 }
                 else {
+                    user.lastActivity = Date.now();
+                    user.save(function(err) {
+                        if (err)
+                            logger.log(err);
+                    });
                     return res.sendHttpError(new HttpError(404, "No such bonus '"+bonusStr+"'"));
                 }
             }
@@ -151,6 +160,9 @@ exports.post = function(req, res, next) {
             // check answer
             //
             else {
+                if (checkBruteForce(user)) {
+                    return res.sendHttpError(new HttpError(429, "Too many requests"));
+                }
                 if (problem.check(answer)) {
                     logger.debug('[%s] answer problem.', user.username);
                     problemHistory.solved = true;
@@ -165,6 +177,11 @@ exports.post = function(req, res, next) {
                     });
                 }
                 else {
+                    user.lastActivity = Date.now();
+                    user.save(function(err) {
+                        if (err)
+                            logger.log(err);
+                    });
                     return res.sendHttpError(new HttpError(404, "No such answer '" + answer + "'"));
                 }
             }
@@ -208,4 +225,9 @@ hasHint = function(hintId, takenHints) {
             return item;
         }
     });
+};
+
+checkBruteForce = function(user) {
+    var period = parseInt(config.get("bruteforcetime"));
+    return user.lastActivity && (Date.now() < user.lastActivity + period*1000);
 };
