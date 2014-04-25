@@ -81,7 +81,7 @@ exports.get = function (req, res, next) {
                         });
                         }
                     });
-                    //push global problem if it not solved
+                    /*//push global problem if it not solved
                     history.push({'topic': globalProblem.topic,
                         'total': 0,
                         'numbBonuses': "",
@@ -90,7 +90,7 @@ exports.get = function (req, res, next) {
                         'global': true,
                         'timeStart': finishTime.format("HH:MM:ss"),
                         'timeFinish': finishTime.format("HH:MM:ss")
-                    });
+                    });*/
 
                     var userStatistic = {'user': user.username, 'total': total, 'history': history};
                     allStatistic.push(userStatistic);
