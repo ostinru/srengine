@@ -91,7 +91,7 @@ exports.post = function(req, res, next) {
                     return res.sendHttpError(new HttpError(429, "Too many requests"));
                 }
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-                var bonus = problem.checkBonuses(bonusStr) || globalProblem.checkBonuses(bonusStr);
+                var bonus = problem.checkBonuses(bonusStr);
                 if (bonus) {
                     logger.debug('[%s] got bonus %s', user.username, bonus.text);
                     if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
