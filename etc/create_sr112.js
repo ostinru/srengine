@@ -370,7 +370,12 @@ function createUsers(callback) {
         {username: 'butylka', password: 'd2y1pd'},
         {username: 'mustang', password: 'j1dxv5'},
         {username: 'anchous', password: '48zsks'},
-        {username: 'romawki', password: 'fwmz6j'}
+        {username: 'romawki', password: 'fwmz6j'},
+        {username: 'joseph', password: 'r0jxj0'},
+        {username: 'vugluskr', password: 'dptsn9'},
+        {username: 'rezerv1', password: '7nxw61'},
+        {username: 'rezerv2', password: 'bj0gim'},
+        {username: 'rezerv3', password: 'y35hvv'}
     ];
 
     async.each(users, function (userData, callback) {
