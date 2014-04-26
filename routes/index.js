@@ -56,4 +56,10 @@ module.exports = function(app) {
         res.render('message');
     });
 
- }
+    app.post('/globalbonus', checkAdmin,require('./globalbonus').post);
+
+    app.get('/globalbonus', checkAdmin,function(req,res,next){
+        res.render('globalbonus');
+    });
+
+}
