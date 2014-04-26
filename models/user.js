@@ -29,8 +29,8 @@ var schema = new Schema({
         default: false
     },
     position: {
-       X: {type: Number, default: 5},
-       Y: {type: Number, default: 5}
+       X: {type: Number, default: 10},
+       Y: {type: Number, default: 10}
     },
     problemHistory: [{
             problemId: {
