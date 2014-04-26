@@ -324,9 +324,34 @@ function createUsers(callback) {
     //example of user: {username: 'admin', password: '123123123', admin: true}
 
     var users = [
-        {username: 'vasya', password: '123'},
-        {username: 'petya', password: '123' },
-        {username: 'admin', password: '123', admin: true}
+        {username: 'adminb', password: 'finalfantasy13',admin: true},
+        {username: 'admins', password: 'finalfantasy13', admin:true},
+        {username: 'admind', password: 'finalfantasy13',admin: true},
+        {username: 'adminm', password: 'finalfantasy13', admin:true},
+        {username: 'adminv', password: 'finalfantasy13',admin: true},
+        {username: 'alpaltus', password: 'gic5b4'},
+        {username: 'orgi', password: 'g029p9'},
+        {username: 'hrundeli', password: 'znq3ek'},
+        {username: 'heras2', password: 'x8jhkk'},
+        {username: 'partizan', password: 'y680it'},
+        {username: 'madfox', password: 'b6c1z2'},
+        {username: 'mishadomosed', password: 'w6qjc9'},
+        {username: 'banda', password: 'i1ayrq'},
+        {username: 'vsehorowo', password: 'tmwc0k'},
+        {username: 'highvoltage', password: 'fl9rde'},
+        {username: 'beebee', password: 'mbk55f'},
+        {username: 'bios', password: 'vr6576'},
+        {username: 'hlopkopyt', password: '2u7dzy'},
+        {username: 'bobudei', password: 'ft4mrm'},
+        {username: 'butylka', password: 'd2y1pd'},
+        {username: 'mustang', password: 'j1dxv5'},
+        {username: 'anchous', password: '48zsks'},
+        {username: 'romawki', password: 'fwmz6j'},
+        {username: 'joseph', password: 'r0jxj0'},
+        {username: 'vugluskr', password: 'dptsn9'},
+        {username: 'rezerv1', password: '7nxw61'},
+        {username: 'rezerv2', password: 'bj0gim'},
+        {username: 'rezerv3', password: 'y35hvv'}
     ];
 
     async.each(users, function (userData, callback) {
