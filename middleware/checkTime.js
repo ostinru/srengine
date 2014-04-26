@@ -6,7 +6,7 @@ var Problem = require('models/problem').Problem;
 
 module.exports = function (req, res, next) {
     Problem.count({},function(err,count){
-        if(count-1 === req.user.problemHistory.length){
+        if(count === req.user.problemHistory.length){
             logger.info("finish");
             res.render('finish');
         }

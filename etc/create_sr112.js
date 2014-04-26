@@ -324,8 +324,16 @@ function createProblems(callback) {
             question : 'Оценка за костюмы + количество артефактов',
             answers : ['42'],
             cost: 0,
-            hints: [],
-            bonuses: [],
+            hints: [
+                { text: 'п1', cost: 20},
+                { text: 'п2', cost: 10},
+                { text: 'п3', cost: 10},
+            ],
+            bonuses: [
+                { text: 'б1', cost: 20 },
+                { text: 'б2', cost: 10},
+                { text: 'б3', cost: 10}
+            ],
             _id: Problem.getGlobalObjectId()
         }
     ];

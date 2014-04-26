@@ -56,4 +56,10 @@ module.exports = function(app) {
     app.get('/message', checkAuth, require('./message').get);
     app.post('/message', checkAdmin, require('./message').post);
 
- }
+    app.post('/globalbonus', checkAdmin,require('./globalbonus').post);
+
+    app.get('/globalbonus', checkAdmin,function(req,res,next){
+        res.render('globalbonus');
+    });
+
+}
