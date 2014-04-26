@@ -60,7 +60,7 @@ function createProblems(callback) {
             answers: ['колючка'],
             cost: 60,
             hints: [
-                { text: 'Лесная 49,51', cost: 25}
+                { text: 'ул. Лесная, между домами 49 и 51', cost: 25}
              ],
             bonuses: [],
             _id: ids[1]
@@ -152,7 +152,7 @@ function createProblems(callback) {
                 Девять мертвых матросов,<br>\
                 Водичка стала, словно рубин<br>\
                 <br>\
-                Эхей, семю кровососов,<br>\
+                Эхей, семь кровососов,<br>\
                 Девять мертвых матросов<br>\
                 Послал наш Монолит-господин!<br>\
                 <br>\
@@ -246,6 +246,7 @@ function createProblems(callback) {
                 { text: 'беспроцентный', cost: 20},
                 { text: 'поиск', cost: 20},
                 { text: 'ночнаязвезда', cost: 20},
+                { text: 'мастерзведзы', cost: 10},
                 { text: 'бородабаян', cost: 20},
                 { text: 'винторез', cost: 30},
                 { text: 'св98', cost: 20},
@@ -268,10 +269,10 @@ function createProblems(callback) {
             _id: ids[13]
         },
         {
-            topic: 'Свобода',
+            topic: 'Долг и Свобода',
             question:
                 'Отправляйтесь к Свободе (57.719495 40.890221) и Долгу (57.720612 40.889974)',
-            answers: ['вечнаявояна'],
+            answers: ['вечнаявойна'],
             cost: 60,
             hints: [],
             bonuses: [
