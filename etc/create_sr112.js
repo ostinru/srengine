@@ -283,6 +283,8 @@ function createProblems(callback) {
                 
                 { text: 'сушеныйгеракл', cost: 20},
                 { text: 'тупойсапер', cost: 20},
+                { text: 'ищитедалее', cost: 20},
+                { text: 'пердимоноколь', cost: 20},
                 { text: 'слепойкурей', cost: 20}
             ],
             _id: ids[14]
