@@ -1,6 +1,6 @@
 {
     "name": "srengine",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "StreetRiding game engine",
     "keywords": ["StreetRiding"],
     "bugs": {
@@ -8,7 +8,8 @@
     },
     "contributors": [
         {
-            "name": "Nikolay Antonov"
+            "name": "Nikolay Antonov",
+            "name": "Kulikov Valentin"
         }
     ],
     "license": "Apache-2.0",
