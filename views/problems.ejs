@@ -3,16 +3,16 @@
 
 <table border="1">
 	<tr>
-		<td>ID</td>
-		<td>Topic</td>
-		<td>Cost</td>
+		<td width="10%">Topic</td>
+		<td width="10%">Cost</td>
+        <td width="80%">Question</td>
 	</tr>
 <% for (var i=0; i<problems.length; i++) { %>
 	<% var problem = problems[i]; %>
 	<tr>
-		<td><a href="/problem/<%= problem._id -%>"><%= problem._id -%></a></td>
-		<td><%= problem.topic -%></a></td>
+		<td ><a href="/problem/<%= problem._id -%>"><%= problem.topic -%></a></td>
 		<td><%= problem.cost -%></a></td>
+        <td><%= problem.question -%></a></td>
 	</tr>
 <% } %>
 </table>

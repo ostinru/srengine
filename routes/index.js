@@ -37,6 +37,12 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/problems', checkAdmin, function (req, res, next) {
+        Problem.find({}, function (err, problems) {
+            if (err) return next(err);
+            res.json(problems);
+        })
+    });
     app.get('/problem', checkAdmin, require('./problems').get);
     app.get('/problem/:problemId', checkAdmin, require('./problem').get);
     app.post('/problem/:problemId', checkAdmin, require('./problem').post);
