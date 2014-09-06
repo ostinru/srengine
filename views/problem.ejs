@@ -10,14 +10,13 @@
     }
 
     .title{
-        width : 20%;
-        float:left;
+        width : 100%;
     }
     .input{
-         width : 80%;
-        float:left;
+         width : 100%;
     }
     #wrapper{
+        margin-top: 20px;
     }
 </style>
 
@@ -51,17 +50,17 @@
         </div>
     </div>
     <div id="wrapper">
-        <div class="title">Бонусы  <button type="button" onclick="addBonus();">добавить</button></div>
-        <div class="input">
-            <ul id="bonuses_list">
-            <% for (var i=0; i<problem.bonuses.length; i++) { %>
-                <li>
-                    T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
-                    C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
-                </li>
-            <% } %>
-            </ul>
-        </div>
+            <div class="title">Бонусы  <button type="button" onclick="addBonus();">добавить</button></div>
+            <div class="input">
+                <ul id="bonuses_list">
+                <% for (var i=0; i<problem.bonuses.length; i++) { %>
+                    <li>
+                        T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
+                        C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
+                    </li>
+                <% } %>
+                </ul>
+            </div>
     </div>
     <div id="wrapper">
         <div class="title">Подсказки  <button type="button" onclick="addHint();">добавить</button></div>
@@ -76,7 +75,7 @@
             </ul>
         </div>
     </div>
-    <div id="wrapper">
+    <div id="wrapper" align = "center">
 	    <input type="submit"/>
     </div>
 </form>
