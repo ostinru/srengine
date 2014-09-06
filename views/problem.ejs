@@ -24,15 +24,15 @@
 <form id="promblem" method="post">
 	<div id="wrapper">
 	    <div class="title">Заголовок:</div>
-        <div class="input"><input type="text" name="topic" value="<%= problem.topic %>" /></div>
+        <div class="input"><input type="text" name="topic" value="<%=problem.topic%>" /></div>
     </div>
     <div id="wrapper">
         <div class="title">Порядковый номер:</div>
-        <div class="input"><input type="text" name="serial" value="<%= problem.serial %>" /></div>
+        <div class="input"><input type="text" name="serial" value="<%=problem.serial%>" /></div>
     </div>
     <div id="wrapper">
         <div class="title">Текст задания:</div>
-        <div class="input"><textarea rows=10 name="question" style="width:600px"> <%= problem.question %></textarea></div>
+        <div class="input"><textarea rows=10 name="question" style="width:600px"> <%=problem.question%></textarea></div>
     </div>
     <div id="wrapper">
         <div class="title">Стоимость:</div>

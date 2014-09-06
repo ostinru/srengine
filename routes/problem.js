@@ -34,24 +34,25 @@ exports.post = function(req, res, next) {
 
         //write answers
         var i = 0;
-        while(!req.body['answer' + i] === undefined){
-            if (i<problem.answers.count){
+         while(!(req.body['answer' + i] === undefined)){
+            if (i<problem.answers.length){
                 problem.answers[i] = req.body['answer' + i];
+                logger.info("Updated " + problem.answers[i]);
             }
             else{
-                problem.bonuses.push(req.body['answer' + i]);
+                problem.answers.push(req.body['answer' + i]);
+                logger.info("Added " + problem.answers[i]);
             }
             i++;
         }
-        problem.markModified('answer');
+        problem.markModified('answers');
 
-        //write bonuses
+      //write bonuses
         var i = 0;
-        while (!req.body['bonus' + i] === undefined) {
-            if (i < problem.bonus.count) {
-                problem.bonuses[i] = {
-                    text : req.body['bonus' + i],
-                    cost : req.body['bonus_cost' + i]};
+        while (!(req.body['bonus' + i] === undefined)) {
+            if (i < problem.bonuses.length) {
+                problem.bonuses[i].text = req.body['bonus' + i];
+                problem.bonuses[i].cost = req.body['bonus_cost' + i];
             }
             else{
                 problem.bonuses.push({
@@ -60,15 +61,14 @@ exports.post = function(req, res, next) {
             }
             i++;
         }
-        problem.markModified('bonus');
+        problem.markModified('bonuses');
 
         //write hints
         var i = 0;
-        while (!req.body['hint' + i] === undefined) {
-            if (i < problem.hint.count) {
-                problem.hints[i] = {
-                    text : req.body['hint' + i],
-                    cost : req.body['hint_cost' + i]};
+        while (!(req.body['hint' + i] === undefined)) {
+            if (i < problem.hints.length) {
+                problem.hints[i].text =  req.body['hint' + i];
+                problem.hints[i].cost =  req.body['hint_cost' + i];
             }
             else{
                 problem.hints.push({
@@ -77,9 +77,10 @@ exports.post = function(req, res, next) {
             }
             i++;
         }
-        problem.markModified('hint');
+        problem.markModified('hints');
 
         problem.save();
+
         res.redirect(req.get('referer'));
     });
 };
