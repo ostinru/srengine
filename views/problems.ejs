@@ -1,15 +1,23 @@
 <% layout('./layout/page.ejs') -%>
 <% block('title', 'SR 112') -%>
 
-<table border="1">
-	<tr>
-		<td width="10%">Topic</td>
-		<td width="10%">Cost</td>
-        <td width="80%">Question</td>
+<table border="2" >
+	<tr  align="center">
+        <td width="5%">п/п</td>
+		<td width="8%">Заголовок</td>
+		<td width="5%">Стоимость</td>
+        <td width="80%">Текст задания</td>
 	</tr>
+    <tr>
+        <td width="5%"></td>
+        <td width="8%"></td>
+        <td width="5%"></td>
+        <td width="80%"></td>
+    </tr>
 <% for (var i=0; i<problems.length; i++) { %>
 	<% var problem = problems[i]; %>
 	<tr>
+        <td><%= problem.serial -%></a></td>
 		<td ><a href="/problem/<%= problem._id -%>"><%= problem.topic -%></a></td>
 		<td><%= problem.cost -%></a></td>
         <td><%= problem.question -%></a></td>

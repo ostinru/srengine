@@ -3,7 +3,7 @@ var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 
 exports.get = function(req, res, next){
-    Problem.find({}, function (err, problems) {
+    Problem.find({},null,{sort: {serial: 1}}, function (err, problems) {
         if (err) {
             return next(err);
         }
