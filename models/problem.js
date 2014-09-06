@@ -10,6 +10,11 @@ var schema = new Schema({
         unique: true,
         required: true
     },
+    serial:{
+        type: Number,
+        unique: true,
+        required: true
+    },
     question: {
         type: String,
         required: true

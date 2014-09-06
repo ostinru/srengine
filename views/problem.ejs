@@ -8,42 +8,77 @@
     input[type="number"] {
         width : 50px;
     }
+
+    .title{
+        width : 20%;
+        float:left;
+    }
+    .input{
+         width : 80%;
+        float:left;
+    }
+    #wrapper{
+    }
 </style>
 
 <form id="promblem" method="post">
-	<p>TOPIC: <input type="text" name="topic" value="<%= problem.topic %>" /></p>
-	<p>Q:<input type="textarea" name="question" value="<%= problem.question %>" style="width:600px"/></p>
-	<p>COST:<input type="number" name="cost" value="<%= problem.cost %>"/></p>
-	<ul id="answers_list">
-		<p>A:<button type="button" onclick="addAnswer();">Add Answer</button></p>
-		<% for (var i=0; i<problem.answers.length; i++) { %>
-			<li>
-				<input type="textarea" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
-			</li>
-		<% } %>
-	</ul>
-    <br/>
-	<ul id="bonuses_list">
-		<p>B:<button type="button" onclick="addBonus();">Add Bonus</button></p>
-		<% for (var i=0; i<problem.bonuses.length; i++) { %>
-			<li>
-				T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
-				C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
-			</li>
-		<% } %>
-	</ul>
-    <br/>
-	<ul id="hints_list">
-		<p>H:<button type="button" onclick="addHint();">Add Hint</button></p>
-		<% for (var i=0; i<problem.hints.length; i++) { %>
-			<li>
-				T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
-				C:<input type="number" name="hint_cost<%= i -%>" value="<%= problem.hints[i].cost %>"/>
-            </li>
-		<% } %>
-	</ul>
-    <br/>
-	<input type="submit"/>
+	<div id="wrapper">
+	    <div class="title">Заголовок:</div>
+        <div class="input"><input type="text" name="topic" value="<%= problem.topic %>" /></div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Порядковый номер:</div>
+        <div class="input"><input type="text" name="serial" value="<%= problem.serial %>" /></div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Текст задания:</div>
+        <div class="input"><textarea rows=10 name="question" style="width:600px"> <%= problem.question %></textarea></div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Стоимость:</div>
+        <div class="input"><input type="number" name="cost" value="<%= problem.cost %>"/></div>
+    </div>
+    <div id="wrapper">
+	    <div class="title">Ответы  <button type="button" onclick="addAnswer();">добавить</button></div>
+        <div class="input">
+            <ul id="answers_list">
+                <% for (var i=0; i<problem.answers.length; i++) { %>
+                    <li>
+                        <input type="textarea" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Бонусы  <button type="button" onclick="addBonus();">добавить</button></div>
+        <div class="input">
+            <ul id="bonuses_list">
+            <% for (var i=0; i<problem.bonuses.length; i++) { %>
+                <li>
+                    T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
+                    C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
+                </li>
+            <% } %>
+            </ul>
+        </div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Подсказки  <button type="button" onclick="addHint();">добавить</button></div>
+        <div class="input">
+            <ul id="hints_list">
+              <% for (var i=0; i<problem.hints.length; i++) { %>
+                <li>
+                    T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
+                    C:<input type="number" name="hint_cost<%= i -%>" value="<%= problem.hints[i].cost %>"/>
+                </li>
+            <% } %>
+            </ul>
+        </div>
+    </div>
+    <div id="wrapper">
+	    <input type="submit"/>
+    </div>
 </form>
 
 

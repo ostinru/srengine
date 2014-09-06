@@ -29,44 +29,52 @@ exports.post = function(req, res, next) {
         // we trust to our admins
         problem.topic = req.body.topic;
         problem.question = req.body.question;
-        
-        problem.answers = [];
+        problem.cost = req.body.cost;
+        problem.serial = req.body.serial;
+
+        //write answers
         var i = 0;
-        while (true) {
-            if (req.body['answer' + i] === undefined) {
-                break;
+        while(!req.body['answer' + i] === undefined){
+            if (i<problem.answers.count){
+                problem.answers[i] = req.body['answer' + i];
             }
-            problem.answers.push(req.body['answer' + i]);
+            else{
+                problem.bonuses.push(req.body['answer' + i]);
+            }
             i++;
         }
         problem.markModified('answer');
-        
-        problem.cost = req.body.cost;
-        
-        problem.bonuses = [];
+
+        //write bonuses
         var i = 0;
-        while (true) {
-            if (req.body['bonus' + i] === undefined) {
-                break;
+        while (!req.body['bonus' + i] === undefined) {
+            if (i < problem.bonus.count) {
+                problem.bonuses[i] = {
+                    text : req.body['bonus' + i],
+                    cost : req.body['bonus_cost' + i]};
             }
-            problem.bonuses.push({
-                text : req.body['bonus' + i],
-                cost : req.body['bonus_cost' + i]
-            });
+            else{
+                problem.bonuses.push({
+                    text : req.body['bonus' + i],
+                    cost : req.body['bonus_cost' + i]});
+            }
             i++;
         }
         problem.markModified('bonus');
-        
-        problem.hints = [];
+
+        //write hints
         var i = 0;
-        while (true) {
-            if (req.body['hint' + i] === undefined) {
-                break;
+        while (!req.body['hint' + i] === undefined) {
+            if (i < problem.hint.count) {
+                problem.hints[i] = {
+                    text : req.body['hint' + i],
+                    cost : req.body['hint_cost' + i]};
             }
-            problem.hints.push({
-                text : req.body['hint' + i],
-                cost : req.body['hint_cost' + i]
-            });
+            else{
+                problem.hints.push({
+                    text : req.body['hint' + i],
+                    cost : req.body['hint_cost' + i]});
+            }
             i++;
         }
         problem.markModified('hint');
