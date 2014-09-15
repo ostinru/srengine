@@ -59,7 +59,9 @@ var schema = new Schema({
             }
         }
     ],
-    lastActivity : Number
+    lastActivity : Number,
+    numberOfAttempts: Number,
+    problemQueue: [Number]
 });
 
 schema.methods.encryptPassword = function (password) {

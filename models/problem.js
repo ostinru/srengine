@@ -11,7 +11,8 @@ var schema = new Schema({
         required: true
     },
     serial:{
-        type: Number
+        type: Number,
+        unique: true
     },
     question: {
         type: String,
