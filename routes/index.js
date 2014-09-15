@@ -17,7 +17,7 @@ module.exports = function(app) {
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/users',checkAdmin, function (req, res, next) {
+    app.get('/user', checkAdmin, function (req, res, next) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
@@ -58,10 +58,10 @@ module.exports = function(app) {
         })
     });
 
-    app.get('/map', checkAuth, checkTime, require('./map2').get);
-    app.post('/map', checkAuth, checkTime, require('./map2').post);
+    app.get('/map', checkAuth, checkTime, require('./map').get);
+    app.post('/map', checkAuth, checkTime, require('./map').post);
 
-    app.get('/statistics',checkAdmin, require('./statistics').get);
+    app.get('/statistics', checkAdmin, require('./statistics').get);
 
     app.get('/message', checkAuth, require('./message').get);
     app.post('/message', checkAdmin, require('./message').post);
