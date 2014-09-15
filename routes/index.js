@@ -17,7 +17,7 @@ module.exports = function(app) {
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/user', checkAdmin, function (req, res, next) {
+    app.get('/users',checkAdmin, function (req, res, next) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
@@ -36,17 +36,20 @@ module.exports = function(app) {
             res.json(user);
         });
     });
+    app.get('/user',checkAdmin,  require('./users').get);
+    app.post('/user',checkAdmin,  require('./users').post);
 
-    app.get('/problems',  function (req, res, next) {
+    //просмотр и редактирование заданий
+    app.get('/problems',checkAdmin,  function (req, res, next) {
         Problem.find({}, function (err, problems) {
             if (err) return next(err);
             res.json(problems);
         })
     });
-    app.get('/problem',  require('./problems').get);
-    app.post('/problem',  require('./problems').post);
-    app.get('/problem/:problemId',  require('./problem').get);
-    app.post('/problem/:problemId',  require('./problem').post);
+    app.get('/problem',checkAdmin,  require('./problems').get);
+    app.post('/problem',checkAdmin,  require('./problems').post);
+    app.get('/problem/:problemId',checkAdmin,  require('./problem').get);
+    app.post('/problem/:problemId',checkAdmin,  require('./problem').post);
 
     app.get('/fieldsMap', checkAdmin, function (req, res, next) {
         FieldMap.find({}, function (err, fieldsMap) {
@@ -55,10 +58,10 @@ module.exports = function(app) {
         })
     });
 
-    app.get('/map', checkAuth, checkTime, require('./map').get);
-    app.post('/map', checkAuth, checkTime, require('./map').post);
+    app.get('/map', checkAuth, checkTime, require('./map2').get);
+    app.post('/map', checkAuth, checkTime, require('./map2').post);
 
-    app.get('/statistics', checkAdmin, require('./statistics').get);
+    app.get('/statistics',checkAdmin, require('./statistics').get);
 
     app.get('/message', checkAuth, require('./message').get);
     app.post('/message', checkAdmin, require('./message').post);
@@ -69,4 +72,7 @@ module.exports = function(app) {
         res.render('globalbonus');
     });
 
+    app.get('/administration',checkAdmin,function(req,res,next){
+        res.render('administration');
+    })
 }

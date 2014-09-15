@@ -1,0 +1,29 @@
+<% layout('./layout/page.ejs') -%>
+<% block('title', 'SR 112') -%>
+<form id="users" method="post" align="center">
+    <div>
+        <input type="submit" value="Добавить пользователя">
+    </div>
+    <div>
+        <table border="1" >
+            <tr  align="center">
+                <td width="50%">Имя пользователя</td>
+                <td width="50%">Пароль</td>
+            </tr>
+            <% for (var i=0; i<users.length; i++) { %>
+            <% var user = users[i]; %>
+            <tr>
+                <td ><a href="/user/<%= user.username -%>"><%= user.username -%></a></td>
+                <td><%= user.hashedPassword -%></a></td>
+            </tr>
+            <% } %>
+        </table>
+    </div>
+</form>
+
+
+<script>
+    function addUser() {
+        console.log(arguments);
+    }
+</script>

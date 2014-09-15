@@ -30,7 +30,12 @@ exports.post = function (req, res, next) {
         }
 
         req.session.user = user._id;
-        res.redirect("/map");
+        if(user.isAdmin()){
+            res.redirect("/administration")
+        }
+        else {
+            res.redirect("/map");
+        }
     });
 
 };
