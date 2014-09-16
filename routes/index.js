@@ -17,25 +17,14 @@ module.exports = function(app) {
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/user', checkAdmin, function (req, res, next) {
+    app.get('/users', checkAdmin, function (req, res, next) {
         User.find({}, function (err, users) {
             if (err) return next(err);
             res.json(users);
         })
     });
-    app.get('/user/:username', checkAdmin, function (req, res, next) {
-        User
-        .findOne({'username' : req.params.username })
-        .exec(function (err, user) {
-            if (err) {
-                return next(err);
-            }
-            if (!user) {
-                return next(404);
-            }
-            res.json(user);
-        });
-    });
+    app.get('/user/:userId', checkAdmin, require('./user').get);
+    app.post('/user/:userId', checkAdmin, require('./user').post);
     app.get('/user',checkAdmin,  require('./users').get);
     app.post('/user',checkAdmin,  require('./users').post);
 

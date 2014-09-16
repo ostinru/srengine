@@ -7,14 +7,12 @@
     <div>
         <table border="1" >
             <tr  align="center">
-                <td width="50%">Имя пользователя</td>
-                <td width="50%">Пароль</td>
+                <td>Имя пользователя</td>
             </tr>
             <% for (var i=0; i<users.length; i++) { %>
             <% var user = users[i]; %>
             <tr>
-                <td ><a href="/user/<%= user.username -%>"><%= user.username -%></a></td>
-                <td><%= user.hashedPassword -%></a></td>
+                <td ><a href="/user/<%= user._id -%>"><%= user.username -%></a></td>
             </tr>
             <% } %>
         </table>

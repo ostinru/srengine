@@ -1,0 +1,48 @@
+<% layout('./layout/page.ejs') -%>
+<% block('title', 'SR 112') -%>
+
+<style type="text/css">
+    input[type="textarea"] {
+        width : 500px;
+    }
+    input[type="number"] {
+        width : 50px;
+    }
+
+    .title{
+        width : 100%;
+    }
+    .input{
+        width : 100%;
+    }
+    #wrapper{
+        margin-top: 20px;
+    }
+</style>
+
+<form id="user" method="post">
+    <div id="wrapper">
+        <div class="title">Имя пользователя:</div>
+        <div class="input"><input type="text" name="username" value="<%=user.username%>" /></div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Администратор:</div>
+        <div class="input"><input type="checkbox" name="admin" id="admin" /></div>
+    </div>
+    <div id="wrapper">
+        <div class="title">Пароль:</div>
+        <div class="input"><input type="text" name="password" value="<%=user.password%>" /></div>
+    </div>
+    <div>
+        <% for (var i=1; i<=  12; i++ ) { %>
+        <div><input type = "number" name = "n<%= i -%>" value = 15 /></div>
+        <% } %>
+    </div>
+     <div id="wrapper" align = "center">
+        <input type="submit"/>
+    </div>
+</form>
+
+<script>
+    document.getElementById('admin').checked = <%=user.admin%>;
+</script>
