@@ -1,6 +1,7 @@
 var async = require('async');
 var logger = require('lib/logger')(module);
 var User = require('models/user').User;
+var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
 var _ = require('underscore');
 var mongoose = require('lib/mongoose.js');
@@ -26,8 +27,11 @@ exports.get = function(req, res, next){
                     admin:false,
                     _id: mongoose.Types.ObjectId(req.params.userId)});
             }
-            res.locals.user = user;
-            return res.render("user");
+            Problem.find(function(err,problems){
+                res.locals.countProblem = problems.length-1;//без глобального бонуса
+                res.locals.user = user;
+                return res.render("user");
+            });
         }
     });
 };
@@ -44,7 +48,17 @@ exports.post = function(req, res, next) {
         user.username = req.body.username;
         user.password = req.body.password;
         user.admin = req.body.admin;
-        user.markModified();
+        var i = 0;
+        while (!(req.body['numb' + i] === undefined)) {
+            if (i < user.problemQueue.length) {
+                user.problemQueue[i] = req.body['numb' + i];
+            }
+            else {
+                user.problemQueue.push(req.body['numb' + i]);
+            }
+            i++;
+        }
+        user.markModified('problemQueue');
         user.save(function(err){
             if (err){
                 logger.debug(err);

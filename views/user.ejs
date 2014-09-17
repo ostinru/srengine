@@ -15,6 +15,11 @@
     .input{
         width : 100%;
     }
+    .block{
+        float:left;
+        margin-left:15px;
+        text-align:center;
+    }
     #wrapper{
         margin-top: 20px;
     }
@@ -26,19 +31,22 @@
         <div class="input"><input type="text" name="username" value="<%=user.username%>" /></div>
     </div>
     <div id="wrapper">
-        <div class="title">Администратор:</div>
-        <div class="input"><input type="checkbox" name="admin" id="admin" /></div>
-    </div>
-    <div id="wrapper">
         <div class="title">Пароль:</div>
         <div class="input"><input type="text" name="password" value="<%=user.password%>" /></div>
     </div>
-    <div>
-        <% for (var i=1; i<=  12; i++ ) { %>
-        <div><input type = "number" name = "n<%= i -%>" value = 15 /></div>
+    <div id="wrapper">
+        <div class="input"><label><input type="checkbox" name="admin" id="admin" /> администратор</label></div>
+    </div>
+    <div id = "wrapper">
+        <div>Порядок заданий: </div>
+        <% for (var i=0; i<  countProblem - 1; i++ ) { %>
+        <%var numb = 0;%>
+        <%if (i<user.problemQueue.length) numb = user.problemQueue[i];%>
+        <div class="block"><input type = "number" name = "numb<%= i -%>"value = "<%= numb%>"/></div>
         <% } %>
     </div>
-     <div id="wrapper" align = "center">
+    <div>.</div>
+    <div id="wrapper" align = "center">
         <input type="submit"/>
     </div>
 </form>
