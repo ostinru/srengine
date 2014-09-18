@@ -11,13 +11,15 @@ module.exports = function (req, res, next) {
             res.render('finish');
         }
         else{
+            logger.info(startTime);
+            logger.info(Date.now());
+            logger.info(finishTime);
             if (Date.now() < startTime) {
                 res.locals.timeStart = Date.parse(config.get('startTime'));
                 res.render('start');
             }
             else {
                 if (Date.now() > finishTime) {
-                    logger.info("finish");
                     res.render('finish');
                 }
                 else  next();

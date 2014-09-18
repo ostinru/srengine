@@ -61,7 +61,7 @@ module.exports = function(app) {
         res.render('globalbonus');
     });
 
-    app.get('/administration',checkAdmin,function(req,res,next){
-        res.render('administration');
-    })
+    app.get('/administration',checkAdmin,require('./administration').get);
+    app.post('/administration',checkAdmin,require('./administration').post);
+
 }
