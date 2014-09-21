@@ -43,7 +43,7 @@
             <ul id="answers_list">
                 <% for (var i=0; i<problem.answers.length; i++) { %>
                     <li>
-                        <input type="textarea" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
+                        <input type="text" name="answer" value="<%= problem.answers[i] %>"/>
                     </li>
                 <% } %>
             </ul>
@@ -55,8 +55,8 @@
                 <ul id="bonuses_list">
                 <% for (var i=0; i<problem.bonuses.length; i++) { %>
                     <li>
-                        T:<input type="textarea" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
-                        C:<input type="number" name="bonus_cost<%= i -%>" value="<%= problem.bonuses[i].cost %>"/>
+                        T:<input type="text" name="bonus" value="<%= problem.bonuses[i].text %>"/>
+                        C:<input type="number" name="bonus_cost" class = "number" value="<%= problem.bonuses[i].cost %>"/>
                     </li>
                 <% } %>
                 </ul>
@@ -68,8 +68,8 @@
             <ul id="hints_list">
               <% for (var i=0; i<problem.hints.length; i++) { %>
                 <li>
-                    T:<input type="textarea" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
-                    C:<input type="number" name="hint_cost<%= i -%>" value="<%= problem.hints[i].cost %>"/>
+                    T:<input type="text" name="hint" value="<%= problem.hints[i].text %>"/>
+                    C:<input type="number" name="hint_cost" class = "number" value="<%= problem.hints[i].cost %>"/>
                 </li>
             <% } %>
             </ul>
@@ -96,23 +96,30 @@ function removeHint(btn) {
 }
 function addAnswer() {
 	console.log(arguments);
-	$("#answers_list").append('<li><input type="textarea" name="answer" value=""/><button type="button" onclick="removeAnswer(this);">Remove</button></li>');
-	fixNames("#answers_list", "answer");
+	$("#answers_list").append('<li><input type="text" name="answer" value=""/><button type="button" onclick="removeAnswer(this);">Remove</button></li>');
+	fixNames("#answers_list", "answer","answer_cost");
 }
 function addBonus() {
 	console.log(arguments);
-	$("#bonuses_list").append('<li>T:<input type="textarea" name="bonus" value=""/> C:<input type="number" name="bonus_cost" value="0"/><button type="button" onclick="removeBonus(this);">Remove</button></li>');
+	$("#bonuses_list").append('<li>T:<input type="text" name="bonus" value=""/> C:<input type="number" name="bonus_cost" value="0"/><button type="button" onclick="removeBonus(this);">Remove</button></li>');
 	fixNames("#bonuses_list", "bonus", "bonus_cost");
 }
 function addHint() {
 	console.log(arguments);
-	$("#hints_list").append('<li>T:<input type="textarea" name="hint" value=""/> C:<input type="number" name="bonus_cost" value="1"/><button type="button" onclick="removeHint(this);">Remove</button></li>');
+	$("#hints_list").append('<li>T:<input type="text" name="hint" value=""/> C:<input type="number" name="bonus_cost" value="1"/><button type="button" onclick="removeHint(this);">Remove</button></li>');
 	fixNames("#hints_list", "hint", "hint_cost");
 }
 function fixNames(selector, prefix1, prefix2) {
-	$(selector).children("li").each(function (index, el) {
-		$(el).children('[type="textarea"]').attr("name", prefix1 + index);
-		$(el).children('[type="number"]').attr("name", prefix2 + index);
+	$(selector + " li").each(function (index,el) {
+    $(el).children().each(function(index2,el2){
+        switch (el2.type){
+            case "text":el2.name = prefix1 + index; break;
+            case "number":el2.name=prefix2 + index; break;
+         }
+    });
+/*		$(el).children([type="textarea"]).attr("name", prefix1 + index);
+		$(el).children([type="number"]).attr("name", prefix2 + index);
+*/
 	});
 }
 </script>

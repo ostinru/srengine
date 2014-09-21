@@ -59,6 +59,10 @@ exports.post = function(req, res, next) {
             i++;
         }
         user.markModified('problemQueue');
+        if (user.problemHistory.length === 0) {
+            user.problemHistory.push({problemId: Problem.getGlobalObjectId(), solved: true});
+        }
+        user.markModified('problemHistory');
         user.save(function(err){
             if (err){
                 logger.debug(err);

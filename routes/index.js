@@ -47,8 +47,8 @@ module.exports = function(app) {
         })
     });
 
-    app.get('/map', checkAuth, checkTime, require('./map').get);
-    app.post('/map', checkAuth, checkTime, require('./map').post);
+    app.get('/map', checkAuth, checkTime, require('./map2').get);
+    app.post('/map', checkAuth, checkTime, require('./map2').post);
 
     app.get('/statistics', checkAdmin, require('./statistics').get);
 

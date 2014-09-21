@@ -5,6 +5,8 @@ module.exports = function (req, res, next) {
     var method = req.method;
     var path = req.path;
     var body = req.body;
-    logger.debug('[%s] %s on "%s": ', username, method, path, body);
+    if (path != '/message') {
+        logger.debug('[%s] %s on "%s": ', username, method, path, body);
+    }
     next();
 };
