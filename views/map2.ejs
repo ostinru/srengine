@@ -1,0 +1,437 @@
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<script type='text/javascript' src='roulette5/jquery-1.7.1.js'></script>
+<script type='text/javascript' src='roulette5/countdown.js'></script>
+<script type="text/javascript" src="roulette5/jQueryRotate.js"></script>
+<script type="text/javascript" src="roulette5/jquery.easing.min.js"></script>
+
+<style type='text/css' src='countdowncss.css'></style>
+
+<style type='text/css'>
+
+    .styled{
+        position:absolute;
+        top:20px;
+        right:50px;
+        width:150px;
+        height:50px;
+        background-color:#ead182;
+    }
+
+    .diskmap{
+        position: absolute;
+        top:100px;
+        left: 50px;
+    }
+
+    .bgdiv{
+        position:absolute;
+        top:0px;left:0px;
+        background-image: url(roulette5/bg.png);
+        width:1156px;
+        height:768px;
+
+    }
+
+    .megatext{
+        position:absolute;
+        top:100px;
+        left:550px;
+        background-image: url(roulette5/megatext2+.png);
+        width:587px;
+        height:660px;
+    }
+
+    .textinside{
+        padding-left:40px;
+        padding-top:10px;
+        color:#ffc750;
+        font-size:14pt;
+    }
+
+    .alarm{
+        position:absolute;
+        display:block;
+        top:0px;
+        left:0px;
+        width:1156px;
+        height:768px;
+        background-image: url(roulette5/alarm.png);
+    }
+
+    #alarmp{
+        color:#ff0000;
+        font-size:20pt;
+        padding-left:40px;
+    }
+
+    #image{
+        top: 285px;
+        left: 475px;
+    }
+
+    .input{
+        position:absolute;
+        top:620px;
+        left:50px;
+        background-image:url(roulette5/input2+.png);
+        width:296px;
+        height:61px;
+        z-index:10;
+    }
+    #inputarea{
+        background: transparent;
+        margin-top:15px;
+        margin-left:10px;
+        width:260px;
+        height:25px;
+        border:none;
+        outline: none;
+        color:#ffc750;
+        font-size:14pt;
+        padding-left:10px;
+    }
+
+    .okbut{
+        width:142px;
+        height:60px;
+        position:absolute;
+        top:620px;
+        left:350px;
+        z-index:10;
+    }
+
+    .serviceinput{
+        position:absolute;
+        top:570px;
+        left:50px;
+        background-image:url(roulette5/service_input2+.png);
+        width:445px;
+        height:39px;
+    }
+
+    #serviceinputarea{
+        color:#ffc750;
+        font-size:14pt;
+        padding-left:15px;
+        width:445px;
+        height:39px;
+        border:none;
+        outline: none;
+        background: transparent;
+    }
+
+    .arrow{
+        position: absolute;
+        top:295px;
+        left: 490px;
+    }
+
+    .spinner{
+        position:absolute;
+        top:690px;
+        left:45px;
+        width:466px;
+        height:68px;
+    }
+</style>
+
+<style type='text/css'>
+
+    .styled div {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 30px;
+        font-weight: 100;
+        line-height: 1;
+        text-align: right;
+    }
+    /* IE7 inline-block hack */
+    *+html .styled div{
+        display: inline;
+        zoom: 1;
+    }
+    .styled div:first-child {
+        margin-left: 0;
+    }
+    .styled div span {
+        display: block;
+        border-top: 1px solid #cecece;
+        padding-top: 3px;
+        font-size: 12px;
+        font-weight: normal;
+        text-transform: uppercase;
+        text-align: left;
+    }
+</style>
+
+
+<script type='text/javascript'>
+
+function rotatemywheel(myPrev,myCur){
+//    var myPrev = 0; //тут сделать запрос на номер предыдущего уровня
+//    var myCur = 1; //тут - на номер текущего
+    var myAngle = 0; //константа угла вращения
+
+    switch (myCur){
+        case (1):
+            myAngle = 1
+            break
+        case (2):
+            break
+        case (3):
+            myAngle = 8
+            break
+        case (4):
+            break
+        case (5):
+            myAngle = 9
+            break
+        case (6):
+            break
+        case (7):
+            myAngle = 0
+            break
+        case (8):
+            break
+        case (9):
+            myAngle = 3
+            break
+        case (10):
+            break
+        case (11):
+            myAngle = 5
+            break
+        case (12):
+            break
+        case (13):
+            myAngle = 7
+            break
+        case (14):
+            break
+        case (14):
+            myAngle = 2
+            break
+        case (16):
+            break
+        case (17):
+            myAngle = 11
+            break
+        case (18):
+            break
+        case (19):
+            myAngle = 6
+            break
+        case (20):
+            break
+        case (21):
+            myAngle = 10
+            break
+        case (22):
+            break
+        case (23):
+            myAngle = 4
+            break
+        case (24):
+            break
+    }
+
+    var subvalue = myAngle*30+15+1800; //константа*сектор+полсектора+4 оборота
+
+    //вращение на нечетных
+    if (myCur%2 != 0 ) {
+        $("#arrowhead").rotate({
+            angle: myPrev,
+            center: ["-420%", "50%"],
+            animateTo:subvalue,
+            duration:4000
+        });
+    }
+
+    $("p.textinside").html('Текст задания с примером картинки <br><img src="roulette5/hg.png" width="500px";>'); //вывод текста задания
+}
+</script>
+
+<div class="bgdiv">
+
+    <div class="alarm" id="alarm">
+        <p class = "alarmp" id="alarmp">ПРЕКРАТИТЬ ВЫПОЛНЕНИЕ! СРОЧНО НА БАЗУ!!</p>
+    </div>
+
+    <div class="countdown styled" id="countdown">
+
+    </div>
+
+    <div class="diskmap">
+        <img src="/roulette5/disk2+.png" id="disk">
+    </div>
+
+    <div class="arrow">
+        <img src="/roulette5/arrow6.png" id="arrowhead">
+    </div>
+
+
+    <div class="serviceinput">
+        <input type="text" readonly id="serviceinputarea" value="Вы заблокированы на 2 минуты"/>
+    </div>
+
+    <form id = "game">
+    <div class="input">
+        <input type="text" id="inputarea" name = "answer"/>
+    </div>
+    </form>
+
+    <div class="okbut">
+        <img src="/roulette5/ok2+.png"
+             onmouseout="this.src='/roulette5/ok2+.png'"
+             onmouseover="this.src='/roulette5/ok_hover.png'"
+             onclick="sendAnswer();"
+                >
+    </div>
+
+    <div class="spinner">
+        <img src="/roulette5/spin2+.png"
+             onmouseout="this.src='/roulette5/spin2+.png'"
+             onmouseover="this.src='/roulette5/spin_hover.png'"
+             onclick="rotate();"
+                >
+    </div>
+
+    <div class="megatext">
+        <p class="textinside">А здесь идёт наш очешуенный текст задания</p>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        Date.prototype.addHours = function(h){
+            // this.setHours(this.getHours()+h);  //+1hour
+            this.setTime(this.getTime() + (1*h*60*1000));
+            return this;
+        }
+        $('.countdown').countdown({
+//date: new Date(<=timeStart ->),
+            date: new Date().addHours(1),
+            render: function (data) {
+                var el = $(this.el);
+                el.empty()
+                        .append("<div>" + this.leadingZeros(data.hours, 2) + " <span>hrs</span></div>")
+                        .append("<div>" + this.leadingZeros(data.min, 2) + " <span>min</span></div>")
+                        .append("<div>" + this.leadingZeros(data.sec, 2) + " <span>sec</span></div>");
+            },
+            onEnd: function () {
+//window.location.href = "/map";
+//alert("!!!");
+//                document.getElementById("alarm").style.display = "block";
+//                document.getElementById("countdown").style.display = "none";
+
+            }
+        });
+
+    });
+</script>
+
+<script>
+    function checkAdminMessages() {
+        $.getJSON("/message", function(messages) {
+            var value = messages[messages.length-1].message;
+            /*for (var i=0; i<messages.length; i++) {
+                value += messages[i].message + "; ";
+            }*/
+            $("p.alarmp").html(value);
+        });
+    };
+    checkAdminMessages();
+    //setInterval(checkAdminMessages, 10000);
+</script>
+
+<script>
+    $(function() {
+        $.ajax({
+            url: "/map",
+            data: "",
+            statusCode: {
+                200: function(res) {
+                    getProblem(false);
+                },
+                403: function(jqXHR) {
+                    console.log("403", arguments);
+                }
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+function getProblem() {
+
+$.ajax({
+url: "/",
+data: ""
+})
+    .done(function(problem) {
+            var textProblem = "";
+            if (problem.visible){
+                textProblem = problem.topic + '<br>' + problem.question + '<br';
+            }
+            $("p.textinside").html(textProblem);
+        })
+    .fail(function(jqXHR) {
+        console.log(jqXHR.status + " " + jqXHR.message);
+    });
+}
+
+</script>
+
+<script type="text/javascript">
+    function sendAnswer() {
+        console.log("POST on /");
+        var answer = document.getElementsByName('answer').value;
+        $.ajax({
+            url: "/",
+            data: $("#game").serialize(),
+            type: "post"
+        })
+                .done(function (resp) {
+                    if (resp.correctAnswer) {
+                        alert("задание засчитано");
+                        getProblem();
+                    }
+                    else if (resp.skipProblem) {
+                        alert("автопереход");
+                    }
+                    else if (resp.hint || resp.bonus) {
+                        //перегрузить задание  добавить подсказки/ бонусы
+                        alert("взята подсказка/бонус");
+                    }
+                })
+                .fail(function (resp) {
+                    var errorEl = $("#error");
+                    errorEl.empty();
+                    errorEl.text(resp.status + ': ' + resp.responseJSON.message);
+                });
+
+    }
+</script>
+
+<script>
+    function rotate(){
+    console.log("POST on /map");
+        $.ajax({
+            url: "/map",
+            data: "",
+            type: "post"
+        })
+                .done(function(resp){
+                    if(resp.visible) {
+                        rotatemywheel(resp.myPrev, resp.myCur);
+                        getProblem();
+                    }
+                })
+                .fail(function(jqXHR) {
+                    console.log(jqXHR.status + " " + jqXHR.message);
+                });
+    }
+</script>
