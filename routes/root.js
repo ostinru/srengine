@@ -10,7 +10,7 @@ var HINT_KEY_WORD = "подсказка";
 var SKIPPROBLEM_KEY_WORD = "автопереход";
 
 exports.get = function(req, res, next){
-    if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
+   if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
         return res.redirect("/map");
     }
 
@@ -36,6 +36,8 @@ exports.get = function(req, res, next){
 
         var problemHistory = user.getProblemHistory(problemId);
 
+        publicProblem.visible = problemHistory.visible;
+        logger.info("at root get visible = " + publicProblem.visible);
         // add bonuses
         var bonusesIds = problemHistory && _.filter(problem.bonuses, function(item) {
             return _.find(problemHistory.takenBonuses, function(bonusId) {

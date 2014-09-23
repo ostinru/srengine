@@ -41,6 +41,10 @@ var schema = new Schema({
                 type: Boolean,
                 default: false
             },
+            visible:{
+                type: Boolean,
+                default:false
+            },
             takenBonuses: [{
                 type: mongoose.Schema.Types.ObjectId,
                 required: false
