@@ -1,6 +1,6 @@
 {
-    "startTime": "2014-04-25 11:00:00 GMT+04",
-    "finishTime":"2014-09-01 23:00:00 GMT+04",
+    "startTime": "2014-09-20 11:00:00 GMT+04",
+    "finishTime":"2014-09-23 23:00:00 GMT+04",
     "port": 3000,
 	"mongoose": {
 		"uri": "mongodb://localhost/srengine",
@@ -13,5 +13,6 @@
 		}
     },
 	"debug": true,
-	"bruteforcetime" : 20
+	"bruteforcetime" : 3,
+    "bruteforcenumber":5
 }

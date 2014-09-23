@@ -10,9 +10,8 @@ async.series([
     requireModels,
     generateIds,
     createProblems,
-    createUsers,
-    createFields
-], function(err) {
+    createUsers
+], function (err) {
     console.log(arguments);
     mongoose.disconnect();
     process.exit(err ? 255 : 0);
@@ -32,137 +31,80 @@ function requireModels(callback) {
     require('models/problem');
     require('models/fieldMap');
 
-    async.each(Object.keys(mongoose.models), function(modelName, callback) {
+    async.each(Object.keys(mongoose.models), function (modelName, callback) {
         mongoose.models[modelName].ensureIndexes(callback);
     }, callback);
 }
 
 function generateIds(callback) {
-    for(var i=0; i<=100; i++) {
-        ids.push(mongoose.Types.ObjectId(1));
+    for (var i = 0; i <= 100; i++) {
+        ids.push(mongoose.Types.ObjectId(i));
     }
     callback(null);
 }
 
 function createProblems(callback) {
-
     var problems = [
         {
-            topic : 'GlobalProblem',
-            question : 'The Ultimate Question of Life, the Universe, and Everything',
-            answers : ['42'],
+            topic : 'Глобальный бонус',
+            question : 'Оценка за костюмы + количество артефактов',
+            answers : ['1'],
             cost: 0,
-            hints: [],
+            hints: [
+                { text: 'п10', cost: 10},
+                { text: 'п20', cost: 20},
+                { text: 'п30', cost: 30},
+                { text: 'п40', cost: 40},
+                { text: 'п50', cost: 50}
+            ],
             bonuses: [
-                { text: 'global1', cost: 20 },
-                { text: 'global2', cost: 20}
+                { text: 'б10', cost: 10},
+                { text: 'б20', cost: 20},
+                { text: 'б30', cost: 30},
+                { text: 'б40', cost: 40},
+                { text: 'б50', cost: 50},
+                { text: 'б60', cost: 60},
+                { text: 'б70', cost: 70},
+                { text: 'б80', cost: 80},
+                { text: 'б90', cost: 90},
+                { text: 'б100', cost: 100},
+                { text: 'б110', cost: 110}
             ],
             _id: Problem.getGlobalObjectId()
-        }, {
-            topic : 'Base 1',
-            question : 'Move to XX.XXX YY.YYY',
-            answers : ['answer'],
-            cost: 100,
-            hints: [],
-            bonuses: [
-                { text: 'base1', cost: 20 },
-                { text: 'base2', cost: 20}
-            ],
-            _id: ids[100]
         }
     ];
 
-    for(var i=1; i<10; i++) {
-        problems.push(
-            {
-                _id: ids[i],
-                topic : 'Задание ' + (i).toString(),
-                question : 'Фрай читал летопись Футурамы:\n«В тот день, когда BMW превратилось в ТЬБ, EUI - в ВАП, а FGC - в НГШ, пришел Дворак и произнес речь: Fynhjbdh\' ,ydpex fu jbdytpy dyp Phjbdhko x Ehtgx»',
-                answers : ['PING', "ПИНГ"],
-                cost: 50,
-                hints: [
-                    { _id:ids[i+20],text: 'Переведите речь из раскладки Дворака в раскладку Йцукен.тоже есть.', cost: 10},
-                    { _id:ids[i+21],text: 'Недострой церкви на стрелке рек Костромы и Волги.', cost: 10},
-                    { _id:ids[i+22],text: 'Найдите метку и смотрите на столбы.', cost: 10}
-                ],
-                bonuses: [
-                    { _id:ids[i+23],text: 'ъ', cost: 20 },
-                    { _id:ids[i+24],text: 'ъ', cost: 20 },
-                ]
-            });
-    }
-    
-    async.each(problems, function(problemData, callback) {
+    async.each(problems, function (problemData, callback) {
         var problem = new mongoose.models.Problem(problemData);
         problem.save(callback);
     }, callback);
 }
 
 function createUsers(callback) {
+    //example of user: {username: 'admin', password: '123123123', admin: true}
 
     var users = [
-        {username: 'vasya', password: '123',problemHistory: [
-            {
-                problemId: ids[1],
-                solved:true,
-                takenBonuses:[
-                    ids[1+23],
-                    ids[1+24]
-                ],
-                takenHints:[
-                    ids[1+20],
-                    ids[1+21],
-                    ids[1+22],
-                ]
-            },
-            {
-                problemId: ids[2],
-                solved:true,
-                takenBonuses:[
-                    ids[2+23],
-                ],
-                takenHints:[
-                    ids[2+20],
-                ]
-            },
-            {
-                problemId: ids[3],
-                solved:true,
-                takenBonuses:[],
-                takenHints:[]
-            }
-        ]},
-        //{username: 'vasya', password: '123' },
-        {username: 'petya', password: '123' },
-        {username: 'admin', password: '123', admin: true}
+        {username: 'superAdmin', password: '1',admin: true}
     ];
-    
-    for (var i=0; i<20; i++) {
-        users.push({username : 'user'+i, password : '123'});
-        users.push({username : 'nft'+i, password : '123'});
-    }
 
-    async.each(users, function(userData, callback) {
+    async.each(users, function (userData, callback) {
         var user = new mongoose.models.User(userData);
+        user.problemHistory.push({problemId: Problem.getGlobalObjectId(),solved:true});
         user.save(callback);
     }, callback);
 }
 
 function createFields(callback) {
+    //example of fieldmap: {X:1, Y:1, BS:false, ProblemId: ids[1]}
 
-    var fields = [];
+    var fields = [
+     ];
 
-    for(var i=2; i<=8; i++) {
-        var k = 1;
-        for (var j=1; j<=8; j++)
-        {
-           fields.push({X:i, Y:j, ProblemId: ids[i] });
+
+    async.each(fields, function (fieldData, callback) {
+        if(!fieldData.ProblemId){
+            fieldData.ProblemId = Problem.getGlobalObjectId();
         }
-    }
-    fields.push({X:1, Y:1, BS:true, ProblemId: ids[100]});
-
-    async.each(fields, function(fieldData, callback) {
-
         var field = new mongoose.models.FieldMap(fieldData);
         field.save(callback);
     }, callback);
