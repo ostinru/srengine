@@ -39,7 +39,7 @@
     </div>
     <div id = "wrapper">
         <div>Порядок заданий: </div>
-        <% for (var i=0; i<  countProblem - 1; i++ ) { %>
+        <% for (var i=0; i<  countProblem; i++ ) { %>
         <%var numb = 0;%>
         <%if (i<user.problemQueue.length) numb = user.problemQueue[i];%>
         <div class="block"><input type = "number" name = "numb<%= i -%>"value = "<%= numb%>"/></div>
