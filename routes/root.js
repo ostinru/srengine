@@ -31,12 +31,22 @@ exports.get = function(req, res, next){
 
         var publicProblem = {
             topic : problem.topic,
-            question : problem.question
+            question : problem.question,
+            cost : problem.cost
         };
 
         var problemHistory = user.getProblemHistory(problemId);
 
         publicProblem.visible = problemHistory.visible;
+        var delay = 0;
+        if (problem.serial === 0) {
+            delay = 1200000;
+        }else{
+            delay = 3600000;
+        };
+        publicProblem.timeStart = Date.parse(problemHistory.timeStart)+ delay;
+        publicProblem.myCur = problem.serial;
+
         logger.info("at root get visible = " + publicProblem.visible);
         // add bonuses
         var bonusesIds = problemHistory && _.filter(problem.bonuses, function(item) {
@@ -71,7 +81,7 @@ exports.post = function(req, res, next) {
     }
     var answer = req.body.answer;
     if (!answer) {
-        return res.sendHttpError(new HttpError(403, "No answer"));
+        return res.sendHttpError(new HttpError(403, "Ответ не введен")); //No answer
     }
 
     Problem.findById(problemId, function (err, problem) {
@@ -90,7 +100,7 @@ exports.post = function(req, res, next) {
             //
             if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
                 if (checkBruteForce(user)) {
-                    return res.sendHttpError(new HttpError(429, "Too many requests"));
+                    return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
                 }
                 var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
                 var bonus = problem.checkBonuses(bonusStr);
@@ -103,11 +113,11 @@ exports.post = function(req, res, next) {
                             if (err) {
                                 return res.sendHttpError(new HttpError(500, err));
                             }
-                            return res.json({ status : "Success", bonus : bonus });
+                            return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
                         });
                     }
                     else {
-                        return res.json({ status : "Success", bonus : bonus });
+                        return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
                     }
                 }
                 else {
@@ -116,7 +126,7 @@ exports.post = function(req, res, next) {
                         if (err)
                             logger.log(err);
                     });
-                    return res.sendHttpError(new HttpError(404, "No such bonus '"+bonusStr+"'"));
+                    return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
                 }
             }
             //
@@ -126,11 +136,11 @@ exports.post = function(req, res, next) {
                 var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
                 var hintNumber = parseInt(hintNumberStr);
                 if (isNaN(hintNumber)) {
-                    return res.sendHttpError(new HttpError(500, "Can't parse hint numer '" + hintNumberStr + "'"));
+                    return res.sendHttpError(new HttpError(500, "Нет номера подсказки '" + hintNumberStr + "'"));//Can't parse hint numer
                 }
                 var hint = problem.hints[hintNumber - 1];
                 if (hint === undefined) {
-                    return res.sendHttpError(new HttpError(404, "No such hint for this problem"));
+                    return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
                 }
                 logger.debug('[%s] got hint #%s', user.username, hintNumber);
                 if (! hasHint(hint._id, problemHistory.takenHints)) {
@@ -139,10 +149,10 @@ exports.post = function(req, res, next) {
                         if (err) {
                             return res.sendHttpError(new HttpError(500, err));
                         }
-                        return res.json({ status : "Success", hint : hint});
+                        return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
                     }); // TODO: markModified(?)
                 }
-                return res.json({ status : "Success", hint : hint});
+                return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
             }
             //
             // skip problem
@@ -155,7 +165,7 @@ exports.post = function(req, res, next) {
                     if (err) {
                         return res.sendHttpError(new HttpError(500, err));
                     }
-                    return res.json({ status : "Success", skipProblem : true});
+                    return res.json({ status : "Success", skipProblem : true,message: "зачислено:  " + answer});
                 });
             }
             //
@@ -163,7 +173,7 @@ exports.post = function(req, res, next) {
             //
             else {
                 if (checkBruteForce(user)) {
-                    return res.sendHttpError(new HttpError(429, "Too many requests"));
+                    return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек"));
                 }
                 if (problem.check(answer)) {
                     logger.debug('[%s] answer problem.', user.username);
@@ -175,7 +185,7 @@ exports.post = function(req, res, next) {
                         if (err) {
                             return res.sendHttpError(new HttpError(500, err));
                         }
-                        return res.json({ status : "Success", correctAnswer: true})
+                        return res.json({ status : "Success", correctAnswer: true,message: "зачислено:  " + answer})
                     });
                 }
                 else {
@@ -184,7 +194,7 @@ exports.post = function(req, res, next) {
                         if (err)
                             logger.log(err);
                     });
-                    return res.sendHttpError(new HttpError(404, "No such answer '" + answer + "'"));
+                    return res.sendHttpError(new HttpError(404, " Ответ неверный '" + answer + "'"));//No such answer
                 }
             }
         });
