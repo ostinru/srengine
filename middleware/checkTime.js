@@ -6,14 +6,16 @@ var Problem = require('models/problem').Problem;
 
 module.exports = function (req, res, next) {
     Problem.count({},function(err,count){
-        if(count === req.user.problemHistory.length){
-            logger.info("finish");
+        var lastProblemSolved = req.user.problemHistory[req.user.problemHistory.length -1].solved;
+        if(count === req.user.problemHistory.length && lastProblemSolved){
+            logger.info("finish: problemCount: = " + count + " historyLength = " + req.user.problemHistory.length);
             res.render('finish');
         }
         else{
-            logger.info(startTime);
+ /*           logger.info(startTime);
             logger.info(Date.now());
             logger.info(finishTime);
+*/
             if (Date.now() < startTime) {
                 res.locals.timeStart = Date.parse(config.get('startTime'));
                 res.render('start');
