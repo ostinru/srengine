@@ -46,7 +46,7 @@
                         <input type="text" name="answer" value="<%= problem.answers[i] %>"/>
                     </li>
                 <% } %>
-                <% fixNames();%>
+                <% fixNames("#answers_list", "answer","answer_cost"); %>
             </ul>
         </div>
     </div>
@@ -59,7 +59,7 @@
                         T:<input type="text" name="bonus" value="<%= problem.bonuses[i].text %>"/>
                         C:<input type="number" name="bonus_cost" class = "number" value="<%= problem.bonuses[i].cost %>"/>
                     </li>
-                <% fixNames();%>
+                <% fixNames("#bonuses_list", "bonus", "bonus_cost"); %>
                 <% } %>
                 </ul>
             </div>
@@ -74,7 +74,7 @@
                     C:<input type="number" name="hint_cost" class = "number" value="<%= problem.hints[i].cost %>"/>
                 </li>
             <% } %>
-            <% fixNames();%>
+            <% fixNames("#hints_list", "hint", "hint_cost"); %>
             </ul>
         </div>
     </div>
