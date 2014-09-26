@@ -524,13 +524,13 @@ data: ""
     function sendAnswer() {
         console.log("POST on /");
         var answer = document.getElementsByName('answer').value;
-        document.getElementById('inputarea').value = "";
         $.ajax({
             url: "/",
             data: $("#game").serialize(),
             type: "post"
         })
                 .done(function (resp) {
+                      document.getElementById('inputarea').value = "";
    /*                 if (resp.correctAnswer || resp.skipProblem) {
                         document.getElementById('serviceinputarea').value = resp.message;
                         reloadMap();
@@ -543,6 +543,7 @@ data: ""
                     reloadMap();
                 })
                 .fail(function (jqXHR) {
+                    document.getElementById('inputarea').value = "";
                     var responseText = jQuery.parseJSON(jqXHR.responseText)
                     document.getElementById('serviceinputarea').value = responseText.message;
                 });
