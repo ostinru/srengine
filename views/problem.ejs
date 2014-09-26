@@ -43,10 +43,9 @@
             <ul id="answers_list">
                 <% for (var i=0; i<problem.answers.length; i++) { %>
                     <li>
-                        <input type="text" name="answer" value="<%= problem.answers[i] %>"/>
+                        <input type="text" name="answer<%= i -%>" value="<%= problem.answers[i] %>"/>
                     </li>
                 <% } %>
-                <% fixNames("#answers_list", "answer","answer_cost"); %>
             </ul>
         </div>
     </div>
@@ -56,10 +55,9 @@
                 <ul id="bonuses_list">
                 <% for (var i=0; i<problem.bonuses.length; i++) { %>
                     <li>
-                        T:<input type="text" name="bonus" value="<%= problem.bonuses[i].text %>"/>
-                        C:<input type="number" name="bonus_cost" class = "number" value="<%= problem.bonuses[i].cost %>"/>
+                        T:<input type="text" name="bonus<%= i -%>" value="<%= problem.bonuses[i].text %>"/>
+                        C:<input type="number" name="bonus_cost<%= i -%>" class = "number" value="<%= problem.bonuses[i].cost %>"/>
                     </li>
-                <% fixNames("#bonuses_list", "bonus", "bonus_cost"); %>
                 <% } %>
                 </ul>
             </div>
@@ -70,11 +68,10 @@
             <ul id="hints_list">
               <% for (var i=0; i<problem.hints.length; i++) { %>
                 <li>
-                    T:<input type="text" name="hint" value="<%= problem.hints[i].text %>"/>
-                    C:<input type="number" name="hint_cost" class = "number" value="<%= problem.hints[i].cost %>"/>
+                    T:<input type="text" name="hint<%= i -%>" value="<%= problem.hints[i].text %>"/>
+                    C:<input type="number" name="hint_cost<%= i -%>" class = "number" value="<%= problem.hints[i].cost %>"/>
                 </li>
             <% } %>
-            <% fixNames("#hints_list", "hint", "hint_cost"); %>
             </ul>
         </div>
     </div>
