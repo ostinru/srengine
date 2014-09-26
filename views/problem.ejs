@@ -46,6 +46,7 @@
                         <input type="text" name="answer" value="<%= problem.answers[i] %>"/>
                     </li>
                 <% } %>
+                <% fixNames();%>
             </ul>
         </div>
     </div>
@@ -58,6 +59,7 @@
                         T:<input type="text" name="bonus" value="<%= problem.bonuses[i].text %>"/>
                         C:<input type="number" name="bonus_cost" class = "number" value="<%= problem.bonuses[i].cost %>"/>
                     </li>
+                <% fixNames();%>
                 <% } %>
                 </ul>
             </div>
@@ -72,6 +74,7 @@
                     C:<input type="number" name="hint_cost" class = "number" value="<%= problem.hints[i].cost %>"/>
                 </li>
             <% } %>
+            <% fixNames();%>
             </ul>
         </div>
     </div>
