@@ -524,6 +524,7 @@ data: ""
     function sendAnswer() {
         console.log("POST on /");
         var answer = document.getElementsByName('answer').value;
+        document.getElementsByName('answer').value = "";
         $.ajax({
             url: "/",
             data: $("#game").serialize(),
