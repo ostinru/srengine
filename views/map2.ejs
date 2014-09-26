@@ -440,9 +440,10 @@ function setPosition(myCur){
                         .append("<div>" + this.leadingZeros(data.sec, 2) + " <span>sec</span></div>");
             },
             onEnd: function () {
-                document.getElementByName('answer').value = "автопереход";
-                if(myCur=0){
-                    sendAnswer();
+
+            if(myCur==0){
+                document.getElementsByName('answer').value = "автопереход";
+                sendAnswer();
                 }
             }
         });
