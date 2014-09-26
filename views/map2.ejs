@@ -503,7 +503,7 @@ data: ""
                 if (problem.takenHints.length>0) {
                     textProblem = textProblem + "<br><br>" + "использованы подсказки:";
                     for (i = 0; i < problem.takenHints.length; i++) {
-                        textProblem = textProblem + '<br>' + problem.takenHints[i].text + " ( -" + problem.takenBonuses[i].cost + "баллов)";
+                        textProblem = textProblem + '<br>' + problem.takenHints[i].text + " ( -" + problem.takenHints[i].cost + "баллов)";
                     }
                 }
                 document.getElementById('serviceinputarea').value = "";
