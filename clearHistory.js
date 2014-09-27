@@ -6,7 +6,7 @@ var HttpError = require('error').HttpError;
 var _ = require('underscore');
 var mongoose = require('lib/mongoose.js');
 
-exports.post = function(req, res, next) {
+exports = function(req, res, next) {
 
     User.findById("5425af40aabf2aa734520402", function(err, user) {
         if(!user){
@@ -21,10 +21,10 @@ exports.post = function(req, res, next) {
         user.save(function(err){
             if (err){
                 logger.debug(err);
-                res.json(err);
+                console.log(err);
             }
             else{
-                res.redirect('user');
+                console.log("user");
             }
         });
 
