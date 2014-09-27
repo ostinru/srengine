@@ -29,4 +29,4 @@ exports = function(req, res, next) {
         });
 
     });
-};.
+};
