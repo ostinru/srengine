@@ -523,7 +523,7 @@ data: ""
 <script type="text/javascript">
     function sendAnswer() {
         console.log("POST on /");
-        var answer = (myCur==25 && answer=="автопереход")?" ":document.getElementsByName('answer').value;
+        var answer = document.getElementsByName('answer').value;
         
         $.ajax({
             url: "/",
