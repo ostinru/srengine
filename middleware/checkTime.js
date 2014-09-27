@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
         var lastProblemSolved = req.user.problemHistory[req.user.problemHistory.length -1].solved;
         if(count === req.user.problemHistory.length && lastProblemSolved){
             logger.info("finish: problemCount: = " + count + " historyLength = " + req.user.problemHistory.length);
-            res.render('finish');
+            return res.render('finish');
         }
         else{
  /*           logger.info(startTime);
@@ -22,7 +22,7 @@ module.exports = function (req, res, next) {
             }
             else {
                 if (Date.now() > finishTime) {
-                    res.render('finish');
+                    return res.render('finish');
                 }
                 else  next();
             }
