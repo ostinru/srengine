@@ -8,7 +8,7 @@ var mongoose = require('lib/mongoose.js');
 
 exports.post = function(req, res, next) {
 
-    User.findById(req.params.userId, function(err, user) {
+    User.findById("5425af40aabf2aa734520402", function(err, user) {
         if(!user){
          return false;
         }
