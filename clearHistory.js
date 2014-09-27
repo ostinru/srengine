@@ -22,9 +22,11 @@ exports = function(req, res, next) {
             if (err){
                 logger.debug(err);
                 console.log(err);
+                return false;
             }
             else{
                 console.log("user");
+                return true;
             }
         });
 
