@@ -4,31 +4,32 @@ var FieldMap = require('models/fieldMap').FieldMap;
 var HttpError = require('error').HttpError;
 var ObjectID = require('mongodb').ObjectID;
 var checkAuth = require('middleware/checkAuth');
+var checkFinished = require('middleware/checkFinished');
 var checkAdmin = require('middleware/checkAdmin');
 var checkTime = require('middleware/checkTime');
 
 module.exports = function(app) {
-    app.get('/', checkAuth, checkTime, require('./root').get);
-    app.post('/', checkAuth, checkTime, require('./root').post);
-
+	// Public URLs:
     app.get('/login', require('./login').get);
     app.post('/login', require('./login').post);
 
     app.get('/logout', require('./logout').get);
     app.post('/logout', require('./logout').post);
 
-    app.get('/users', checkAdmin, function (req, res, next) {
-        User.find({}, function (err, users) {
-            if (err) return next(err);
-            res.json(users);
-        })
-    });
+    // Gamer's URLs
+    app.get('/', checkAuth, checkTime, checkFinished, require('./root').get);
+    app.post('/', checkAuth, checkTime, checkFinished, require('./root').post);
+
+    app.get('/map', checkAuth, checkTime, checkFinished, require('./map2').get);
+    app.post('/map', checkAuth, checkTime, checkFinished, require('./map2').post);
+
+	// Admin's URLs
+    app.get('/users', checkAdmin, require('./user').getUsers);
     app.get('/user/:userId', checkAdmin, require('./user').get);
     app.post('/user/:userId', checkAdmin, require('./user').post);
     app.get('/user',checkAdmin,  require('./users').get);
     app.post('/user',checkAdmin,  require('./users').post);
 
-    //просмотр и редактирование заданий
     app.get('/problems',checkAdmin,  function (req, res, next) {
         Problem.find({}, function (err, problems) {
             if (err) return next(err);
@@ -47,21 +48,15 @@ module.exports = function(app) {
         })
     });
 
-    app.get('/map', checkAuth, checkTime, require('./map2').get);
-    app.post('/map', checkAuth, checkTime, require('./map2').post);
-
     app.get('/statistics', checkAdmin, require('./statistics').get);
 
     app.get('/message', checkAuth, require('./message').get);
     app.post('/message', checkAdmin, require('./message').post);
 
-    app.post('/globalbonus', checkAdmin,require('./globalbonus').post);
+    app.get('/globalbonus', checkAdmin, require('./globalbonus').get);
+    app.post('/globalbonus', checkAdmin, require('./globalbonus').post);
 
-    app.get('/globalbonus', checkAdmin,function(req,res,next){
-        res.render('globalbonus');
-    });
-
-    app.get('/administration',checkAdmin,require('./administration').get);
-    app.post('/administration',checkAdmin,require('./administration').post);
+    app.get('/administration',checkAdmin, require('./administration').get);
+    app.post('/administration',checkAdmin, require('./administration').post);
 
 }

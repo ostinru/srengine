@@ -7,6 +7,10 @@ var Problem = require('models/problem').Problem;
 var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
 
+exports.get = function(req, res, next) {
+	res.render('globalbonus');
+};
+
 exports.post = function (req, res, next) {
     logger.info("POST on /globalbonus " + req.body.user + " " + req.body.answer);
 
