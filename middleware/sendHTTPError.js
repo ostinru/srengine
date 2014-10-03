@@ -1,10 +1,15 @@
-var logger = require('lib/logger')(module);
+var logger = require('lib/logger')();
 
 module.exports = function (req, res, next) {
 
     res.sendHttpError = function (error) {
         var username = req.user && req.user.username;
-        logger.debug('[%s] %s: %s', username, error.status, error.message);
+        var proxy = req.headers['x-forwarded-for'] || '';
+        var ip = (req.connection && req.connection.remoteAddress) ||
+            (req.socket && req.socket.remoteAddress) ||
+            (req.connection && req.connection.socket.remoteAddress);
+        
+        logger.debug('[proxy="%s", IP="%s"][%s] %s: %s', proxy, ip, username, error.status, error.message);
 
         res.status(error.status);
         if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {

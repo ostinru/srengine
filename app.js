@@ -27,7 +27,6 @@ app.use(express.cookieParser('secret'));
 app.use(express.session({ secret: 'pew-pew'}));
 app.use(require('middleware/loadUser'));
 app.use(require('middleware/resLocals'));
-app.use(require('middleware/logRequest'));
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -36,6 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //if ('development' == app.get('env')) {
 //  app.use(express.errorHandler());
 //}
+
+app.use(require('middleware/logRequest'));
 
 require('./routes')(app);
 //обработчик ошибок
