@@ -1,6 +1,7 @@
 var config = require('./config');
 var logger = require('./lib/logger');
 var express = require('express');
+var MongoStore = require('connect-mongo')(express);
 var http = require('http');
 var path = require('path');
 var HttpError = require('error').HttpError;
@@ -10,6 +11,14 @@ var url = require('url');
 var chat = require('./chat');
 
 var app = express();
+
+if (! config.get('cookie_secret')) {
+    throw new Error('You should specify "cookie_secret" in config');
+}
+if (config.get('cookie_secret') == "pew-pew") {
+    throw new Error('You should change "cookie_secret" in config');
+}
+
 
 // all environments
 app.engine('ejs', require('ejs-locals'));
@@ -23,8 +32,13 @@ app.use(express.logger('dev'));
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.bodyParser());
-app.use(express.cookieParser('secret'));
-app.use(express.session({ secret: 'pew-pew'}));
+app.use(express.cookieParser(config.get('cookie_secret')));
+app.use(express.session({
+    secret: config.get('cookie_secret'),
+    store: new MongoStore({
+        url : config.get('mongoose:uri')
+    })
+}));
 app.use(require('middleware/loadUser'));
 app.use(require('middleware/resLocals'));
 
