@@ -1,14 +1,16 @@
 var config = require('./config');
 var logger = require('./lib/logger');
-var express = require('express');
-var MongoStore = require('connect-mongo')(express);
 var http = require('http');
 var path = require('path');
 var HttpError = require('error').HttpError;
-
-var fs = require('fs');
-var url = require('url');
-var chat = require('./chat');
+// ExpressJS & modules
+var express = require('express');
+var expressSessions = require('express-session');
+var MongoStore = require('connect-mongo')(expressSessions);
+var bodyParser = require('body-parser');
+var favicon = require('serve-favicon');
+var morgan = require('morgan'); // logger
+var cookieParser = require('cookie-parser');
 
 var app = express();
 
@@ -27,22 +29,23 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(require('middleware/sendHTTPError'));
-app.use(express.favicon('public/favicon.ico'));
-app.use(express.logger('dev'));
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.bodyParser());
-app.use(express.cookieParser(config.get('cookie_secret')));
-app.use(express.session({
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(morgan('dev')); // TODO: configure it
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser(config.get('cookie_secret')));
+app.use(expressSessions({
     secret: config.get('cookie_secret'),
+    saveUninitialized: false, // don't create session until something stored
+    resave: false, //don't save session if unmodified 
     store: new MongoStore({
-        url : config.get('mongoose:uri')
+        url : config.get('mongoose:uri'),
+        touchAfter: 3600 // time period in seconds 
     })
 }));
 app.use(require('middleware/loadUser'));
 app.use(require('middleware/resLocals'));
 
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
@@ -50,7 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //  app.use(express.errorHandler());
 //}
 
-app.use(require('middleware/logRequest'));
+//app.use(require('middleware/logRequest'));
 
 require('./routes')(app);
 //обработчик ошибок
