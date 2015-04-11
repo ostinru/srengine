@@ -30,7 +30,8 @@ app.set('view engine', 'ejs');
 
 app.use(require('middleware/sendHTTPError'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(morgan('dev')); // TODO: configure it
+morgan.token('sr-user', function(req, res) { return req.user && req.user.username; });
+app.use(morgan(':remote-addr - :sr-user [:date[clf]] ":method :url :status :response-time ms'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.get('cookie_secret')));
@@ -53,10 +54,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //  app.use(express.errorHandler());
 //}
 
-//app.use(require('middleware/logRequest'));
-
 require('./routes')(app);
-//обработчик ошибок
+
+// Error handler
 app.use(function (err, req, res, next) {
     if (typeof err == 'number') {
         err = new HttpError(err);
