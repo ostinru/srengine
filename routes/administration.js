@@ -3,10 +3,12 @@ var HttpError = require('error').HttpError;
 var config = require('../config');
 
 exports.get = function(req,res,next){
-    res.locals.startTimeValue = config.get('startTime');
-    logger.info(res.locals.startTimeValue);
-    res.locals.finishTimeValue = config.get('finishTime');
     res.render('administration');
+/*    res.json({
+        startTimeValue : config.get('startTime'),
+        finishTimeValue : config.get('finishTime')
+    });
+*/
 }
 
 exports.post = function(req,res,next){

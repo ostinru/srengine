@@ -5,6 +5,16 @@ var HttpError = require('error').HttpError;
 var _ = require('underscore');
 var mongoose = require('lib/mongoose.js');
 
+exports.getAllProblems = function(req, res, next){
+    Problem.find({},null,{sort: {serial: 1}}, function (err, problems) {
+        if (err) {
+            return next(err);
+        }
+
+        return res.json(problems);
+    });
+};
+
 exports.get = function(req, res, next){
     if (!req.params.problemId) {
         return res.sendHttpError(new HttpError(404, "problemId not set"));
@@ -18,26 +28,10 @@ exports.get = function(req, res, next){
         if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
             return res.json(problem);
         }
-        else {
-            if(!problem){
-                logger.info("create new problem");
-                problem =  new Problem({topic:'новое задание',
-                    serial:999,
-                    question:'Текст вопроса',
-                    answers:[],
-                    cost:0,
-                    hints:[],
-                    bonuses:[],
-                    _id: mongoose.Types.ObjectId(req.params.problemId)});
-            }
-            res.locals.problem = problem;
-            return res.render("problem");
-        }
     });
 };
 
 exports.post = function(req, res, next) {
-
     Problem.findById(req.params.problemId, function(err, problem) {
         if(!problem){
             problem =  new Problem({topic:'новое задание',
@@ -113,3 +107,4 @@ exports.post = function(req, res, next) {
 
     });
 };
+

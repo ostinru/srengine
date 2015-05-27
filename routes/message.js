@@ -7,14 +7,7 @@ exports.get = function(req, res, next) {
         if (err) {
             return res.sendHttpError(new HttpError(500, err.message));
         }
-        
-        if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
-            return res.json(messages);
-        }
-        else {
-            res.locals.messages = messages;
-            return res.render("message");
-        }
+        return res.json(messages);
     });
 };
 

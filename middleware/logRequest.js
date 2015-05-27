@@ -1,6 +1,7 @@
-var logger = require('lib/logger')();
+var morgan = require('morgan'); // logger
 
 module.exports = function (req, res, next) {
+
     var username = req.user && req.user.username;
     var method = req.method;
     var path = req.path;

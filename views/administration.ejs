@@ -1,37 +1,5 @@
-<% layout('./layout/page.ejs') -%>
+<% layout('./layout/admin.ejs') -%>
 
-<form id="menu" class="zf" align = "center " method="post">
-    <p>АДМИНИСТРИРОВАНИЕ</p>
-    <input id = "selector" name = "selector" type="text" hidden="true"/>
-    <div>
-        <label>Время старта   <input class="zf zf-date" type="text" name="startTime" id="input-datetime1" value="<%=startTimeValue%>" onclick="return { oOptions : { bWithTime : true, oPlaceHolders : { sHour : 'чч', sMinute : 'мм', sSecond : 'сс' } } }" /></label>
-        <input type = "button" value = "установить" name="setStart" onclick="submitForm('startTime')">
-    </div>
-    <div>
-        <label>Время финиша   <input class="zf zf-date" type="text" name="finishTime" id="input-datetime2" value="<%=finishTimeValue%>" onclick="return { oOptions : { bWithTime : true, oPlaceHolders : { sHour : 'чч', sMinute : 'мм', sSecond : 'сс' } } }" /></label>
-        <input type = "button" value = "установить" name="setFinish" onclick="submitForm('finishTime')">
-    </div>
-    <div>
-        <a href="/problem">Задания</a>
-    </div>
-    <div>
-        <a href="/user">Пользователи</a>
-    </div>
-    <div>
-        <a href="/statistics">Статистика</a>
-    </div>
-    <div>
-        <a href="/globalbonus">Глобальный бонус</a>
-    </div>
-    <div>
-        <a href="/message">Сообщение от администратора</a>
-    </div>
-</form>
 
-<script>
-    function submitForm(param)
-    {
-        document.getElementById('selector').value = param;
-        document.getElementById('menu').submit();
-    }
-</script>
+<script src="js/bundle.js"></script>
+

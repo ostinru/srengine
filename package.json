@@ -36,5 +36,15 @@
         "dateformat": "*",
         "url":"*",
         "connect-mongo": "*"
+    },
+    "devDependencies": {
+        "jsx-loader": "*",
+        "react": "*",
+        "react-bootstrap": "^0.20.2",
+        "react-tools": "*",
+        "react-mini-router": "^1.1.2",
+        "jquery": "^2.1.0",
+        "baobab": "~1.1.0"
     }
+
 }

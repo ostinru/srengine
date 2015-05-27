@@ -8,6 +8,8 @@ var checkFinished = require('middleware/checkFinished');
 var checkAdmin = require('middleware/checkAdmin');
 var checkTime = require('middleware/checkTime');
 
+var REST_PREFIX = '/rest';
+
 module.exports = function(app) {
 	// Public URLs:
     app.get('/login', require('./login').get);
@@ -23,23 +25,21 @@ module.exports = function(app) {
     app.get('/map', checkAuth, checkTime, checkFinished, require('./map2').get);
     app.post('/map', checkAuth, checkTime, checkFinished, require('./map2').post);
 
-	// Admin's URLs
-    app.get('/users', checkAdmin, require('./user').getUsers);
-    app.get('/user/:userId', checkAdmin, require('./user').get);
-    app.post('/user/:userId', checkAdmin, require('./user').post);
-    app.get('/user',checkAdmin,  require('./users').get);
-    app.post('/user',checkAdmin,  require('./users').post);
+    app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
 
-    app.get('/problems',checkAdmin,  function (req, res, next) {
-        Problem.find({}, function (err, problems) {
-            if (err) return next(err);
-            res.json(problems);
-        })
-    });
-    app.get('/problem',checkAdmin,  require('./problems').get);
-    app.post('/problem',checkAdmin,  require('./problems').post);
-    app.get('/problem/:problemId',checkAdmin,  require('./problem').get);
-    app.post('/problem/:problemId',checkAdmin,  require('./problem').post);
+	// Admin's URLs
+    app.get('/administration',checkAdmin, require('./administration').get);
+
+    // Admin's REST API
+    // FIXME: mount to /rest/...
+    app.get(REST_PREFIX + '/user', checkAdmin, require('./user').getAllUsers);
+    app.get(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').getUser);
+    app.post(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
+    app.post(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
+
+    app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
+    app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
+    app.post(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').post);
 
     app.get('/fieldsMap', checkAdmin, function (req, res, next) {
         FieldMap.find({}, function (err, fieldsMap) {
@@ -50,13 +50,12 @@ module.exports = function(app) {
 
     app.get('/statistics', checkAdmin, require('./statistics').get);
 
-    app.get('/message', checkAuth, require('./message').get);
-    app.post('/message', checkAdmin, require('./message').post);
+    app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
 
-    app.get('/globalbonus', checkAdmin, require('./globalbonus').get);
-    app.post('/globalbonus', checkAdmin, require('./globalbonus').post);
+    app.get(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').get);
+    app.post(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').post);
 
-    app.get('/administration',checkAdmin, require('./administration').get);
-    app.post('/administration',checkAdmin, require('./administration').post);
+    // FIXME: /times
+    app.post(REST_PREFIX + '/administration', checkAdmin, require('./administration').post);
 
 }
