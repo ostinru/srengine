@@ -15,6 +15,7 @@ var GlobalBonus = React.createClass({
 		var me = this;
 	    server.fetchGlobalBonuses(
 	    	function() {
+                console.error('failed to load global bonuses', arguments);
 	    	},
 	    	function(result) {
 		    	if (me.isMounted()) {
@@ -26,7 +27,6 @@ var GlobalBonus = React.createClass({
 	},
 
 	render: function() {
-		// FIXME: WTF?
 		return (
 			<div className='globalbonus'>
 				{this.state.bonuses.map(function(bonus) {

@@ -1,12 +1,36 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
+var server = require('./server.js');
 
 var Users = React.createClass({
-	
-	propTypes: {
+
+    propTypes: {
         users: React.PropTypes.array.isRequired
     },
+
+    getInitialState: function() {
+        return {
+            users: []
+        };
+    },
+
+	// https://facebook.github.io/react/tips/initial-ajax.html
+	componentDidMount: function() {
+		var me = this;
+	    server.fetchMessages(
+	    	function() {
+	    		console.error('failed to load users', arguments);
+	    	},
+	    	function(result) {
+	    		debugger;
+		    	if (me.isMounted()) {
+					me.setState({
+						users : result
+					});
+				}
+		    });
+	},
 
 	render: function() {
 		return (

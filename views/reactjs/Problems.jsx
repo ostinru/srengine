@@ -1,9 +1,10 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
+var server = require('./server.js');
 
 var AnswersList = React.createClass({
-	
+
     contextTypes: {
         store: React.PropTypes.object.isRequired,
     },
@@ -11,6 +12,29 @@ var AnswersList = React.createClass({
 	propTypes: {
         answers: React.PropTypes.array.isRequired
     },
+
+	getInitialState: function() {
+		return {
+			problems: []
+		};
+	},
+
+	// https://facebook.github.io/react/tips/initial-ajax.html
+	componentDidMount: function() {
+		var me = this;
+	    server.fetchMessages(
+	    	function() {
+	    		console.error('failed to load problems', arguments);
+	    	},
+	    	function(result) {
+	    		debugger;
+		    	if (me.isMounted()) {
+					me.setState({
+						problems : result
+					});
+				}
+		    });
+	},
 
 	render: function() {
 		return (
