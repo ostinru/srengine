@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var morgan = require('morgan'); // logger
 var cookieParser = require('cookie-parser');
+var errorHandler = require('errorhandler');
 
 var app = express();
 
@@ -66,7 +67,7 @@ app.use(function (err, req, res, next) {
         res.sendHttpError(err);
     } else {
         if (app.get('env') == 'development') {
-            express.errorHandler()(err, req, res, next);
+            app.use(errorHandler());
         } else {
             log.error(err);
             err = new HttpError(500);

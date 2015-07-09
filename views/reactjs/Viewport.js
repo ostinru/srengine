@@ -12,6 +12,8 @@ var Viewport = React.createClass({
 
     mixins: [RouterMixin],
 
+    root: '/administration',
+
     routes: {
         '/times': 'renderTimes',
         '/problems': 'renderProblems',
@@ -21,9 +23,9 @@ var Viewport = React.createClass({
         '/message': 'renderMessage'
     },
 
-	getInitialState: function() {
-		return {};
-	},
+    getInitialState: function() {
+        return {};
+    },
 
     renderTimes: function() {
         var gameOptions = store.select('game').get();
@@ -66,7 +68,7 @@ var Viewport = React.createClass({
 
 React.render(
     <Viewport/>,
-    document.body
+    document.getElementById('react-content')
 );
 
 module.exports = Viewport;
