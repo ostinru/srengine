@@ -6,7 +6,6 @@ var server = require('./server.js');
 var Users = React.createClass({
 
     propTypes: {
-        users: React.PropTypes.array.isRequired
     },
 
     getInitialState: function() {
@@ -18,12 +17,11 @@ var Users = React.createClass({
 	// https://facebook.github.io/react/tips/initial-ajax.html
 	componentDidMount: function() {
 		var me = this;
-	    server.fetchMessages(
+	    server.fetchUsers(
 	    	function() {
 	    		console.error('failed to load users', arguments);
 	    	},
 	    	function(result) {
-	    		debugger;
 		    	if (me.isMounted()) {
 					me.setState({
 						users : result
@@ -33,35 +31,40 @@ var Users = React.createClass({
 	},
 
 	render: function() {
+		var me = this;
 		return (
 			<div className='users'>
-			{this.props.users.map(function(user, index) {
+			{this.state.users.map(function(user, index) {
 				return (
 					<div className='user'>
 						<div id="wrapper">
-					        <div class="title">Имя пользователя:</div>
-					        <div class="input"><input type="text" name="username" value="{this.props.user.username}" /></div>
+					        <div className="title">Имя пользователя:</div>
+					        <div className="input"><input type="text" ref="username" value={user.username}/></div>
 					    </div>
 					    <div id="wrapper">
-					        <div class="title">Пароль:</div>
-					        <div class="input"><input type="text" name="password" value="{this.props.user.password}" /></div>
+					        <div className="title">Пароль:</div>
+					        <div className="input"><input type="text" ref="password" value={user.password} /></div>
 					    </div>
 					    <div id="wrapper">
-					        <div class="input"><label><input type="checkbox" checked={this.props.user.admin} name="admin" id="admin" /> администратор</label></div>
+					        <div className="input"><label><input type="checkbox" ref="admin" checked={user.admin} /> администратор</label></div>
 					    </div>
 					    <div id = "wrapper">
 					        <div>Порядок заданий: </div>
-					        {this.props.user.problemQueue.map(function(problem) {
+					        {user.problemQueue.map(function(problem) {
 					        	// FIXME: do something
 					        	return null;
-					        })};
+					        })}
 					    </div>
-					    <Button>Save</Button>
+					    <Button onClick={me.save(user.username)}>Save</Button>
 					</div>
 				);
 			})}
 			</div>
 		);
+	},
+
+	save: function(username) {
+		return;
 	}
 });
 

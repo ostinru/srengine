@@ -5,8 +5,6 @@ var server = require('./server.js');
 
 var Times = React.createClass({
       propTypes: {
-            startTime: React.PropTypes.string.isRequired,
-            endTime: React.PropTypes.string.isRequired
       },
       
     getInitialState: function() {

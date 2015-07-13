@@ -1,57 +1,35 @@
 var React = require('react');
+var server = require('./server.js');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
-var server = require('./server.js');
+var Input = Bootstrap.Input;
 
 var AnswersList = React.createClass({
 
-    contextTypes: {
-        store: React.PropTypes.object.isRequired,
-    },
-
 	propTypes: {
-        answers: React.PropTypes.array.isRequired
+		answers: React.PropTypes.array.isRequired
     },
-
-	getInitialState: function() {
-		return {
-			problems: []
-		};
-	},
-
-	// https://facebook.github.io/react/tips/initial-ajax.html
-	componentDidMount: function() {
-		var me = this;
-	    server.fetchMessages(
-	    	function() {
-	    		console.error('failed to load problems', arguments);
-	    	},
-	    	function(result) {
-	    		debugger;
-		    	if (me.isMounted()) {
-					me.setState({
-						problems : result
-					});
-				}
-		    });
-	},
 
 	render: function() {
 		return (
 			<div id="wrapper">
-			    <div class="title">Ответы  <button type="button" onclick="{addAnswer}">добавить</button></div>
-		        <div class="input">
+			    <div className="title">Ответы  <Button onClick={this.addAnswer}>добавить</Button></div>
+		        <div className="input">
 		            <ul id="answers_list">
 		                {this.props.answers.map(function(answer, index) {
 		                	return (
 		                		<li>
-		                        	<input type="text" name="answer{index}" value="{answer}"/>
+		                        	<input type="text" key="answer{index}" value={answer}/>
 		                    	</li>);
 		                })}
 		            </ul>
 		        </div>
 		    </div>
 		);
+	},
+
+	addAnswer: function() {
+		return;
 	}
 });
 
@@ -64,20 +42,24 @@ var BonusesList = React.createClass({
 	render: function() {
 		return (
 		    <div id="wrapper">
-		            <div class="title">Бонусы  <button type="button" onclick="{this.addBonus}">добавить</button></div>
-		            <div class="input">
+		            <div className="title">Бонусы  <Button onClick={this.addBonus}>добавить</Button></div>
+		            <div className="input">
 		                <ul id="bonuses_list">
 		                {this.props.bonuses.map(function(bonus, index) {
 		                	return (
 			                    <li>
-			                        T:<input type="text" name="bonus{index}" value="{bonus.text}"/>
-			                        C:<input type="number" name="bonus_cost{index}" class = "number" value="{bonus.cost}"/>
+			                        T:<input type="text" name="bonus{index}" value={bonus.text} />
+			                        C:<input type="number" name="bonus_cost{index}" className = "number" value={bonus.cost} />
 			                    </li>
 		                	);
 		                })}
 		                </ul>
 		            </div>
 		    </div>);
+	},
+
+	addBonus: function() {
+		return;
 	}
 });
 
@@ -90,14 +72,14 @@ var HintsList = React.createClass({
 	render: function() {
 		return (
 		    <div id="wrapper">
-		        <div class="title">Подсказки  <button type="button" onclick="{this.addHint}">добавить</button></div>
-		        <div class="input">
+		        <div className="title">Подсказки  <Button type="button" onClick={this.addHint}>добавить</Button></div>
+		        <div className="input">
 		            <ul id="hints_list">
 		            {this.props.hints.map(function(hint, index) {
 		            	return (
 			                <li>
-			                    T:<input type="text" name="hint{index}" value="{hint.text}"/>
-			                    C:<input type="number" name="hint_cost{index}" class = "number" value="{hint.cost}"/>
+			                    T:<input type="text" name="hint{index}" value={hint.text}/>
+			                    C:<input type="number" name="hint_cost{index}" className="number" value={hint.cost} />
 			                </li>
 		            	);
 		            })}
@@ -105,48 +87,75 @@ var HintsList = React.createClass({
 		        </div>
 		    </div>
 		);
+	},
+
+	addHint: function() {
+		return;
 	}
 });
 
 var Problems = React.createClass({
 
-	propTypes: {
-        problems: React.PropTypes.array.isRequired
-    },
+	getInitialState: function() {
+		return {
+			problems: []
+		};
+	},
+
+	// https://facebook.github.io/react/tips/initial-ajax.html
+	componentDidMount: function() {
+		var me = this;
+	    server.fetchProblems(
+	    	function() {
+	    		console.error('failed to load problems', arguments);
+	    	},
+	    	function(result) {
+		    	if (me.isMounted()) {
+					me.setState({
+						problems : result
+					});
+				}
+		    });
+	},
 
 	render: function() {
+		var me = this;
 		return (
 			<div className='problems'>
-				{this.props.problems.map(function(problem, index) {
+				{this.state.problems.map(function(problem, index) {
 					return (
-						<div className='problem'>
+						<div className='problem' key={problem.serial} >
 							<div id="wrapper">
-							    <div class="title">Заголовок:</div>
-						        <div class="input"><input type="text" name="topic" value="{problem.topic}" /></div>
+							    <div className="title">Заголовок:</div>
+						        <div className="input"><input type="text" name="topic" value={problem.topic} /></div>
 						    </div>
 						    <div id="wrapper">
-						        <div class="title">Порядковый номер:</div>
-						        <div class="input"><input type="text" name="serial" value="{problem.serial}" /></div>
+						        <div className="title">Порядковый номер:</div>
+						        <div className="input"><input type="text" name="serial" value={problem.serial} /></div>
 						    </div>
 						    <div id="wrapper">
-						        <div class="title">Текст задания:</div>
-						        <div class="input"><textarea rows='10' name="question" style="width:600px"> {problem.question}</textarea></div>
+						        <div className="title">Текст задания:</div>
+						        <div className="input"><Input type='textarea' label="question">{problem.question}</Input></div>
 						    </div>
 						    <div id="wrapper">
-						        <div class="title">Стоимость:</div>
-						        <div class="input"><input type="number" name="cost" value="{problem.cost}"/></div>
+						        <div className="title">Стоимость:</div>
+						        <div className="input"><input type="number" name="cost" value="{problem.cost}"/></div>
 						    </div>
 						    <AnswersList answers={problem.answers} />
 						    <BonusesList bonuses={problem.bonuses} />
 						    <HintsList hints={problem.hints} />
 						    
-						    <Button>Save</Button>
+						    <Button onClick={me.save(problem.serial)}>Save</Button>
 					    </div>
 				    )
 				})
 			}
             </div>
 		);
+	},
+
+	save: function(serial) {
+		return;
 	}
 });
 

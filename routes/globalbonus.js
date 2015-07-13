@@ -4,11 +4,13 @@ var User = require('models/user').User;
 var HttpError = require('error').HttpError;
 var Problem = require('models/problem').Problem;
 
+// FIXME: убрать эти два слова.
+// FIXME: произвольный бонусы + комментарий
 var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
 
 exports.get = function(req, res, next) {
-	res.render('globalbonus');
+	res.status(501).end();
 };
 
 exports.post = function (req, res, next) {
@@ -16,11 +18,11 @@ exports.post = function (req, res, next) {
 
     User.findOne({ username: req.body.user }, function (err, user) {
         if (!user) {
-            return res.sendHttpError(new HttpError(401));
+            return res.sendHttpError(new HttpError(400, "No user"));
         }
         var answer = req.body.answer;
         if (!answer) {
-            return res.sendHttpError(new HttpError(403, "No answer"));
+            return res.sendHttpError(new HttpError(400, "No answer"));
         }
 
         logger.info("user " + user.username);

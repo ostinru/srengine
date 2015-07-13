@@ -1,6 +1,7 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 var server = require('./server.js');
+var Bootstrap = require('react-bootstrap');
+var Button = Bootstrap.Button;
 
 var GlobalBonus = React.createClass({
 
@@ -35,12 +36,22 @@ var GlobalBonus = React.createClass({
 
 				<p class="lead">Добавление глобальных бонусов</p>
 
-				<form id="globalbonus" class="form-inline" action="/globalbonus" method="POST" name="globalbonus-form">
-				    <input name="user" type="text" class="form-control" id="input-user" placeholder="Имя"/>
-				    <input name="answer" type="text" class="form-control" id="input-answer" placeholder="Ответ"/>
-				    <input type="submit" class="btn btn-primary" value="зачислить"/>
-				</form>
+				<input ref="user" name="user" type="text" />
+				<input ref="answer" name="answer" type="text" />
+				<Button bsStyle='primary' onClick={this.onSubmit}>Зачислить</Button>
+
             </div>
+		);
+	},
+
+	onSubmit: function() {
+		var user = this.refs.user.value;
+		var answer = this.refs.answer.value;
+
+		server.postGlobalBonus(
+			{ user: user, answer: answer},
+			function() { console.error("Faied to push message", arguments); },
+			function() { console.log("Ok"); }
 		);
 	}
 });

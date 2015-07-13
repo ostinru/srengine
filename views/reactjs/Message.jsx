@@ -1,6 +1,7 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 var server = require('./server');
+var Bootstrap = require('react-bootstrap');
+var Button = Bootstrap.Button;
 
 var Message = React.createClass({
 
@@ -18,7 +19,6 @@ var Message = React.createClass({
 	    		console.error('failed to load admin messages', arguments);
 	    	},
 	    	function(result) {
-	    		debugger;
 		    	if (me.isMounted()) {
 					me.setState({
 						messages : result
@@ -33,22 +33,34 @@ var Message = React.createClass({
 			<div className='message'>
 				<p class="lead">Сообщения от администраторов</p>
 
-				<form id="publish" class="form-inline" method="post">
-				    <input type="text" name="message"/>
-				    <input type="submit" class="btn btn-primary" value="Отправить"/>
-				</form>
+				<input ref="message" name="message" type="text" />
+				<Button bsStyle='primary' onClick={this.onSubmit}>Отправить</Button>
 
 				<table>
-					<tr><td>Timestamp</td><td>message</td></tr>
+					<thead>
+						<tr><td>Timestamp</td><td>message</td></tr>
+					</thead>
+					<tbody>
 					{this.state.messages.map(function(message, index) {
+						// FIXME: add key
 						return (
-							<tr><td>{messag.timestamp}</td><td>{messag.message}</td></tr>
+							<tr><td>{message.timestamp}</td><td>{message.message}</td></tr>
 						);
 					})}
+					</tbody>
 				</table>
 
 
             </div>
+		);
+	},
+
+	onSubmit: function() {
+		var value = this.refs.message.value;
+		server.postMessage(
+			{ message: value},
+			function() { console.error("Faied to push message", arguments); },
+			function() { console.log("Ok"); }
 		);
 	}
 });

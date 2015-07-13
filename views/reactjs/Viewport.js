@@ -28,16 +28,13 @@ var Viewport = React.createClass({
     },
 
     renderTimes: function() {
-        var gameOptions = store.select('game').get();
-        return <Times startTime={gameOptions.startTime} endTime={gameOptions.endTime} />
+        return <Times />
     },
     renderProblems: function() {
-        var problems = store.select('problems').get();
-        return <Problems problems={problems} />;
+        return <Problems />;
     },
     renderUsers: function() {
-        var users = store.select('users').get();
-        return <Users users={users} />
+        return <Users />
     },
     renderStatistics: function() {
         return (
@@ -52,7 +49,7 @@ var Viewport = React.createClass({
         return <GlobalBonus />
     },
     notFound: function(path) {
-        return <div class="not-found">Page Not Found: {path}</div>;
+        return <div className="not-found">Page Not Found: {path}</div>;
     },
 
     render: function () {
