@@ -44,11 +44,12 @@ var Times = React.createClass({
 
     handleSave: function() {
         server.postTime({
-        	startTime : this.refs.startTime.value,
-        	finishTime: this.refs.finishTime.value
-        },
-		function() { console.error("Faied to push times", arguments); },
-		function() { console.log("Ok"); }
+	        	startTime : this.refs.startTime.value,
+	        	finishTime: this.refs.finishTime.value
+	        },
+			function() { console.error("Faied to push times", arguments); },
+			function() { console.log("Ok"); }
+		);
     }
 });
 
