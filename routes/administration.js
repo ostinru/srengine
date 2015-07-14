@@ -2,31 +2,34 @@ var logger = require('lib/logger')(module);
 var HttpError = require('error').HttpError;
 var config = require('../config');
 
-exports.get = function(req,res,next){
-    res.render('administration');
-/*    res.json({
+exports.get = function(req, res, next){
+    res.json({
         startTimeValue : config.get('startTime'),
         finishTimeValue : config.get('finishTime')
     });
-*/
 }
 
-exports.post = function(req,res,next){
-    var selector = req.body.selector;
-    logger.info("selector = " + selector);
-    if (selector === "startTime"|| selector === "finishTime") {
-        logger.info(req.body[selector]);
-        var newDate = req.body[selector];
-        logger.info(newDate);
-        if (!newDate){
-            //вывести ошибку
-            console.log("неверно задана дата!");
-            return res.sendHttpError(new HttpError(500, 'Неверно задана дата'));
-        }
-        else {
-            config.set(selector, newDate);
-            logger.info("set new " + selector + ": " + config.get(selector));
-        }
+exports.post = function(req, res, next){
+    logger.info("Times: ", req.body);
+    
+    // step 1: validate:
+    if (req.body.startTime === undefined && req.body.finishTime === undefined) {
+        return res.sendHttpError(new HttpError(400, 'No data'));
     }
-    res.redirect("administration");
+    // FIXME: check Date format!!!
+
+    // step 2: set time:
+    if (req.body.startTime !== undefined) {
+        config.set("startTime", req.body.startTime);
+    }
+
+    if (req.body.finishTime !== undefined) {
+        config.set("finishTime", req.body.finishTime);
+    }
+
+    return res.json({
+        status: "Success",
+        startTimeValue : config.get('startTime'),
+        finishTimeValue : config.get('finishTime')}
+    );
 }

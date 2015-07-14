@@ -7,6 +7,7 @@ module.exports = {
 
     postMessage: superPost("message"),
     postGlobalBonus: superPost("globalbonus"),
+    postTime: superPost("time"),
 }
 
 var $ = require('jquery');

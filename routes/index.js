@@ -55,7 +55,6 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').get);
     app.post(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').post);
 
-    // FIXME: /times
-    app.post(REST_PREFIX + '/administration', checkAdmin, require('./administration').post);
+    app.post(REST_PREFIX + '/time', checkAdmin, require('./administration').post);
 
 }

@@ -34,16 +34,21 @@ var Times = React.createClass({
 		return (
                   <div className='times'>
                   	<label>Start time</label>
-                  	<input type='text' label='Start Time'>{this.props.startTime}</input>
-                  	<label>End time</label>
-                  	<input type='text' label='End Time'>{this.props.endTime}</input>
+                  	<input type='text' label='Start Time' ref="startTime">{this.props.startTime}</input>
+                  	<label>Finish time</label>
+                  	<input type='text' label='Finish Time' ref="finishTime">{this.props.finishTime}</input>
                   	<Button onClick={this.handleSave}> Save </Button>
                   </div>
 		);
 	},
 
     handleSave: function() {
-        // FIXME
+        server.postTime({
+        	startTime : this.refs.startTime.value,
+        	finishTime: this.refs.finishTime.value
+        },
+		function() { console.error("Faied to push times", arguments); },
+		function() { console.log("Ok"); }
     }
 });
 
