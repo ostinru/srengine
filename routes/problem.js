@@ -17,17 +17,14 @@ exports.getAllProblems = function(req, res, next){
 
 exports.get = function(req, res, next){
     if (!req.params.problemId) {
-        return res.sendHttpError(new HttpError(404, "problemId not set"));
+        return res.sendHttpError(new HttpError(400, "problemId not set"));
     }
 
     Problem.findById(req.params.problemId, function(err, problem) {
         if (err) {
-            return res.sendHttpError(new HttpError(404, err));
+            return res.sendHttpError(new HttpError(400, err));
         }
-
-        if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
-            return res.json(problem);
-        }
+        return res.json(problem);
     });
 };
 

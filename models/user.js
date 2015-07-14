@@ -53,6 +53,10 @@ var schema = new Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 required: false
             }],
+            adminBonuses: [{
+                type: mongoose.Schema.Types.ObjectId,
+                required: false
+            }],
             timeStart:{
                 type: Date,
                 default: defaultTime

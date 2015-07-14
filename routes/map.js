@@ -6,21 +6,17 @@ var FieldMap = require('models/fieldMap').FieldMap;
 var User = require('models/user').User;
 
 exports.get = function (req, res, next) {
-    if (res.req.headers['x-requested-with'] == 'XMLHttpRequest') {
-        if (req.query.full == 'true') {
-            FieldMap.find({ /* all */ }, 'X Y BS -_id', function(err, result) {
-                if (err) {
-                    logger.error(err);
-                    return res.json({error: err});
-                }
-                res.json(result);
-            });
-        }
-        else {
-            res.json(req.user.position);
-        }
-    } else {
-        res.render('map');
+    if (req.query.full == 'true') {
+        FieldMap.find({ /* all */ }, 'X Y BS -_id', function(err, result) {
+            if (err) {
+                logger.error(err);
+                return res.json({error: err});
+            }
+            res.json(result);
+        });
+    }
+    else {
+        res.json(req.user.position);
     }
 }
 

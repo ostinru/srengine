@@ -34,7 +34,7 @@ var GlobalBonus = React.createClass({
 					return <div>{bonus.name} - {bonus.answer}</div>
 				})}
 
-				<p class="lead">Добавление глобальных бонусов</p>
+				<p className="lead">Добавление глобальных бонусов</p>
 
 				<input ref="user" name="user" type="text" />
 				<input ref="answer" name="answer" type="text" />
