@@ -15,6 +15,7 @@ var Viewport = React.createClass({
     root: '/administration',
 
     routes: {
+        '/': 'renderTimes', // default URL
         '/times': 'renderTimes',
         '/problems': 'renderProblems',
         '/users': 'renderUsers',

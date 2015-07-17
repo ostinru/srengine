@@ -25,6 +25,7 @@ module.exports = function(app) {
     app.get('/map', checkAuth, checkTime, checkFinished, require('./map2').get);
     app.post('/map', checkAuth, checkTime, checkFinished, require('./map2').post);
 
+    // Gamer's REST API
     app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
 
 	// Admin's URLs
@@ -55,6 +56,6 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').get);
     app.post(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').post);
 
-    app.post(REST_PREFIX + '/time', checkAdmin, require('./administration').post);
+    app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);
 
 }
