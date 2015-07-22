@@ -1,6 +1,5 @@
 var User = require('models/user').User;
 var Problem = require('models/problem').Problem;
-var FieldMap = require('models/fieldMap').FieldMap;
 var HttpError = require('error').HttpError;
 var ObjectID = require('mongodb').ObjectID;
 var checkAuth = require('middleware/checkAuth');
@@ -41,13 +40,6 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
     app.post(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').post);
-
-    app.get('/fieldsMap', checkAdmin, function (req, res, next) {
-        FieldMap.find({}, function (err, fieldsMap) {
-            if (err) return next(err);
-            res.json(fieldsMap);
-        })
-    });
 
     app.get('/statistics', checkAdmin, require('./statistics').get);
 

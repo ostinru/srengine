@@ -2,7 +2,6 @@ var async = require('async');
 var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
-var FieldMap = require('models/fieldMap').FieldMap;
 var User = require('models/user').User;
 
 var root = require('routes/root');
