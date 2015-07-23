@@ -3,6 +3,10 @@ var server = require('./server.js');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
 var Input = Bootstrap.Input;
+var Glyphicon = Bootstrap.Glyphicon;
+var Panel = Bootstrap.Panel;
+
+
 
 var AnswersList = React.createClass({
 
@@ -12,19 +16,15 @@ var AnswersList = React.createClass({
 
 	render: function() {
 		return (
-			<div id="wrapper">
-			    <div className="title">Ответы  <Button onClick={this.addAnswer}>добавить</Button></div>
-		        <div className="input">
-		            <ul id="answers_list">
-		                {this.props.answers.map(function(answer, index) {
-		                	return (
-		                		<li>
-		                        	<input type="text" key="answer{index}" value={answer}/>
-		                    	</li>);
-		                })}
-		            </ul>
-		        </div>
-		    </div>
+			<Panel header="Answers" >
+                {this.props.answers.map(function(answer, index) {
+                	return (
+                		<form className='form-inline' key={"answer" + index} action="javascript:void(0);">
+                			<Input type="text" value={answer}/>
+                		</form>);
+                })}
+                <Button onClick={this.addAnswer}><Glyphicon glyph='plus' /></Button>
+		    </Panel>
 		);
 	},
 
@@ -41,21 +41,18 @@ var BonusesList = React.createClass({
 
 	render: function() {
 		return (
-		    <div id="wrapper">
-		            <div className="title">Бонусы  <Button onClick={this.addBonus}>добавить</Button></div>
-		            <div className="input">
-		                <ul id="bonuses_list">
-		                {this.props.bonuses.map(function(bonus, index) {
-		                	return (
-			                    <li>
-			                        T:<input type="text" name="bonus{index}" value={bonus.text} />
-			                        C:<input type="number" name="bonus_cost{index}" className = "number" value={bonus.cost} />
-			                    </li>
-		                	);
-		                })}
-		                </ul>
-		            </div>
-		    </div>);
+			<Panel header="Bonuses" >
+            	{this.props.bonuses.map(function(bonus, index) {
+                	return (
+                		<form className='form-inline' key={"bonus" + index} action="javascript:void(0);">
+	                        <Input type="text" value={bonus.text} />
+	                        <Input type="number" value={bonus.cost} />
+	                        <Button bsSize='small'><Glyphicon glyph='remove'/></Button>
+	                    </form>
+                	);
+           		})}
+           		<Button onClick={this.addBonus}><Glyphicon glyph='plus' /></Button>
+		    </Panel>);
 	},
 
 	addBonus: function() {
@@ -71,21 +68,18 @@ var HintsList = React.createClass({
 
 	render: function() {
 		return (
-		    <div id="wrapper">
-		        <div className="title">Подсказки  <Button type="button" onClick={this.addHint}>добавить</Button></div>
-		        <div className="input">
-		            <ul id="hints_list">
-		            {this.props.hints.map(function(hint, index) {
-		            	return (
-			                <li>
-			                    T:<input type="text" name="hint{index}" value={hint.text}/>
-			                    C:<input type="number" name="hint_cost{index}" className="number" value={hint.cost} />
-			                </li>
-		            	);
-		            })}
-		            </ul>
-		        </div>
-		    </div>
+		    <Panel header="Hints">
+	        	{this.props.hints.map(function(hint, index) {
+	            	return (
+		                <form className='form-inline' key={"hint" + index} action="javascript:void(0);">
+		                    <Input type="text" value={hint.text}/>
+		                    <Input type="number" value={hint.cost} />
+		                    <Button bsSize='small'><Glyphicon glyph='remove' /></Button>
+		                </form>
+	            	);
+	            })}
+		     	<Button type="button" onClick={this.addHint}><Glyphicon glyph='plus' /></Button>
+		    </Panel>
 		);
 	},
 
@@ -124,34 +118,30 @@ var Problems = React.createClass({
 			<div className='problems'>
 				{this.state.problems.map(function(problem, index) {
 					return (
-						<div className='problem' key={problem.serial} >
-							<div id="wrapper">
-							    <div className="title">Заголовок:</div>
-						        <div className="input"><input type="text" name="topic" value={problem.topic} /></div>
-						    </div>
-						    <div id="wrapper">
-						        <div className="title">Порядковый номер:</div>
-						        <div className="input"><input type="text" name="serial" value={problem.serial} /></div>
-						    </div>
-						    <div id="wrapper">
-						        <div className="title">Текст задания:</div>
-						        <div className="input"><Input type='textarea' label="question">{problem.question}</Input></div>
-						    </div>
-						    <div id="wrapper">
-						        <div className="title">Стоимость:</div>
-						        <div className="input"><input type="number" name="cost" value="{problem.cost}"/></div>
-						    </div>
-						    <AnswersList answers={problem.answers} />
-						    <BonusesList bonuses={problem.bonuses} />
-						    <HintsList hints={problem.hints} />
+						<Panel bsStyle='primary' key={"problem" + problem.serial} header={problem.topic}>
+							<Input type="text" ref="title" label="Title" value={problem.topic} onChange={me.updateProblem} />
+						    <Input type="number" ref="sequence" label="Sequence number" value={problem.serial} onChange={me.updateProblem} />
+							<Input type='textarea' ref="text" label="Text" value={problem.question} onChange={me.updateProblem}/>
+							<Input type="number" ref="cost" label="Cost" value={problem.cost} onChange={me.updateProblem}/>
 						    
-						    <Button onClick={me.save(problem.serial)}>Save</Button>
-					    </div>
+						    <Button onClick={me.save(problem.serial)}><Glyphicon glyph='ok'/> Save</Button>
+					    </Panel>
 				    )
 				})
 			}
             </div>
 		);
+	},
+
+	updateProblem: function(index) {
+		var copy = this.state.problems.slice();
+		var element = copy[index];
+
+		element.title = this.refs.title.value;
+
+		this.setState({
+			problems: copy
+		});
 	},
 
 	save: function(serial) {
@@ -160,27 +150,3 @@ var Problems = React.createClass({
 });
 
 module.exports = Problems;
-
-/*
-
-<style type="text/css">
-    input[type="textarea"] {
-        width : 500px;
-    }
-    input[type="number"] {
-        width : 50px;
-    }
-
-    .title{
-        width : 100%;
-    }
-    .input{
-         width : 100%;
-    }
-    #wrapper{
-        margin-top: 20px;
-    }
-</style>
-
-
-*/
