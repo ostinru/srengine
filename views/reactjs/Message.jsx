@@ -2,6 +2,11 @@ var React = require('react');
 var server = require('./server');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
+var Input = Bootstrap.Input;
+var Glyphicon = Bootstrap.Glyphicon;
+var Panel = Bootstrap.Panel;
+var Table = Bootstrap.Table;
+
 
 var Message = React.createClass({
 
@@ -30,15 +35,15 @@ var Message = React.createClass({
 
 	render: function() {
 		return (
-			<div className='message'>
-				<p class="lead">Сообщения от администраторов</p>
+			<Panel header="Administarator's messages" >
+				<form className='form-inline' action="javascript:void(0);">
+					<Input ref="message" name="message" type="text" />
+					<Button bsStyle='primary' onClick={this.onSubmit}>Отправить</Button>
+				</form>
 
-				<input ref="message" name="message" type="text" />
-				<Button bsStyle='primary' onClick={this.onSubmit}>Отправить</Button>
-
-				<table>
+				<Table bordered hover striped >
 					<thead>
-						<tr><td>Timestamp</td><td>message</td></tr>
+						<tr><th>Timestamp</th><th>message</th></tr>
 					</thead>
 					<tbody>
 					{this.state.messages.map(function(message, index) {
@@ -48,15 +53,13 @@ var Message = React.createClass({
 						);
 					})}
 					</tbody>
-				</table>
-
-
-            </div>
+				</Table>
+            </Panel>
 		);
 	},
 
 	onSubmit: function() {
-		var value = this.refs.message.value;
+		var value = this.refs.message.getValue();
 		server.postMessage(
 			{ message: value},
 			function() { console.error("Faied to push message", arguments); },
