@@ -48,6 +48,7 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').get);
     app.post(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').post);
 
+    app.get(REST_PREFIX + '/time', checkAdmin, require('./game').get);
     app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);
 
 }

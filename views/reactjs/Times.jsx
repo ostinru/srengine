@@ -1,6 +1,9 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
+var Glyphicon = Bootstrap.Glyphicon;
+var Input = Bootstrap.Input;
+var Panel = Bootstrap.Panel;
 var server = require('./server.js');
 
 var Times = React.createClass({
@@ -9,7 +12,8 @@ var Times = React.createClass({
       
     getInitialState: function() {
         return {
-            times: []
+            startTime: '',
+            finishTime: ''
         };
     },
 
@@ -21,10 +25,10 @@ var Times = React.createClass({
 	    		console.error('failed to load times', arguments);
 	    	},
 	    	function(result) {
-	    		debugger;
 		    	if (me.isMounted()) {
 					me.setState({
-						times : result
+						startTime : result.startTime,
+						finishTime: result.finishTime
 					});
 				}
 		    });
@@ -32,21 +36,32 @@ var Times = React.createClass({
 
 	render: function() {
 		return (
-                  <div className='times'>
-                  	<label>Start time</label>
-                  	<input type='text' label='Start Time' ref="startTime">{this.props.startTime}</input>
-                  	<label>Finish time</label>
-                  	<input type='text' label='Finish Time' ref="finishTime">{this.props.finishTime}</input>
-                  	<Button onClick={this.handleSave}> Save </Button>
-                  </div>
+                  <Panel header="Start/Finish time">
+                  	<Input type="text" ref="startTime" label="Start time" value={this.state.startTime} onChange={this.updateStartTime} />
+                  	<Input type='text' ref="finishTime" label='Finish time' value={this.state.finishTime} onChange={this.updateFinishTime} />
+                  	<Button onClick={this.handleSave}><Glyphicon glyph='ok'/> Save</Button>
+                  </Panel>
 		);
 	},
 
+	updateStartTime: function() {
+		this.setState({
+			startTime: this.refs.startTime.getValue()
+		});
+	},
+	updateFinishTime: function() {
+		this.setState({
+			finishTime: this.refs.finishTime.getValue()
+		});
+	},
+
+
     handleSave: function() {
         server.postTime({
-	        	startTime : this.refs.startTime.value,
-	        	finishTime: this.refs.finishTime.value
+	        	startTime : this.state.startTime,
+	        	finishTime: this.state.finishTime
 	        },
+	        // FIXME: force reload
 			function() { console.error("Faied to push times", arguments); },
 			function() { console.log("Ok"); }
 		);

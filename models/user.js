@@ -28,15 +28,11 @@ var schema = new Schema({
         type: Boolean,
         default: false
     },
-    position: {
-       X: {type: Number, default: 10},
-       Y: {type: Number, default: 10}
-    },
     problemHistory: [{
-            problemId: {
+            problems: [{
                 type: mongoose.Schema.Types.ObjectId,
                 required: true
-            },
+            }],
             solved: {
                 type: Boolean,
                 default: false
@@ -65,8 +61,7 @@ var schema = new Schema({
                 type: Date,
                 default: defaultTime
             }
-        }
-    ],
+    }],
     lastActivity : Number,
     numberOfAttempts: Number,
     problemQueue: [Number]

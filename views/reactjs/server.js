@@ -3,7 +3,7 @@ module.exports = {
 	fetchMessages : superFetch('message'),
     fetchUsers : superFetch('user'),
     fetchProblems : superFetch('problem'),
-    fetchTimes : superFetch('times'),
+    fetchTimes : superFetch('time'),
 
     postMessage: superPost("message"),
     postGlobalBonus: superPost("globalbonus"),

@@ -4,8 +4,8 @@ var config = require('../config');
 
 exports.get = function(req, res, next){
     res.json({
-        startTimeValue : config.get('startTime'),
-        finishTimeValue : config.get('finishTime')
+        startTime : (new Date(config.get('startTime'))).toJSON(),
+        finishTime : (new Date(config.get('finishTime'))).toJSON()
     });
 }
 
@@ -16,16 +16,27 @@ exports.post = function(req, res, next){
     if (req.body.startTime === undefined && req.body.finishTime === undefined) {
         return res.sendHttpError(new HttpError(400, 'No data'));
     }
-    // FIXME: check Date format!!!
-
+    
     // step 2: set time:
     if (req.body.startTime !== undefined) {
-        config.set("startTime", req.body.startTime);
+        var startTime = new Date(req.body.startTime);
+        if (startTime.toJSON() === null) {
+            return res.sendHttpError(new HttpError(400, 'Invalid StartTime'));
+        }
+        logger.info('Set StartTime = ' + startTime);
+        config.set("startTime", startTime.toJSON());
     }
 
     if (req.body.finishTime !== undefined) {
-        config.set("finishTime", req.body.finishTime);
+        var finishTime = new Date(req.body.finishTime);
+        if (finishTime.toJSON() === null) {
+            return res.sendHttpError(new HttpError(400, 'Invalid FinishTime'));
+        }
+        logger.info('Set FinishTime = ' + finishTime);
+        config.set("finishTime", finishTime.toJSON());
     }
+
+    // FIXME: save to db/config!
 
     return res.json({
         status: "Success",
