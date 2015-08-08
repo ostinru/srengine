@@ -29,7 +29,6 @@ function dropDatabase(callback) {
 function requireModels(callback) {
     require('models/user');
     require('models/problem');
-    require('models/fieldMap');
 
     async.each(Object.keys(mongoose.models), function (modelName, callback) {
         mongoose.models[modelName].ensureIndexes(callback);
@@ -89,23 +88,10 @@ function createUsers(callback) {
 
     async.each(users, function (userData, callback) {
         var user = new mongoose.models.User(userData);
-        user.problemHistory.push({problemId: Problem.getGlobalObjectId(),solved:true});
+        user.problemHistory.push({problem: Problem.getGlobalObjectId(),solved:true});
         user.save(callback);
     }, callback);
 }
 
 function createFields(callback) {
-    //example of fieldmap: {X:1, Y:1, BS:false, ProblemId: ids[1]}
-
-    var fields = [
-     ];
-
-
-    async.each(fields, function (fieldData, callback) {
-        if(!fieldData.ProblemId){
-            fieldData.ProblemId = Problem.getGlobalObjectId();
-        }
-        var field = new mongoose.models.FieldMap(fieldData);
-        field.save(callback);
-    }, callback);
 }

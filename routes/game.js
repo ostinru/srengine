@@ -36,7 +36,8 @@ exports.post = function(req, res, next){
         config.set("finishTime", finishTime.toJSON());
     }
 
-    // FIXME: save to db/config!
+    // FIXME: save to db/config-file!
+    // FIXME: add admin message
 
     return res.json({
         status: "Success",

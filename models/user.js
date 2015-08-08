@@ -3,8 +3,7 @@ var crypto = require('crypto'),
     Schema = mongoose.Schema,
     _ = require('underscore');
 var config = require('../config');
-var Problem = require('models/problem').Problem;
-var defaultTime = new Date(config.get('startTime'));
+var defaultTime = new Date(config.get('startTime')); // FIXME: ???
 
 var schema = new Schema({
     username: {
@@ -20,37 +19,32 @@ var schema = new Schema({
         type: String,
         required: true
     },
-    problemId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false
-    },
     admin: {
         type: Boolean,
         default: false
     },
+    // current availible problems
+    problems: [{
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'Problem'
+    }],
     problemHistory: [{
-            problems: [{
-                type: mongoose.Schema.Types.ObjectId,
-                required: true
-            }],
+            problem: {
+                type: Schema.Types.ObjectId,
+                required: true,
+                ref: 'Problem'
+            },
             solved: {
                 type: Boolean,
                 default: false
             },
-            visible:{
-                type: Boolean,
-                default:false
-            },
             takenBonuses: [{
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 required: false
             }],
             takenHints: [{
-                type: mongoose.Schema.Types.ObjectId,
-                required: false
-            }],
-            adminBonuses: [{
-                type: mongoose.Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 required: false
             }],
             timeStart:{
@@ -62,9 +56,23 @@ var schema = new Schema({
                 default: defaultTime
             }
     }],
+    adminBonuses: [{
+        id: {
+            type: Schema.Types.ObjectId,
+            required: true
+            // default: function() {return new mongoose.Types.ObjectId(); }
+        },
+        message: {
+            type: String,
+            required: true
+        },
+        cost: {
+            type:Number,
+            required: true
+        }
+    }],
     lastActivity : Number,
-    numberOfAttempts: Number,
-    problemQueue: [Number]
+    numberOfAttempts: Number
 });
 
 schema.methods.encryptPassword = function (password) {
@@ -90,10 +98,10 @@ schema.methods.isAdmin = function () {
     return this.admin === true;
 };
 
+// TODO: remove or update
 schema.methods.getPublicFields = function() {
     return {
         username: this.username,
-        created: this.created,
         id: this.id
     };
 };

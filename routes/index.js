@@ -21,8 +21,8 @@ module.exports = function(app) {
     app.get('/', checkAuth, checkTime, checkFinished, require('./root').get);
     app.post('/', checkAuth, checkTime, checkFinished, require('./root').post);
 
-    app.get('/map', checkAuth, checkTime, checkFinished, require('./map2').get);
-    app.post('/map', checkAuth, checkTime, checkFinished, require('./map2').post);
+    app.get('/map', checkAuth, checkTime, checkFinished, require('./map').get);
+    app.post('/map', checkAuth, checkTime, checkFinished, require('./map').post);
 
     // Gamer's REST API
     app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
@@ -34,8 +34,13 @@ module.exports = function(app) {
     // FIXME: mount to /rest/...
     app.get(REST_PREFIX + '/user', checkAdmin, require('./user').getAllUsers);
     app.get(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').getUser);
+    app.put(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
     app.post(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
-    app.post(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
+    app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
+    
+    app.put(REST_PREFIX + '/user/:userId/adminbonus/', checkAdmin, require('./user').addAdminBonus);
+    app.post(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').updateAdminBonus);
+    app.delete(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').deleteAdminBonus);
 
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
@@ -44,9 +49,6 @@ module.exports = function(app) {
     app.get('/statistics', checkAdmin, require('./statistics').get);
 
     app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
-
-    app.get(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').get);
-    app.post(REST_PREFIX + '/globalbonus', checkAdmin, require('./globalbonus').post);
 
     app.get(REST_PREFIX + '/time', checkAdmin, require('./game').get);
     app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);

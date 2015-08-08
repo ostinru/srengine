@@ -14,7 +14,7 @@ exports.get = function(req, res, next) {
 exports.post = function(req, res, next) {
     logger.debug(req.body);
     if (!req.body.message) {
-        return res.sendHttpError(new HttpError(403, "No message"));
+        return res.sendHttpError(new HttpError(400, "No message"));
     }
     var message = new Message();
     message.message = req.body.message;

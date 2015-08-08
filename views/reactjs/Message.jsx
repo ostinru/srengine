@@ -2,11 +2,10 @@ var React = require('react');
 var server = require('./server');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
-var Input = Bootstrap.Input;
 var Glyphicon = Bootstrap.Glyphicon;
 var Panel = Bootstrap.Panel;
 var Table = Bootstrap.Table;
-
+var Input = require('./controls/Input.jsx');
 
 var Message = React.createClass({
 
@@ -40,7 +39,7 @@ var Message = React.createClass({
 					<Input ref="message" name="message" type="text" />
 					<Button bsStyle='primary' onClick={this.onSubmit}>Отправить</Button>
 				</form>
-
+				<br/>
 				<Table bordered hover striped >
 					<thead>
 						<tr><th>Timestamp</th><th>message</th></tr>
@@ -60,10 +59,16 @@ var Message = React.createClass({
 
 	onSubmit: function() {
 		var value = this.refs.message.getValue();
+
+		console.log('Sending new admin message ', value);
+		
 		server.postMessage(
-			{ message: value},
+			{ message: value },
 			function() { console.error("Faied to push message", arguments); },
-			function() { console.log("Ok"); }
+			function() {
+				console.log("Ok");
+				document.location.reload();
+			}
 		);
 	}
 });

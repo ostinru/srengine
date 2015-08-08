@@ -8,8 +8,8 @@ var root = require('routes/root');
 
 exports.get = function (req, res, next) {
     var user = req.user;
-    logger.info("at map get");
-    getNextProblem(user,res);
+    logger.info("GET /map");
+    getNextProblem(user, res);
 }
 
 exports.post = function (req, res, next) {
@@ -49,36 +49,30 @@ exports.post = function (req, res, next) {
 }
 
 function getNextProblem(user,res){
-    if (!user.problemId){
-        //we must give next problem
-        var serial = user.problemQueue[user.problemHistory.length-1];
-        Problem.findOne({serial:serial},function(err,problem){
-            if (err) {
-                return res.sendHttpError(new HttpError(500,"Problem not found"));
-            }
-            if(!problem){
-                return res.sendHttpError(new HttpError(500, "No problem with serial: '" + serial + "'"));
-            }
-            user.problemId = problem._id;
-            var visible = user.problemHistory.length ===1;
-            user.problemHistory.push({
-                problemId: problem._id,
-                takenBonuses:[],
-                takenHints:[],
-                timeStart: Date.now(),
-                visible: visible
-            });
-            user.markModified('problemHistory');
-            user.save(function (err) {
-                if (err) {
-                    logger.error("[%s] задание не добавлено в историю", user.username, err);
-                    return res.sendHttpError(new HttpError(500,"Problem not saved to history"))
-                }
-                logger.info("[%s] Задание добавлено в историю.", user.username, problem.topic);
-                res.render('map2');
-            });
-        });
-    }else{
-        res.render('map2');
+    if (!user.problems) {
+        // FIXME: add all problems without dependencies
+        return res.sendHttpError(new HttpError(500, "Automatic user initialization not implemented"));
     }
+
+    user.problems
+
+    user.problemId = problem._id;
+    var visible = user.problemHistory.length ===1;
+    user.problemHistory.push({
+        problemId: problem._id,
+        takenBonuses:[],
+        takenHints:[],
+        timeStart: Date.now(),
+        visible: visible
+    });
+    user.markModified('problemHistory');
+    user.save(function (err) {
+        if (err) {
+            logger.error("[%s] задание не добавлено в историю", user.username, err);
+                return res.sendHttpError(new HttpError(500,"Problem not saved to history"))
+            }
+            logger.info("[%s] Задание добавлено в историю.", user.username, problem.topic);
+            res.render('map2');
+        });
+    res.render('map');
 }

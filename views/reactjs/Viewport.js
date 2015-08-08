@@ -5,8 +5,6 @@ var Times = require('./Times.jsx');
 var Problems = require('./Problems.jsx');
 var Users = require('./Users.jsx');
 var Message = require('./Message.jsx');
-var GlobalBonus = require('./GlobalBonus.jsx');
-var store = require('./store.js')
 
 var Viewport = React.createClass({
 
@@ -20,7 +18,6 @@ var Viewport = React.createClass({
         '/problems': 'renderProblems',
         '/users': 'renderUsers',
         '/statistics': 'renderStatistics',
-        '/globalbonus': 'renderGlobalBonus',
         '/message': 'renderMessage'
     },
 
@@ -45,9 +42,6 @@ var Viewport = React.createClass({
     },
     renderMessage : function() {
         return <Message />
-    },
-    renderGlobalBonus: function() {
-        return <GlobalBonus />
     },
     notFound: function(path) {
         return <div className="not-found">Page Not Found: {path}</div>;

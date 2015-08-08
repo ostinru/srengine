@@ -14,7 +14,6 @@ var Menu = React.createClass({
 					<NavItem href="problems">Problems</NavItem>
 					<NavItem href="users">Users</NavItem>
 					<NavItem href="statistics">Statistics</NavItem>
-					<NavItem href="globalbonus">Gobal bonuses</NavItem>
 					<NavItem href="message">Admin messages</NavItem>
 				</Nav>
 			</Navbar>

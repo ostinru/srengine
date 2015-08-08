@@ -29,9 +29,9 @@
         "ejs-locals": "*",
         "nconf": "*",
         "winston": "*",
-        "mongoose": "^3.8.0",
+        "mongoose": "4.1.1",
         "async": "*",
-        "mongodb": "*",
+        "mongodb": "2.0.*",
         "underscore": "*",
         "dateformat": "*",
         "url":"*",
@@ -45,7 +45,6 @@
         "react-mini-router": "^1.1.2",
         "react-dnd": "^1.1.0",
         "jquery": "^2.1.0",
-        "baobab": "~1.1.0",
         "errorhandler": "^1.4.0"
     }
 
