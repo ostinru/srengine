@@ -71,7 +71,11 @@ var schema = new Schema({
             required: true
         }
     }],
-    lastActivity : Number,
+    availebleHints: {
+        type:Number,
+        default:0
+    },
+    lastActivity: Number,
     numberOfAttempts: Number
 });
 

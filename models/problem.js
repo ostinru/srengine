@@ -41,6 +41,10 @@ var schema = new Schema({
             type: Number,
             required: true
         }
+    }],
+    dependencies: [{
+        type: Schema.Types.ObjectId,
+        required: false
     }]
 });
 

@@ -5,6 +5,7 @@ var Times = require('./Times.jsx');
 var Problems = require('./Problems.jsx');
 var Users = require('./Users.jsx');
 var Message = require('./Message.jsx');
+var Statistics = require('./Statistics.jsx');
 
 var Viewport = React.createClass({
 
@@ -35,10 +36,7 @@ var Viewport = React.createClass({
         return <Users />
     },
     renderStatistics: function() {
-        return (
-            <div className='statistics'>
-            </div>
-        );
+        return <Statistics />
     },
     renderMessage : function() {
         return <Message />

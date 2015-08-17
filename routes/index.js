@@ -46,7 +46,7 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
     app.post(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').post);
 
-    app.get('/statistics', checkAdmin, require('./statistics').get);
+    app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get); // ложит движок! не заходить!
 
     app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
 
