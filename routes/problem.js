@@ -28,18 +28,35 @@ exports.get = function(req, res, next){
     });
 };
 
-exports.post = function(req, res, next) {
-    Problem.findById(req.params.problemId, function(err, problem) {
-        if(!problem){
-            problem =  new Problem({topic:'новое задание',
-                serial:999,
-                question:'Текст вопроса',
-                answers:[],
-                cost:0,
-                hints:[],
-                bonuses:[],
-                _id: mongoose.Types.ObjectId(req.params.problemId)});
+exports.put = function(req, res, next) {
+    // FIXME: check parameters!!
+    problem =  new Problem({
+        topic: req.body.topic,
+        question: req.body.question,
+        answers: [],
+        cost: req.body.cost,
+        hints: [],
+        bonuses: [],
+    });
+
+    problem.save(function(err){
+        if (err){
+            logger.info(err);
+            res.json(err);
         }
+        else{
+            res.json({ status : "Success"});
+        }
+    });
+};
+
+exports.post = function(req, res, next) {
+    // FIXME: check parameters!!
+    Problem.findById(req.params.problemId, function(err, problem) {
+        if(!problem || err){
+            return res.sendHttpError(new HttpError(400, err));
+        }
+
         problem.topic = req.body.topic;
         problem.question = req.body.question;
         problem.cost = req.body.cost;
@@ -98,10 +115,28 @@ exports.post = function(req, res, next) {
                 res.json(err);
             }
             else{
-                res.redirect('problem');
+                res.json({ status : "Success"});
             }
         });
 
     });
 };
 
+exports.delete = function(req, res, next) {
+    Problem.findById(req.params.problemId, function(err, problem) {
+        if(!problem){
+            return res.sendHttpError(new HttpError(400, err));
+        }
+        
+
+        problem.remove(function(err){
+            if (err){
+                logger.debug(err);
+                res.json(err);
+            }
+            else{
+                res.json({ status : "Success"});
+            }
+        });
+    });
+};

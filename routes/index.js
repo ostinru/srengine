@@ -1,7 +1,3 @@
-var User = require('models/user').User;
-var Problem = require('models/problem').Problem;
-var HttpError = require('error').HttpError;
-var ObjectID = require('mongodb').ObjectID;
 var checkAuth = require('middleware/checkAuth');
 var checkFinished = require('middleware/checkFinished');
 var checkAdmin = require('middleware/checkAdmin');
@@ -32,21 +28,23 @@ module.exports = function(app) {
 
     // Admin's REST API
     // FIXME: mount to /rest/...
-    app.get(REST_PREFIX + '/user', checkAdmin, require('./user').getAllUsers);
+    app.get(REST_PREFIX + '/user', checkAdmin, require('./user').getAllUsers  );
     app.get(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').getUser);
-    app.put(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
-    app.post(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
+    app.post(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
+    app.put(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
     app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
     
-    app.put(REST_PREFIX + '/user/:userId/adminbonus/', checkAdmin, require('./user').addAdminBonus);
-    app.post(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').updateAdminBonus);
+    app.post(REST_PREFIX + '/user/:userId/adminbonus/', checkAdmin, require('./user').addAdminBonus);
+    app.put(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').updateAdminBonus);
     app.delete(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').deleteAdminBonus);
 
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
+    app.put(REST_PREFIX + '/problem', checkAdmin,  require('./problem').put);
     app.post(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').post);
+    app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').delete);
 
-    app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get); // ложит движок! не заходить!
+    app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get); // Р»РѕР¶РёС‚ РґРІРёР¶РѕРє! РЅРµ Р·Р°С…РѕРґРёС‚СЊ!
 
     app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
 

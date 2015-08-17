@@ -1,51 +1,53 @@
 {
-    "name": "srengine",
-    "version": "0.0.2",
-    "description": "StreetRiding game engine",
-    "keywords": ["StreetRiding"],
-    "bugs": {
-        "url": "https://github.com/ostinru/srengine/issues"
-    },
-    "contributors": [
-        {
-            "name": "Nikolay Antonov",
-            "name": "Kulikov Valentin"
-        }
-    ],
-    "license": "Apache-2.0",
-    "private": true,
-    "scripts": {
-        "start": "node app.js"
-    },
-    "dependencies": {
-        "express": "4.12.x",
-        "body-parser": "1.12.x",
-        "serve-favicon": "2.2.x",
-        "morgan": "1.5.x",
-        "cookie-parser": "1.3.x",
-        "express-session": "1.10.x",
-        
-        "ejs": "*",
-        "ejs-locals": "*",
-        "nconf": "*",
-        "winston": "*",
-        "mongoose": "4.1.1",
-        "async": "*",
-        "mongodb": "2.0.*",
-        "underscore": "*",
-        "dateformat": "*",
-        "url":"*",
-        "connect-mongo": "*"
-    },
-    "devDependencies": {
-        "jsx-loader": "*",
-        "react": "<0.14",
-        "react-bootstrap": "^0.20.2",
-        "react-tools": "<0.14",
-        "react-mini-router": "^1.1.2",
-        "react-dnd": "^1.1.0",
-        "jquery": "^2.1.0",
-        "errorhandler": "^1.4.0"
+  "name": "srengine",
+  "version": "0.0.3",
+  "description": "StreetRiding game engine",
+  "keywords": [
+    "StreetRiding"
+  ],
+  "bugs": {
+    "url": "https://github.com/ostinru/srengine/issues"
+  },
+  "contributors": [
+    {
+      "name": "Nikolay Antonov",
+      "name": "Kulikov Valentin"
     }
-
+  ],
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "async": "*",
+    "baucis": "^1.6.1",
+    "body-parser": "1.12.x",
+    "connect-mongo": "*",
+    "cookie-parser": "1.3.x",
+    "dateformat": "*",
+    "ejs": "*",
+    "ejs-locals": "*",
+    "express": "4.12.x",
+    "express-session": "1.10.x",
+    "mongodb": "2.0.*",
+    "mongoose": "4.1.1",
+    "morgan": "1.5.x",
+    "nconf": "*",
+    "serve-favicon": "2.2.x",
+    "underscore": "*",
+    "url": "*",
+    "winston": "*"
+  },
+  "devDependencies": {
+    "jsx-loader": "*",
+    "react": "<0.14",
+    "react-bootstrap": "^0.20.2",
+    "react-tools": "<0.14",
+    "react-mini-router": "^1.1.2",
+    "react-dnd": "^1.1.0",
+    "baobab": "^1.1.0",
+    "jquery": "^2.1.0",
+    "errorhandler": "^1.4.0"
+  }
 }

@@ -1,23 +1,40 @@
 var React = require('react');
 var server = require('./server.js');
+var Baobab = require('baobab');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
 var Glyphicon = Bootstrap.Glyphicon;
 var Panel = Bootstrap.Panel;
 var Input = require('./controls/Input.jsx');
 
+// FIXME: normal context!!
+var context = require('./context');
+
+var buildPath = function() {
+	if (arguments.length === 0)
+		throw 'No arguments!';
+	if (arguments.length === 1)
+		return arguments[0].slice();
+
+	var result = arguments[0].slice();
+	var rest = Array.prototype.slice.call(arguments, 1);
+	Array.prototype.push.apply(result, rest);
+	return result;
+}
 
 var AnswerEditor = React.createClass({
+
 	propTypes: {
-		problem: React.PropTypes.object.isRequired,
-		answer: React.PropTypes.object.isRequired
+		path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
-		var answer = this.props.answer;
+		var path = this.props.path;
+		var answer = context.problems.select(path).get();
+		// FIXME: KEY!!
 		return (
-    		<form className='form-inline' action="javascript:void(0);">
-    			<Input type="text" ref="answer" initValue={answer.answer}/>
+    		<form className='form-inline' action="javascript:void(0);" key={answer}>
+    			<Input type="text" ref="answer" initValue={answer}/>
     			<Button bsSize='small' onClick={this.updateAnswer} ><Glyphicon glyph='ok' /></Button>
 	            <Button bsSize='small' onClick={this.removeAnswer} ><Glyphicon glyph='remove' /></Button>
     		</form>
@@ -25,22 +42,28 @@ var AnswerEditor = React.createClass({
 	},
 
 	updateAnswer: function() {
-		return;
+		var cursor = context.problems.select(this.props.path);
+		cursor.set(
+			this.refs.answer.getValue()
+		);
 	},
 
 	removeAnswer: function() {
-		return;
+		var path = this.props.path;
+		var index = path[path.length - 1];
+		var cursor = context.problems.select(path);
+		cursor.up().splice([index, 1]);
 	}
 });
 
 
 var NewAnswer = React.createClass({
+
 	propTypes: {
-		problem: React.PropTypes.object.isRequired
+		path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
-		var answer = this.props.answer;
 		return (
     		<form className='form-inline' action="javascript:void(0);">
     			<Input type="text" ref="answer" />
@@ -50,7 +73,11 @@ var NewAnswer = React.createClass({
 	},
 
 	addAnswer: function() {
-		return;
+		var cursor = context.problems.select(this.props.path);
+		cursor.push(
+			this.refs.answer.getValue()
+		);
+		this.refs.answer.clear();
 	}
 });
 
@@ -58,16 +85,17 @@ var NewAnswer = React.createClass({
 var BonusEditor = React.createClass({
 
 	propTypes: {
-		problem: React.PropTypes.object.isRequired,
-        bonus: React.PropTypes.object.isRequired
+		path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
-		var bonus = this.props.bonus;
+		var path = this.props.path;
+		var bonus = context.problems.select(path).get();
+
 		return (
     		<form className='form-inline' action="javascript:void(0);">
-                <Input type="text" initValue={bonus.text} />
-                <Input type="number" initValue={bonus.cost} />
+                <Input type="text" ref="text" initValue={bonus.text} />
+                <Input type="number" ref="cost" initValue={bonus.cost} />
                 <Button bsSize='small' onClick={this.updateBonus} ><Glyphicon glyph='ok' /></Button>
                 <Button bsSize='small' onClick={this.removeBonus}><Glyphicon glyph='remove'/></Button>
             </form>
@@ -75,23 +103,30 @@ var BonusEditor = React.createClass({
 	},
 
 	updateBonus: function() {
-		return;
+		var cursor = context.problems.select(this.props.path);
+		cursor.set({
+			text: this.refs.text.getValue(),
+			cost: this.refs.cost.getValue(),
+		});
 	},
 	removeBonus: function() {
-		return;
+		var path = this.props.path;
+		var index = path[path.length - 1];
+		var cursor = context.problems.select(path);
+		cursor.up().splice([index, 1]);
 	},
 });
 
 var NewBonus = React.createClass({
 
 	propTypes: {
-        problem: React.PropTypes.object.isRequired
+		path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
 		return (
     		<form className='form-inline' action="javascript:void(0);">
-                <Input type="text" ref="bonus" />
+                <Input type="text" ref="text" />
                 <Input type="number" ref="cost" />
                 <Button bsSize='small' onClick={this.addBonus}><Glyphicon glyph='plus'/></Button>
             </form>
@@ -99,36 +134,50 @@ var NewBonus = React.createClass({
 	},
 
 	addBonus: function() {
-		return;
+		var cursor = context.problems.select(this.props.path);
+		cursor.push({
+			text: this.refs.text.getValue(),
+			cost: this.refs.cost.getValue(),
+		});
+		this.refs.text.clear();
+		this.refs.cost.clear();
 	}
 });
 
 var HintEditor = React.createClass({
 
 	propTypes: {
-		problem: React.PropTypes.object.isRequired,
-        hint: React.PropTypes.object.isRequired
+		path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
-		var hint = this.props.hint;
+		var path = this.props.path;
+		var hint = context.problems.select(path).get();
 		return (
 	        <form className='form-inline' action="javascript:void(0);">
-	            <Input type="text" initValue={hint.text}/>
-	            <Input type="number" initValue={hint.cost} />
+	            <Input type="text" ref="text" initValue={hint.text}/>
+	            <Input type="number" ref="cost" initValue={hint.cost} />
 	            <Button bsSize='small' onClick={this.updateHint} ><Glyphicon glyph='ok' /></Button>
 	            <Button bsSize='small' onClick={this.removeHint} ><Glyphicon glyph='remove' /></Button>
 	        </form>
 		);
 	},
 
-	removeHint: function() {
-		return;
+	updateHint: function() {
+		var cursor = context.problems.select(this.props.path);
+		cursor.set({
+			text: this.refs.text.getValue(),
+			cost: this.refs.cost.getValue(),
+		});
 	},
 
-	updateHint: function() {
-		return;
-	}
+	removeHint: function() {
+		var path = this.props.path;
+		var index = path[path.length - 1];
+		var cursor = context.problems.select(path);
+		cursor.up().splice([index, 1]);
+	},
+
 });
 
 
@@ -150,7 +199,13 @@ var NewHint = React.createClass({
 	},
 
 	addHint: function() {
-		return;
+		var cursor = context.problems.select(this.props.path);
+		cursor.push({
+			text: this.refs.text.getValue(),
+			cost: this.refs.cost.getValue(),
+		});
+		this.refs.text.clear();
+		this.refs.cost.clear();
 	}
 });
 
@@ -158,12 +213,14 @@ var NewHint = React.createClass({
 var ProblemEditor = React.createClass({
 
 	propTypes: {
-    	problem: React.PropTypes.object.isRequired
+    	path: React.PropTypes.array.isRequired
     },
 
 	render: function() {
 		var me = this;
-		var problem = this.props.problem;
+		var path = this.props.path;
+		var problem = context.problems.select(path).get();
+
 		return (
 			<Panel header={problem.topic}>
 				<Input type="text" ref="title" label="Title" initValue={problem.topic} />
@@ -171,30 +228,30 @@ var ProblemEditor = React.createClass({
 				<Input type="number" ref="cost" label="Cost" initValue={problem.cost} />
 			    
     			<Panel header="Answers" >
-	                {this.props.answers && this.props.answers.map(function(answer, index) {
+	                {problem.answers && problem.answers.map(function(answer, index) {
 	                	return (
-	                		<AnswerEditor key={answer._id} problem={problem} answer={answer} />
+	                		<AnswerEditor path={buildPath(path, 'answers', index)} />
 	                	);
 	                })}
-	                <NewAnswer problem={problem} />
+	                <NewAnswer path={buildPath(path, 'answers')} />
 			    </Panel>
 
 				<Panel header="Hints">
-					{this.props.hints && this.props.hints.map(function(hint, index) {
+					{problem.hints && problem.hints.map(function(hint, index) {
 		            	return (
-		            		<HintEditor key={hint._id} problem={problem} hint={hint} />
+		            		<HintEditor key={hint._id} path={buildPath(path, 'hints', index)} />
 		            	);
 	            	})}
-	            	<NewHint problem={problem} />
+	            	<NewHint path={buildPath(path, 'hints')} />
 				</Panel>
 
 				<Panel header="Bonuses" >
-		        	{this.props.bonuses && this.props.bonuses.map(function(bonus, index) {
+		        	{problem.bonuses && problem.bonuses.map(function(bonus, index) {
 		            	return (
-		            		<BonusEditor key={bonus._id} problem={problem} bonus={bonus} />
+		            		<BonusEditor key={bonus._id} path={buildPath(path, 'bonuses', index)} />
 		            	);
 		       		})}
-		       		<NewBonus problem={problem} />
+		       		<NewBonus path={buildPath(path, 'bonuses')} />
 			    </Panel>
 
 
@@ -205,11 +262,17 @@ var ProblemEditor = React.createClass({
 	},
 
 	save: function(serial) {
+		// FIXME: SEND REQUEST TO SERVER
 		return;
 	},
 
 	remove: function(serial) {
-		return;
+		var path = this.props.path;
+		var index = path[path.length - 1];
+		var cursor = context.problems.select(path);
+		cursor.up().splice([index, 1]);
+
+		// FIXME: SEND REQUEST TO SERVER
 	}
 
 });
@@ -220,8 +283,8 @@ var NewProblem = React.createClass({
 		var me = this;
 		return (
 			<Panel bsStyle='primary' header="New problem" >
-				<Input type="text" ref="title" label="Title" />
-				<Input type='textarea' ref="text" label="Text" />
+				<Input type="text" ref="topic" label="Title" />
+				<Input type='textarea' ref="question" label="Text" />
 				<Input type="number" ref="cost" label="Cost" />
 			    
 			    <Button onClick={me.addProblem}><Glyphicon glyph='plus'/> Add Problem</Button>
@@ -230,7 +293,13 @@ var NewProblem = React.createClass({
 	},
 
 	addProblem: function() {
-		return;
+		var request = {
+			topic : this.refs.topic.getValue(),
+			question : this.refs.question.getValue(),
+			cost : this.refs.cost.getValue()
+		}
+
+		server.addProblem(request);
 	}
 
 });
@@ -238,35 +307,40 @@ var NewProblem = React.createClass({
 
 var Problems = React.createClass({
 
-	getInitialState: function() {
-		return {
-			problems: []
-		};
+	childContextTypes: {
+		problems: React.PropTypes.instanceOf(Baobab)
 	},
+
+	getChildContext: function() {
+        return context;
+    },
 
 	// https://facebook.github.io/react/tips/initial-ajax.html
 	componentDidMount: function() {
 		var me = this;
+
+		context.problems.on('update', function() {
+			me.forceUpdate();
+		});
+
 	    server.fetchProblems(
 	    	function() {
 	    		console.error('failed to load problems', arguments);
 	    	},
 	    	function(result) {
-		    	if (me.isMounted()) {
-					me.setState({
-						problems : result
-					});
-				}
+	    		context.problems.root.set({problems : result});
 		    });
 	},
 
 	render: function() {
 		var me = this;
+		var problems = context.problems.root.get().problems;
 		return (
 			<div className='problems'>
-				{this.state.problems.map(function(problem, index) {
+				{problems.map(function(problem, index) {
+					var problem_path = ['problems', index];
 					return (
-						<ProblemEditor key={problem._id} problem={problem} />
+						<ProblemEditor key={problem._id} path={problem_path} />
 					);
 				})}
 				<NewProblem />

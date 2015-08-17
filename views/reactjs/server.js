@@ -6,14 +6,15 @@ module.exports = {
     postTime: superPost("time"),
 
 	fetchUsers : superFetch('user'),
-    addUser: superPut("user"),
-    updateUser: superPost("user"),
+    addUser: superPost("user"),
+    updateUser: superPut("user"),
     removeUser: superDelete("user"),
-    addAdminBonus: superPut("user"),
-    updateAdminBonus: superPost("user"),
+    addAdminBonus: superPost("user"),
+    updateAdminBonus: superPut("user"),
     removeAdminBonus: superDelete("user"),
 
     fetchProblems : superFetch('problem'),
+    addProblem : superPut('problem'),
 }
 
 var $ = require('jquery');
@@ -22,7 +23,7 @@ var REST_PREFIX = 'rest';
 function superFetch(urlsfx) {
 	return function()	{
 		var args = getArguments(arguments, true);
-		$.ajax(REST_PREFIX + '/' + urlsfx + '/' + args.path.join('/'), {
+		$.ajax(REST_PREFIX + '/' + urlsfx + args.path.join('/'), {
         	success: args.onSuccess,
 	        error: args.onError
     	});
@@ -32,7 +33,8 @@ function superFetch(urlsfx) {
 function superPost(urlsfx) {
 	return function() {
 		var args = getArguments(arguments);
-		$.post(REST_PREFIX + '/' + urlsfx + '/' + args.path.join('/'), args.data)
+		args.path.unshift(''); // add '/' if needed
+		$.post(REST_PREFIX + '/' + urlsfx + args.path.join('/'), args.data)
 			.done(args.onSuccess)
 			.fail(args.onError);
 	}
@@ -41,7 +43,8 @@ function superPost(urlsfx) {
 function superPut(urlsfx) {
 	return function() {
 		var args = getArguments(arguments);
-		$.ajax(REST_PREFIX + '/' + urlsfx + '/' + args.path.join('/'), {
+		args.path.unshift(''); // add '/' if needed
+		$.ajax(REST_PREFIX + '/' + urlsfx + args.path.join('/'), {
 			method: 'PUT',
 			success: args.onSuccess,
 			error: args.onError,
@@ -54,7 +57,8 @@ function superPut(urlsfx) {
 function superDelete(urlsfx) {
 	return function() {
 		var args = getArguments(arguments, true);
-		$.ajax(REST_PREFIX + '/' + urlsfx + '/' + args.path.join('/'), {
+		args.path.unshift(''); // add '/' if needed
+		$.ajax(REST_PREFIX + '/' + urlsfx + args.path.join('/'), {
 			method: 'DELETE',
 			success: args.onSuccess,
 			error: args.onError,

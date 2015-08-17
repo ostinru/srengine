@@ -20,7 +20,7 @@ module.exports = React.createClass({
 
 	render: function() {
 		return (
-			<Input ref="input" label={this.props.label} type={this.props.type} value={this.state.value} onChange={this.handleChange} />
+			<Input {...this.props} ref="input" value={this.state.value} onChange={this.handleChange} />
 		);
 	},
 
@@ -33,5 +33,11 @@ module.exports = React.createClass({
 
 	getValue: function() {
 		return this.state.value;
+	},
+
+	clear: function() {
+		this.setState({
+			value: null
+		})
 	}
 });
