@@ -82,6 +82,79 @@ var NewAnswer = React.createClass({
 });
 
 
+var NextProblemEditor = React.createClass({
+
+	propTypes: {
+		path: React.PropTypes.array.isRequired
+    },
+
+	render: function() {
+		var path = this.props.path;
+		var nextProblemId = context.problems.select(path).get();
+		var problems = context.problems.select('problems').get();
+		// FIXME: KEY!!
+		return (
+    		<form className='form-inline' action="javascript:void(0);" key={nextProblemId}>
+    			<Input type="select" ref="nextProblemId" initValue={nextProblemId} >
+    			{problems.map(function(problem) {
+    				return (
+    					<option value={problem._id}> {problem._id} - {problem.topic}</option>
+    				);
+    			})}
+    			</Input>
+    			<Button bsSize='small' onClick={this.updateNextProblemId} ><Glyphicon glyph='ok' /></Button>
+	            <Button bsSize='small' onClick={this.removeNextProblemId} ><Glyphicon glyph='remove' /></Button>
+    		</form>
+		);
+	},
+
+	updateNextProblemId: function() {
+		var cursor = context.problems.select(this.props.path);
+		cursor.set(
+			this.refs.nextProblemId.getValue()
+		);
+	},
+
+	removeNextProblemId: function() {
+		var path = this.props.path;
+		var index = path[path.length - 1];
+		var cursor = context.problems.select(path);
+		cursor.up().splice([index, 1]);
+	}
+});
+
+
+var NewNextProblem = React.createClass({
+
+	propTypes: {
+		path: React.PropTypes.array.isRequired
+    },
+
+	render: function() {
+		var problems = context.problems.select('problems').get();
+		return (
+    		<form className='form-inline' action="javascript:void(0);">
+    			<Input type="select" ref="nextProblemId" >
+    			{problems.map(function(problem) {
+    				return (
+    					<option value={problem._id}> {problem._id} - {problem.topic}</option>
+    				);
+    			})}
+    			</Input>
+    			<Button bsSize='small' onClick={this.addNextProblemId} ><Glyphicon glyph='plus' /></Button>
+    		</form>
+		);
+	},
+
+	addNextProblemId: function() {
+		var cursor = context.problems.select(this.props.path);
+		cursor.push(
+			this.refs.nextProblemId.getValue()
+		);
+		this.refs.nextProblemId.clear();
+	}
+});
+
 var BonusEditor = React.createClass({
 
 	propTypes: {
@@ -223,8 +296,9 @@ var ProblemEditor = React.createClass({
 
 		return (
 			<Panel header={problem.topic}>
-				<Input type="text" ref="title" label="Title" initValue={problem.topic} />
-				<Input type='textarea' ref="text" label="Text" initValue={problem.question} />
+				<Input type="text" label="_id" initValue={problem._id} readOnly />
+				<Input type="text" ref="topic" label="Topic" initValue={problem.topic} />
+				<Input type='textarea' ref="question" label="Question" initValue={problem.question} />
 				<Input type="number" ref="cost" label="Cost" initValue={problem.cost} />
 			    
     			<Panel header="Answers" >
@@ -254,6 +328,21 @@ var ProblemEditor = React.createClass({
 		       		<NewBonus path={buildPath(path, 'bonuses')} />
 			    </Panel>
 
+			    <Panel header="Next Problems" >
+			    	{problem.nextProblems && problem.nextProblems.map(function(nextProblemId, index) {
+		            	return (
+		            		<NextProblemEditor key={nextProblemId} path={buildPath(path, 'nextProblems', index)} />
+		            	);
+		       		})}
+		       		<NewNextProblem path={buildPath(path, 'nextProblems')} />
+			    </Panel>
+
+			    <Input type="number" ref="x" label="X" initValue={problem.x} />
+			    <Input type="number" ref="y" label="Y" initValue={problem.y} />
+
+			    <Input type="text" ref="icon" label="icon" initValue={problem.icon} />
+			    <Input type="text" ref="iconText" label="iconText" initValue={problem.iconText} />
+			    <Input type="text" ref="iconTitle" label="iconTitle" initValue={problem.iconTitle} />
 
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
@@ -262,17 +351,41 @@ var ProblemEditor = React.createClass({
 	},
 
 	save: function(serial) {
-		// FIXME: SEND REQUEST TO SERVER
-		return;
+		var path = this.props.path;
+		var problem = context.problems.select(path).get();
+
+		var request = {
+			topic : this.refs.topic.getValue(),
+			question : this.refs.question.getValue(),
+			cost : this.refs.cost.getValue(),
+			x : this.refs.x.getValue(),
+			y : this.refs.y.getValue(),
+			icon : this.refs.icon.getValue(),
+			iconText : this.refs.iconText.getValue(),
+			iconTitle : this.refs.iconTitle.getValue(),
+			answers: problem.answers,
+			hints : problem.hints,
+			bonuses : problem.bonuses,
+			nextProblems: problem.nextProblems,
+
+		};
+
+		server.updateProblem(problem._id, request, function() {
+			//document.location.reload();
+		});
 	},
 
 	remove: function(serial) {
 		var path = this.props.path;
-		var index = path[path.length - 1];
-		var cursor = context.problems.select(path);
-		cursor.up().splice([index, 1]);
+		// var index = path[path.length - 1];
+		// var cursor = context.problems.select(path);
+		// cursor.up().splice([index, 1]);
 
-		// FIXME: SEND REQUEST TO SERVER
+		var problem = context.problems.select(path).get();
+
+		server.removeProblem(problem._id, function() {
+			//document.location.reload();
+		});
 	}
 
 });

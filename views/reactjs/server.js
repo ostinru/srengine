@@ -14,7 +14,9 @@ module.exports = {
     removeAdminBonus: superDelete("user"),
 
     fetchProblems : superFetch('problem'),
-    addProblem : superPut('problem'),
+    addProblem : superPost('problem'),
+    updateProblem : superPut('problem'),
+    removeProblem: superDelete("problem"),
 }
 
 var $ = require('jquery');
@@ -34,9 +36,13 @@ function superPost(urlsfx) {
 	return function() {
 		var args = getArguments(arguments);
 		args.path.unshift(''); // add '/' if needed
-		$.post(REST_PREFIX + '/' + urlsfx + args.path.join('/'), args.data)
-			.done(args.onSuccess)
-			.fail(args.onError);
+		$.ajax(REST_PREFIX + '/' + urlsfx + args.path.join('/'), {
+			method: 'POST',
+			success: args.onSuccess,
+			error: args.onError,
+			data: JSON.stringify(args.data),
+			contentType:"application/json; charset=utf-8"
+		});
 	}
 }
 
@@ -48,8 +54,8 @@ function superPut(urlsfx) {
 			method: 'PUT',
 			success: args.onSuccess,
 			error: args.onError,
-			data: args.data
-
+			data: JSON.stringify(args.data),
+			contentType:"application/json; charset=utf-8"
 		});
 	}
 }
@@ -62,8 +68,8 @@ function superDelete(urlsfx) {
 			method: 'DELETE',
 			success: args.onSuccess,
 			error: args.onError,
-			data: args.data
-
+			data: JSON.stringify(args.data),
+			contentType:"application/json; charset=utf-8"
 		});
 	}
 }
