@@ -69,7 +69,6 @@ function createProblems(callback) {
                 { text: 'б100', cost: 100},
                 { text: 'б110', cost: 110}
             ],
-            _id: Problem.getGlobalObjectId()
         }
     ];
 

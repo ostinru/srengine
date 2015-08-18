@@ -2,8 +2,6 @@ var mongoose = require('../lib/mongoose'),
     _ = require('underscore'),
     Schema = mongoose.Schema;
 
-var globalObjectId = new mongoose.Types.ObjectId('5352ac6e16d755755806e9f2');
-
 var schema = new Schema({
     topic: {
         type: String,
@@ -42,10 +40,17 @@ var schema = new Schema({
             required: true
         }
     }],
-    dependencies: [{
+    nextProblems: [{
         type: Schema.Types.ObjectId,
         required: false
-    }]
+    }],
+    //  Latitude and Longitude
+    x: Number,
+    y: Number,
+    // Icon on the map
+    icon: String,
+    iconText: String,
+    iconTitle: String
 });
 
 schema.methods.check = function(userAnswer) {
@@ -58,14 +63,6 @@ schema.methods.checkBonuses = function(userBonus) {
     return _.find(this.bonuses, function(item) {
         return item.text == userBonus;
     });
-};
-
-schema.statics.getGlobalProblem = function(callback) {
-    this.findById(globalObjectId, callback);
-};
-
-schema.statics.getGlobalObjectId = function() {
-    return globalObjectId;
 };
 
 exports.Problem = mongoose.model('Problem', schema);

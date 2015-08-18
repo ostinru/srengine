@@ -31,7 +31,7 @@ var game = new Schema({
     	default: false
     }
 });
-
+/*
 var level = new Schema({
 	serial: {
 		type: Number,
@@ -87,6 +87,6 @@ var level = new Schema({
         }
 	}],
 });
+*/
 
-
-exports.Message = mongoose.model('Game', schema);
+exports.Message = mongoose.model('Game', game);

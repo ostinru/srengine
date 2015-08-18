@@ -88,6 +88,7 @@ exports.post = function(req, res, next) {
         if (err) {
             return res.sendHttpError(new HttpError(500, err));
         }
+        // REMOVED
         Problem.getGlobalProblem(function(err, globalProblem) {
             if (err) {
                 return res.sendHttpError(new HttpError(500, err));
