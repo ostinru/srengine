@@ -45,8 +45,8 @@ function generateIds(callback) {
 function createProblems(callback) {
     var problems = [ ];
 
-    for (var i=0;i<=10;i++){
-        problem = new Problem;
+    for (var i=1;i<10;i++){
+        var problem = new Problem;
         problem.topic = "Задание " + i;
         problem.number = i;
         problem.question = "Текст задания";
@@ -70,7 +70,7 @@ function createUsers(callback) {
     Problem.find({}, function (err, problems) {
         var admin = new mongoose.models.User({username: 'superAdmin' , password: '1', admin: true});
         admin.save(callback);
-        for (var i = 1; i <= 10; i++) {
+        for (var i = 1; i < problems.length; i++) {
             var user = new mongoose.models.User({username: 'user' + i.toString(), password: '1', admin: false, problemHistory: []});
             for (var j = 1; j <= i; j++) {
                  if (err) {
@@ -79,7 +79,6 @@ function createUsers(callback) {
                 var problem = problems[j];
                 user.problemHistory.push({problem: problem._id, solved: true});
             }
-            console.log(user);
             user.save(callback);
         }
     })

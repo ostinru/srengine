@@ -17,6 +17,8 @@ module.exports = {
     addProblem : superPost('problem'),
     updateProblem : superPut('problem'),
     removeProblem: superDelete("problem"),
+
+	fetchStatistics: superFetch('statistics')
 }
 
 var $ = require('jquery');

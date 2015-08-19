@@ -9,88 +9,69 @@ var dateFormat = require('dateformat');
 exports.get = function (req, res, next) {
 
     //get all users
-    User.find({}, function (err, users) {
-        if (err) {
-            return next(err);
-        }
-        if (!users) {
-            return next(404);
-        }
-        var allStatistic = [];
+    User.find({})
+        .populate('problems problemHistory.problem problemHistory.takenBonuses problemHistory.takenHints')
+        .exec(function (err, users) {
+            if (err) {
+                return next(err);
+            }
+            if (!users) {
+                return next(404);
+            }
+            var allStatistic = [];
 
-        //get global problem
-        Problem.findById(Problem.getGlobalObjectId(), function (err, globalProblem) {
-            if (err) return next(err);
             //get all problems
             Problem.find({}, function (err, problems) {
                 if (err) {
                     return next(err);
                 }
-
                 _.each(users, function (user) {
                     //for  one user
                     var history = [];
                     var total = _.reduce(user.problemHistory, function (memo, structProblem) {
 
-                        var problem = _.find(problems, function (problem) {
-                            return structProblem.problemId.equals(problem._id);
-                        });
-                        var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
-                            var bonus = _.find(problem.bonuses, function (bonus) {
-                                return bonusId.equals(bonus._id);
-                            });
+                        var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonus) {
                             return memo + bonus.cost;
                         }, 0);
-                        var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
-                            var hint = _.find(problem.hints, function (hint) {
-                                return hintId.equals(hint._id);
-                            });
+
+                        var totalHint = _.reduce(structProblem.takenHints, function (memo, hint) {
                             return memo + hint.cost;
                         }, 0);
 
                         var problemTotal = 0;
                         if (structProblem.solved) {
-                            problemTotal = problem.cost + totalBonus - totalHint;
+                            problemTotal = structProblem.problem.cost + totalBonus - totalHint;
                         }
 
-                        history.push({'topic': problem.topic,
+                        history.push({
+                            'topic': structProblem.problem.topic,
                             'total': problemTotal,
                             'numbBonuses': structProblem.takenBonuses.length,
                             'numbHints': structProblem.takenHints.length,
                             'solved': structProblem.solved,
-                            'global': isGlobal(problem),
-                            'timeStart':structProblem.timeStart.format("HH:MM:ss"),
-                            'timeFinish':structProblem.timeFinish.format("HH:MM:ss")});
+                            'timeStart': structProblem.timeStart.format("HH:MM:ss"),
+                            'timeFinish': structProblem.timeFinish.format("HH:MM:ss")
+                        });
                         return memo + problemTotal;
                     }, 0);
 
                     //push problems not in history
                     _.each(problems, function (problem) {
                         var findProblem = _.find(user.problemHistory, function (structProblem) {
-                            return structProblem.problemId.equals(problem._id);
+                            return structProblem.problem._id.equals(problem._id);
                         });
-                        if (!findProblem && !isGlobal(problem)) {
-                            history.push({'topic': problem.topic,
+                        if (!findProblem) {
+                            history.push({
+                                'topic': problem.topic,
                                 'total': 0,
                                 'numbBonuses': "",
                                 'numbHints': "",
                                 'solved': false,
-                                'global': false,
                                 'timeStart': finishTime.format("HH:MM:ss"),
                                 'timeFinish': finishTime.format("HH:MM:ss")
-                        });
+                            });
                         }
                     });
-                    /*//push global problem if it not solved
-                    history.push({'topic': globalProblem.topic,
-                        'total': 0,
-                        'numbBonuses': "",
-                        'numbHints': "",
-                        'solved': false,
-                        'global': true,
-                        'timeStart': finishTime.format("HH:MM:ss"),
-                        'timeFinish': finishTime.format("HH:MM:ss")
-                    });*/
 
                     var userStatistic = {'user': user.username, 'total': total, 'history': history};
                     allStatistic.push(userStatistic);
@@ -98,17 +79,9 @@ exports.get = function (req, res, next) {
                 allStatistic.sort(function (a, b) {
                     return b.total - a.total
                 });
-                //res.json(allStatistic);
-                res.locals.problems = problems;
-                res.locals.allStatistic = allStatistic;
-                res.render('statistics');
+                res.json({problems: problems, allStatistics: allStatistic});
             })
-        });
-    });
-}
-
-function isGlobal(problem) {
-    return (problem._id.equals(Problem.getGlobalObjectId()));
+        })
 }
 
 Date.prototype.format = function (mask, utc) {

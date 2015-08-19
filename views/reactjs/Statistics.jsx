@@ -1,29 +1,98 @@
 var React = require('react');
-var Input = require('./controls/Input.jsx');
 var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
 var Glyphicon = Bootstrap.Glyphicon;
 var Panel = Bootstrap.Panel;
+var Table = Bootstrap.Table;
 var server = require('./server.js');
+
+var Team = React.createClass({
+    render:function() {
+        var team = this.props.team;
+        var index = this.props.index;
+        return (
+            <tr>
+                <td>{index + 1}</td>
+                <td>{team.user}</td>
+                <td>{team.total}</td>
+                {
+                    team.history.map(function(problem){
+                        return <td>
+                            <table>
+                                <tr>{problem.topic + " " + problem.timeStart + " - " + problem.timeFinish }</tr>
+                                <tr>
+                                    <td>{"<" + problem.total + ">"} </td>
+                                    <td>{"<" + problem.numbBonuses + ">"}</td>
+                                    <td>{"<" + problem.numbHints + ">"}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    })
+                }
+            </tr>
+        )
+    }
+})
 
 var Statistic = React.createClass({
     propTypes: {
     },
 
+    getInitialState: function() {
+        return {
+            problems: [],
+            statistics:[]
+        };
+    },
+
+    // https://facebook.github.io/react/tips/initial-ajax.html
+    componentDidMount: function() {
+        var me = this;
+        server.fetchStatistics(
+            function() {
+                console.error('failed to load statistics', arguments);
+            },
+            function(result) {
+                if (me.isMounted()) {
+                    me.setState({
+                        problems : result.problems,
+                        statistics : result.allStatistics
+                    });
+                }
+            });
+    },
+
     render: function() {
+        var problems = this.state.problems;
+        var statistics = this.state.statistics;
         return (
             <Panel header="Statisctic">
-                <table style = "2px">
+                <Table>
+                    <thead Статистика>
                     <tr>
-                        <td>Place</td>
-                        <td>Team</td>
-                        <td>Total score</td>
+                        <th>Место</th>
+                        <th>Команда</th>
+                        <th>Cчет</th>
+                        {
+                            problems.map(function (problem, index) {
+                                return <th>Задание {index + 1}</th>
+                            })
+                        }
                     </tr>
-
-                </table>
+                    </thead>
+                    <tbody>
+                    {
+                        statistics.map(function (team, index) {
+                            return (
+                                <Team team={team} index={index}/>
+                            )
+                        })
+                    }
+                    </tbody>
+                </Table>
             </Panel>
         );
-    },
+    }
 
 });
 
