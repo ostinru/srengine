@@ -7,13 +7,12 @@ var Panel = Bootstrap.Panel;
 var server = require('./server.js');
 
 var Times = React.createClass({
-      propTypes: {
-      },
       
     getInitialState: function() {
         return {
             startTime: '',
-            finishTime: ''
+            finishTime: '',
+            loaded: false
         };
     },
 
@@ -28,13 +27,23 @@ var Times = React.createClass({
 		    	if (me.isMounted()) {
 					me.setState({
 						startTime : result.startTime,
-						finishTime: result.finishTime
+						finishTime: result.finishTime,
+						loaded : true
 					});
 				}
 		    });
 	},
 
 	render: function() {
+		if (!this.state.loaded) {
+			// don't create Inputs with empty initValue
+			return (
+                <Panel header="Start/Finish time">
+                	<p>Loading...</p>
+                </Panel>
+               );
+		}
+
 		return (
                 <Panel header="Start/Finish time">
                 	<Input type="text" ref="startTime" label="Start time" initValue={this.state.startTime} />
