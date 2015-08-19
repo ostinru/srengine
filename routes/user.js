@@ -38,20 +38,16 @@ exports.createUser = function(req, res, next) {
     if (!req.body.admin)
         return res.sendHttpError(new HttpError(400, '\'admin\' not specified'));
 
-    var user =  new User({
+    logger.debug('CreateUser: ', req.body);
+
+    var user = new User({
         username: req.body.username,
         password: req.body.password,
         admin: req.body.admin,
         problems: [],
-        problemHistory: [ {
-            problem: Problem.getGlobalObjectId(),
-            solved: true
-        }],
+        problemHistory: [],
         adminBonuses: [],
-        _id: mongoose.Types.ObjectId(req.params.userId),
     });
-
-    user.markModified('problemHistory');
 
     user.save(function(err){
         if (err){
@@ -59,6 +55,7 @@ exports.createUser = function(req, res, next) {
             res.json(err);
         }
         else{
+            logger.debug('CreateUser OK:', req.body);
             res.json({ status : "Success"});
         }
     });
