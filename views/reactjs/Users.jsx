@@ -3,6 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var Button = Bootstrap.Button;
 var Panel = Bootstrap.Panel;
 var Input = require('./controls/Input.jsx');
+var Checkbox = require('./controls/Checkbox.jsx');
 var server = require('./server.js');
 
 
@@ -73,7 +74,7 @@ var NewUser = React.createClass({
 			<Panel header="New User" key="newUser" bsStyle='primary'>
 				<Input label="Username" type="text" ref="username" />
 			    <Input label="Password" type="text" ref="password" />
-			    <Input label="IsAdmin"  type="checkbox" ref="admin" />
+			    <Checkbox label="IsAdmin" ref="admin" />
 			    <Button onClick={me.addUser} bsStyle='success'>Save</Button>
 			</Panel>
 		);
@@ -103,7 +104,7 @@ var UserEditor = React.createClass({
 			<Panel header={"User " + user.username} key={user.id} >
 				<Input label="Username" type="text" ref="username" initValue={user.username} />
 			    <Input label="Password" type="text" ref="password" initValue={user.password} />
-			    <Input label="IsAdmin"  type="checkbox" ref="admin" checked={user.admin} />
+			    <Checkbox label="IsAdmin" ref="admin" initValue={user.admin} />
 			    <Panel header="Admin bonuses and punishments">
 			    	{user.adminBonuses && user.adminBonuses.map(function(bonus) {
 			    		return (
