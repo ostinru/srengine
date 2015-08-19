@@ -40,9 +40,9 @@ module.exports = function(app) {
 
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
-    app.put(REST_PREFIX + '/problem', checkAdmin,  require('./problem').put);
-    app.post(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').post);
-    app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').delete);
+    app.post(REST_PREFIX + '/problem', checkAdmin, require('./problem').createProblem);
+    app.put(REST_PREFIX + '/problem/:problemId', checkAdmin,  require('./problem').updateProblem);
+    app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').deleteProblem);
 
     app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get); // ложит движок! не заходить!
 

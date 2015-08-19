@@ -28,7 +28,7 @@ exports.get = function(req, res, next){
     });
 };
 
-exports.put = function(req, res, next) {
+exports.createProblem = function(req, res, next) {
     // FIXME: check parameters!!
     problem =  new Problem({
         topic: req.body.topic,
@@ -50,64 +50,41 @@ exports.put = function(req, res, next) {
     });
 };
 
-exports.post = function(req, res, next) {
+exports.updateProblem = function(req, res, next) {
     // FIXME: check parameters!!
     Problem.findById(req.params.problemId, function(err, problem) {
         if(!problem || err){
             return res.sendHttpError(new HttpError(400, err));
         }
 
-        problem.topic = req.body.topic;
-        problem.question = req.body.question;
-        problem.cost = req.body.cost;
-        problem.serial = req.body.serial;
+        var body = req.body;
 
-        //write answers
-        var i = 0;
-        while (!(req.body['answer' + i] === undefined)) {
-            if (i < problem.answers.length) {
-                problem.answers[i] = req.body['answer' + i];
-                logger.info("Updated " + problem.answers[i]);
-            }
-            else {
-                problem.answers.push(req.body['answer' + i]);
-                logger.info("Added " + problem.answers[i]);
-            }
-            i++;
-        }
+        // Rely on mongoose validation
+
+        problem.topic = body.topic;
+        
+        problem.question = body.question;
+        
+        problem.answers = body.answers;
         problem.markModified('answers');
-
-        //write bonuses
-        var i = 0;
-        while (!(req.body['bonus' + i] === undefined)) {
-            if (i < problem.bonuses.length) {
-                problem.bonuses[i].text = req.body['bonus' + i];
-                problem.bonuses[i].cost = req.body['bonus_cost' + i];
-            }
-            else {
-                problem.bonuses.push({
-                    text: req.body['bonus' + i],
-                    cost: req.body['bonus_cost' + i]});
-            }
-            i++;
-        }
+        
+        problem.cost = body.cost;
+        
+        problem.bonuses = body.bonuses;
         problem.markModified('bonuses');
 
-        //write hints
-        var i = 0;
-        while (!(req.body['hint' + i] === undefined)) {
-            if (i < problem.hints.length) {
-                problem.hints[i].text = req.body['hint' + i];
-                problem.hints[i].cost = req.body['hint_cost' + i];
-            }
-            else {
-                problem.hints.push({
-                    text: req.body['hint' + i],
-                    cost: req.body['hint_cost' + i]});
-            }
-            i++;
-        }
+        problem.hints = body.hints;
         problem.markModified('hints');
+
+        problem.nextProblems = body.nextProblems;
+        problem.markModified('nextProblems');
+
+        problem.x = body.x;
+        problem.y = body.y;
+
+        problem.icon = body.icon;
+        problem.iconText = body.iconText;
+        problem.iconTitle = body.iconTitle
 
         problem.save(function(err){
             if (err){
@@ -122,7 +99,7 @@ exports.post = function(req, res, next) {
     });
 };
 
-exports.delete = function(req, res, next) {
+exports.deleteProblem = function(req, res, next) {
     Problem.findById(req.params.problemId, function(err, problem) {
         if(!problem){
             return res.sendHttpError(new HttpError(400, err));
