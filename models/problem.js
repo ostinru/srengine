@@ -3,6 +3,11 @@ var mongoose = require('../lib/mongoose'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({
+    number:{
+        type:Number,
+        unique: true,
+        required: true
+    },
     topic: {
         type: String,
         unique: true,

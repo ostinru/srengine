@@ -43,34 +43,20 @@ function generateIds(callback) {
 }
 
 function createProblems(callback) {
-    var problems = [
-        {
-            topic : 'Глобальный бонус',
-            question : 'Оценка за костюмы + количество артефактов',
-            answers : ['1'],
-            cost: 0,
-            hints: [
-                { text: 'п10', cost: 10},
-                { text: 'п20', cost: 20},
-                { text: 'п30', cost: 30},
-                { text: 'п40', cost: 40},
-                { text: 'п50', cost: 50}
-            ],
-            bonuses: [
-                { text: 'б10', cost: 10},
-                { text: 'б20', cost: 20},
-                { text: 'б30', cost: 30},
-                { text: 'б40', cost: 40},
-                { text: 'б50', cost: 50},
-                { text: 'б60', cost: 60},
-                { text: 'б70', cost: 70},
-                { text: 'б80', cost: 80},
-                { text: 'б90', cost: 90},
-                { text: 'б100', cost: 100},
-                { text: 'б110', cost: 110}
-            ],
-        }
-    ];
+    var problems = [ ];
+
+    for (var i=0;i<=10;i++){
+        problem = new Problem;
+        problem.topic = "Задание " + i;
+        problem.number = i;
+        problem.question = "Текст задания";
+        problem.answers = ['1'];
+        problem.cost = 10;
+        problem.hints = [];
+        problem.bonuses = [];
+        problem._id = ids[i];
+        problems.push(problem);
+    }
 
     async.each(problems, function (problemData, callback) {
         var problem = new mongoose.models.Problem(problemData);
@@ -81,16 +67,20 @@ function createProblems(callback) {
 function createUsers(callback) {
     //example of user: {username: 'admin', password: '123123123', admin: true}
 
-    var users = [
-        {username: 'superAdmin', password: '1',admin: true}
-    ];
-
-    async.each(users, function (userData, callback) {
-        var user = new mongoose.models.User(userData);
-        user.problemHistory.push({problem: Problem.getGlobalObjectId(),solved:true});
-        user.save(callback);
-    }, callback);
-}
-
-function createFields(callback) {
+    Problem.find({}, function (err, problems) {
+        var admin = new mongoose.models.User({username: 'superAdmin' , password: '1', admin: true});
+        admin.save(callback);
+        for (var i = 1; i <= 10; i++) {
+            var user = new mongoose.models.User({username: 'user' + i.toString(), password: '1', admin: false, problemHistory: []});
+            for (var j = 1; j <= i; j++) {
+                 if (err) {
+                    throw err;
+                }
+                var problem = problems[j];
+                user.problemHistory.push({problem: problem._id, solved: true});
+            }
+            console.log(user);
+            user.save(callback);
+        }
+    })
 }
