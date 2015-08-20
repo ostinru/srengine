@@ -26,6 +26,7 @@ var schema = new Schema({
         required: true
     },
     bonuses: [{
+        // mongoose will create _id
         text: {
             type: String,
             required: true
@@ -36,6 +37,7 @@ var schema = new Schema({
         }
     }],
     hints: [{
+        // mongoose will create _id
         text: {
             type: String,
             required: true
@@ -69,5 +71,21 @@ schema.methods.checkBonuses = function(userBonus) {
         return item.text == userBonus;
     });
 };
+
+schema.methods.getPublicFields = function() {
+    return {
+        number: this.number,
+        topic: this.topic,
+        question: this.question,
+        //  Latitude and Longitude
+        x: this.x,
+        y: this.y,
+        // Icon on the map
+        icon: this.icon,
+        iconText: this.iconText,
+        iconTitle: this.iconTitle
+    };
+};
+
 
 exports.Problem = mongoose.model('Problem', schema);
