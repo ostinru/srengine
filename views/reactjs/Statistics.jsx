@@ -77,6 +77,7 @@ var Statistic = React.createClass({
                                 return <th>Задание {index + 1}</th>
                             })
                         }
+                        <th>¯\_(ツ)_/¯</th>
                     </tr>
                     </thead>
                     <tbody>

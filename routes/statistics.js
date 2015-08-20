@@ -10,7 +10,7 @@ exports.get = function (req, res, next) {
 
     //get all users
     User.find({})
-        .populate('problems problemHistory.problem problemHistory.takenBonuses problemHistory.takenHints')
+        .populate('problems problemHistory.problem problemHistory.takenBonuses problemHistory.takenHints problemHistory.adminBonuses')
         .exec(function (err, users) {
             if (err) {
                 return next(err);
@@ -73,7 +73,21 @@ exports.get = function (req, res, next) {
                         }
                     });
 
-                    var userStatistic = {'user': user.username, 'total': total, 'history': history};
+                    //push admin bonuses
+                    var totalAdminBonuses = _.reduce(user.adminBonuses, function(memo, bonus){
+                        return memo + bonus.cost;
+                    },0);
+                    history.push({
+                        'topic': '┗┃・ □ ・┃┛',
+                        'total': totalAdminBonuses,
+                        'numbBonuses': "",
+                        'numbHints': "",
+                        'solved': true,
+                        'timeStart': finishTime.format("HH:MM:ss"),
+                        'timeFinish': finishTime.format("HH:MM:ss")
+                    });
+
+                    var userStatistic = {'user': user.username, 'total': total + totalAdminBonuses, 'history': history};
                     allStatistic.push(userStatistic);
                 });
                 allStatistic.sort(function (a, b) {
