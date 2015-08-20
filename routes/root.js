@@ -14,214 +14,173 @@ exports.renderPage = function(req, res, next){
 }
 
 exports.get = function(req, res, next){
-    if (!req.user) {
-        return res.sendHttpError(new HttpError(401));
-    }
-    if (!req.user.problemId) {
-        return res.sendHttpError(new HttpError(500, 'There are no probem for current user'));
+    if (!req.user.problems) {
+        return res.sendHttpError(new HttpError(500, 'There are no probems for current user'));
     }
 
     var user = req.user;
-    var problemId = user.problemId;
+    var problems = user.problems; // populated by loadUser
 
-    Problem.findById(problemId, function(err, problem) {
-        if (err) {
-            return res.sendHttpError(new HttpError(404, err)); // TODO: is it ok?
-        }
+    var result = _.map(user.problems, function(problem) {
+        return problem.getPublicFields();
+    })
 
-        var publicProblem = {
-            topic : problem.topic,
-            question : problem.question,
-            cost : problem.cost
-        };
-
-        var problemHistory = user.getProblemHistory(problemId);
-
-        publicProblem.visible = problemHistory.visible;
-        var delay = 0;
-        if (problem.serial === 0) {
-            delay = 1200000;
-        }else{
-            delay = 3600000;
-        };
-        publicProblem.timeStart = Date.parse(problemHistory.timeStart)+ delay;
-        publicProblem.myCur = problem.serial;
-
-        logger.info("at root get visible = " + publicProblem.visible);
-        // add bonuses
-        var bonusesIds = problemHistory && _.filter(problem.bonuses, function(item) {
-            return _.find(problemHistory.takenBonuses, function(bonusId) {
-                return bonusId.equals(item._id); });
-        });
-        publicProblem.takenBonuses = inlinePublicBonuses(bonusesIds, problem.bonuses);
-
-        // add hints
-        var hintsIds = problemHistory && _.filter(problem.hints, function(item, cb) {
-            return _.find(problemHistory.takenHints,   function(hintId)  { return hintId.equals(item._id); });
-        });
-        publicProblem.takenHints = inlinePublicHints(hintsIds, problem.hints);
-
-        res.json(publicProblem);
-    });
+    res.json(result);
 };
 
 exports.post = function(req, res, next) {
-    if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
-        return res.sendHttpError(new HttpError(412, "Only XMLHttpRequest requests accepted on this URL"));
-    }
-
     var user = req.user;
-    if (!user) {
-        return res.sendHttpError(new HttpError(401));
-    }
 
-    var problemId = user.problemId;
-    if (!problemId) {
-        return res.sendHttpError(new HttpError(500));
-    }
     var answer = req.body.answer;
+    answer = normalizeAnswer(answer);
     if (!answer) {
-        return res.sendHttpError(new HttpError(403, "Ответ не введен")); //No answer
+        return res.sendHttpError(new HttpError(403, "Ответ не введен или он пустой")); //No answer
     }
+    
+    var problems = user.problems; // populated by loadUser
 
-    Problem.findById(problemId, function (err, problem) {
-        if (err) {
-            return res.sendHttpError(new HttpError(500, err));
+    //
+    // check bonuses
+    //
+    if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
+        if (checkBruteForce(user)) {
+            return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
         }
-        // REMOVED
-        Problem.getGlobalProblem(function(err, globalProblem) {
+        var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
+
+        // find problem
+        var problem = _.find(problems, function(problem) {
+            var bonus = problem.checkBonuses(bonusStr);
+            return !! bonus;
+        });
+        if (problem) {
+            // find bonus
+            var bonus = problem.checkBonuses(bonusStr);
+            // find ProblemHistory
+            var problemHistory = _.find(user.problemHistory, function(problemHistory) {
+                return problem._id === problemHistory.problem; // FIXME: is populated??
+            });
+            if (bonus) {
+                logger.debug('[%s] got bonus %s', user.username, bonus.text);
+                if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
+                    problemHistory.takenBonuses.push(bonus._id);
+                    user.markModified('problemHistory');
+                    user.save(function(err) {
+                        if (err) {
+                            return res.sendHttpError(new HttpError(500, err));
+                        }
+                        return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
+                    });
+                }
+                else {
+                    return res.json({ status : "Success", bonus : bonus, message: "Уже был зачислен:  " + answer});
+                }
+            }
+        }
+        // not found:   
+        user.lastActivity = Date.now();
+        user.save(function(err) {
+            if (err)
+                return logger.log(err);
+        });
+        return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
+    }
+    //
+    // check hints
+    //
+    else if (answer.indexOf(HINT_KEY_WORD) == 0) {
+        return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
+        /*
+        var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
+        var hintNumber = parseInt(hintNumberStr);
+        if (isNaN(hintNumber)) {
+            return res.sendHttpError(new HttpError(500, "Нет номера подсказки '" + hintNumberStr + "'"));//Can't parse hint numer
+        }
+        var hint = problem.hints[hintNumber - 1];
+        if (hint === undefined) {
+            return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
+        }
+        logger.debug('[%s] got hint #%s', user.username, hintNumber);
+        if (! hasHint(hint._id, problemHistory.takenHints)) {
+            problemHistory.takenHints.push(hint._id);
+            user.markModified('problemHistory');
+            user.save(function(err) {
+                if (err) {
+                    return res.sendHttpError(new HttpError(500, err));
+                }
+                return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
+            });
+        }
+        return res.json({ status : "Success", hint : hint, message: "Уже был зачислен:  " + answer});
+        */
+    }
+    //
+    // skip problem
+    //
+    else if (answer == SKIPPROBLEM_KEY_WORD) {
+        logger.debug('[%s] skip problem.', user.username);
+        return res.json({ status : "Success", skipProblem : true,message: "В этой игре нет автопереходов"});
+        /*
+        user.problemId = undefined; // be ready to do next steps
+        problemHistory.timeFinish = Date.now();
+        user.save(function(err) {
             if (err) {
                 return res.sendHttpError(new HttpError(500, err));
             }
-
-            var problemHistory = user.getProblemHistory(problemId);
-            answer = normalizeAnswer(answer);
-            //
-            // check bonuses
-            //
-            if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
-                if (checkBruteForce(user)) {
-                    return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
-                }
-                var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-                var bonus = problem.checkBonuses(bonusStr);
-                if (bonus) {
-                    logger.debug('[%s] got bonus %s', user.username, bonus.text);
-                    if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
-                        problemHistory.takenBonuses.push(bonus._id);
-                        user.markModified('problemHistory');
-                        user.save(function(err) {
-                            if (err) {
-                                return res.sendHttpError(new HttpError(500, err));
-                            }
-                            return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
-                        });
-                    }
-                    else {
-                        return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
-                    }
-                }
-                else {
-                    user.lastActivity = Date.now();
-                    user.save(function(err) {
-                        if (err)
-                            logger.log(err);
-                    });
-                    return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
-                }
-            }
-            //
-            // check hints
-            //
-            else if (answer.indexOf(HINT_KEY_WORD) == 0) {
-                var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
-                var hintNumber = parseInt(hintNumberStr);
-                if (isNaN(hintNumber)) {
-                    return res.sendHttpError(new HttpError(500, "Нет номера подсказки '" + hintNumberStr + "'"));//Can't parse hint numer
-                }
-                var hint = problem.hints[hintNumber - 1];
-                if (hint === undefined) {
-                    return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
-                }
-                logger.debug('[%s] got hint #%s', user.username, hintNumber);
-                if (! hasHint(hint._id, problemHistory.takenHints)) {
-                    problemHistory.takenHints.push(hint._id);
-                    user.save(function(err) {
-                        if (err) {
-                            return res.sendHttpError(new HttpError(500, err));
-                        }
-                        return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
-                    }); // TODO: markModified(?)
-                }
-                return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
-            }
-            //
-            // skip problem
-            //
-            else if (answer == SKIPPROBLEM_KEY_WORD) {
-                logger.debug('[%s] skip problem.', user.username);
-                user.problemId = undefined; // be ready to do nest steps
-                problemHistory.timeFinish = Date.now();
-                user.save(function(err) {
-                    if (err) {
-                        return res.sendHttpError(new HttpError(500, err));
-                    }
-                    return res.json({ status : "Success", skipProblem : true,message: "зачислено:  " + answer});
-                });
-            }
-            //
-            // check answer
-            //
-            else {
-                if (checkBruteForce(user)) {
-                    return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек"));
-                }
-                if (problem.check(answer)) {
-                    logger.debug('[%s] answer problem.', user.username);
-                    problemHistory.solved = true;
-                    user.markModified('problemHistory');
-                    user.problemId = undefined; // be ready to do nest steps
-                    problemHistory.timeFinish = Date.now();
-                    user.save(function(err) {
-                        if (err) {
-                            return res.sendHttpError(new HttpError(500, err));
-                        }
-                        return res.json({ status : "Success", correctAnswer: true,message: "зачислено:  " + answer})
-                    });
-                }
-                else {
-                    user.lastActivity = Date.now();
-                    user.save(function(err) {
-                        if (err)
-                            logger.log(err);
-                    });
-                    return res.sendHttpError(new HttpError(404, " Ответ неверный '" + answer + "'"));//No such answer
-                }
-            }
+            return res.json({ status : "Success", skipProblem : true,message: "зачислено:  " + answer});
         });
-    });
+*/
+    }
+    //
+    // check answer
+    //
+    else {
+        if (checkBruteForce(user)) {
+            return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек"));
+        }
+        // find problem
+        var problem = _.find(problems, function(problem) {
+            var answer = problem.check(answer);
+            return !! answer;
+        });
+
+        if (problem) {
+            logger.debug('[%s] answer problem.', user.username);
+
+            var problemHistory = _.find(user.problemHistory, function(problemHistory) {
+                return problem._id === problemHistory.problem; // FIXME: is populated??
+            });
+
+            problemHistory.solved = true;
+            user.markModified('problemHistory');
+
+            user.problems.id(problem._id).remove();
+            _.each(problem.nextProblems, function(next) {
+                user.problems.push(next);
+                return true;
+            });
+
+            problemHistory.timeFinish = Date.now();
+            user.save(function(err) {
+                if (err) {
+                    return res.sendHttpError(new HttpError(500, err));
+                }
+                return res.json({ status : "Success", correctAnswer: true,message: "зачислено:  " + answer})
+            });
+        }
+        else {
+            user.lastActivity = Date.now();
+            user.save(function(err) {
+                if (err)
+                    logger.log(err);
+            });
+            return res.sendHttpError(new HttpError(404, " Ответ неверный '" + answer + "'"));//No such answer
+        }
+    }
 };
 
 normalizeAnswer = function(answer) {
-    return answer;
-};
-
-inlinePublicBonuses = function(bonuses) {
-    return _.map(bonuses, function(bonus) {
-        return {
-            text: bonus.text,
-            cost: bonus.cost
-        };
-    });
-};
-
-inlinePublicHints = function(hints) {
-    return _.map(hints, function(hint) {
-        return {
-            text: hint.text,
-            cost: hint.cost
-        };
-    });
+    return answer.trim();
 };
 
 hasBonus = function(bonusId, takenBonuses) {

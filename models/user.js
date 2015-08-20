@@ -57,6 +57,8 @@ var schema = new Schema({
             }
     }],
     adminBonuses: [{
+        // FIXME: don't confuse '_id' and 'id'
+        _id: false,
         id: {
             type: Schema.Types.ObjectId,
             required: true
