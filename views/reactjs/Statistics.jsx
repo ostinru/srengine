@@ -17,16 +17,15 @@ var Team = React.createClass({
                 <td>{team.total}</td>
                 {
                     team.history.map(function(problem){
-                        return <td>
-                            <table>
-                                <tr>{problem.topic + " " + problem.timeStart + " - " + problem.timeFinish }</tr>
-                                <tr>
-                                    <td>{"<" + problem.total + ">"} </td>
-                                    <td>{"<" + problem.numbBonuses + ">"}</td>
-                                    <td>{"<" + problem.numbHints + ">"}</td>
-                                </tr>
-                            </table>
-                        </td>
+                        return (
+                            <td>
+                                <table style="">
+                                    <tr><td>{problem.topic}</td></tr>
+                                    <tr><td>балл: {problem.total}</td></tr>
+                                    <tr><td>бон: {problem.numbBonuses}</td></tr>
+                                    <tr><td>подск: {problem.numbHints}</td></tr>
+                                </table>
+                            </td>)
                     })
                 }
             </tr>

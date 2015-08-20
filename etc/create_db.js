@@ -47,7 +47,7 @@ function createProblems(callback) {
 
     for (var i=1;i<10;i++){
         var problem = new Problem;
-        problem.topic = "Задание " + i;
+        problem.topic = "Топик " + i;
         problem.number = i;
         problem.question = "Текст задания";
         problem.answers = ['1'];

@@ -27,4 +27,4 @@ var coords = new Schema({
     }
 });
 
-exports.Message = mongoose.model('Coords', coords);
+exports.Coords = mongoose.model('Coords', coords);
