@@ -34,7 +34,7 @@ exports.post = function (req, res, next) {
             res.redirect("/administration")
         }
         else {
-            res.redirect("/map");
+            res.redirect("/");
         }
     });
 

@@ -9,11 +9,11 @@ var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
 var SKIPPROBLEM_KEY_WORD = "автопереход";
 
-exports.get = function(req, res, next){
-   if (res.req.headers['x-requested-with'] != 'XMLHttpRequest') {
-        return res.redirect("/map");
-    }
+exports.renderPage = function(req, res, next){
+    return res.render("index");
+}
 
+exports.get = function(req, res, next){
     if (!req.user) {
         return res.sendHttpError(new HttpError(401));
     }

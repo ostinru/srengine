@@ -14,14 +14,15 @@ module.exports = function(app) {
     app.post('/logout', require('./logout').post);
 
     // Gamer's URLs
-    app.get('/', checkAuth, checkTime, checkFinished, require('./root').get);
-    app.post('/', checkAuth, checkTime, checkFinished, require('./root').post);
-
-    app.get('/map', checkAuth, checkTime, checkFinished, require('./map').get);
-    app.post('/map', checkAuth, checkTime, checkFinished, require('./map').post);
-
+    app.get('/', checkAuth, checkTime, checkFinished, require('./root').renderPage);
     // Gamer's REST API
     app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
+    app.get(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').get);
+    app.post(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').post);
+
+    app.get(REST_PREFIX + '/map', checkAuth, checkTime, checkFinished, require('./map').get);
+    app.post(REST_PREFIX + '/map', checkAuth, checkTime, checkFinished, require('./map').post);
+
 
 	// Admin's URLs
     app.get('/administration',checkAdmin, require('./administration').get);
@@ -44,7 +45,7 @@ module.exports = function(app) {
     app.put(REST_PREFIX + '/problem/:problemId', checkAdmin,  require('./problem').updateProblem);
     app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').deleteProblem);
 
-    app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get); // ложит движок! не заходить!
+    app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get);
 
     app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
 
