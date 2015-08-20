@@ -16,13 +16,10 @@ module.exports = function(app) {
     // Gamer's URLs
     app.get('/', checkAuth, checkTime, checkFinished, require('./root').renderPage);
     // Gamer's REST API
+    // FIXME: add checkREST 
     app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
     app.get(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').get);
     app.post(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').post);
-
-    app.get(REST_PREFIX + '/map', checkAuth, checkTime, checkFinished, require('./map').get);
-    app.post(REST_PREFIX + '/map', checkAuth, checkTime, checkFinished, require('./map').post);
-
 
 	// Admin's URLs
     app.get('/administration',checkAdmin, require('./administration').get);
