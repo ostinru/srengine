@@ -13,6 +13,8 @@ exports.post = function(req,res,next){
         if (err) {
             return res.sendHttpError(new HttpError(500, err));
         }
-        res.render('/');
+        res.writeHead(200, {"Content-Type": "?"});
+        res.write("coordinates taken");
+        res.end();
     })
 }

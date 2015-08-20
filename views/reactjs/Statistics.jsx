@@ -19,7 +19,7 @@ var Team = React.createClass({
                     team.history.map(function(problem){
                         return (
                             <td>
-                                <table style="">
+                                <table>
                                     <tr><td>{problem.topic}</td></tr>
                                     <tr><td>балл: {problem.total}</td></tr>
                                     <tr><td>бон: {problem.numbBonuses}</td></tr>
@@ -66,7 +66,7 @@ var Statistic = React.createClass({
         var statistics = this.state.statistics;
         return (
             <Panel header="Statisctic">
-                <Table>
+                <Table responsive>
                     <thead Статистика>
                     <tr>
                         <th>Место</th>
