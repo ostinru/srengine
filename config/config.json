@@ -16,5 +16,7 @@
     },
     "debug": true,
     "bruteforcetime" : 3,
-    "bruteforcenumber":5
+    "bruteforcenumber":5,
+    "bunTime":10,
+    "aDistance":50
 }
