@@ -55,6 +55,18 @@ function testGeo(){
 </head>
 
 <body onLoad="testGeo();">
+	<script type="text/javascript">
+		function submitAnswer() {
+			$.ajax({
+				type: "POST",
+				url: "/rest/",
+				data: {
+					answer: $('#mainInput').val(),
+				},
+				success: function(resp) { console.log(resp); }
+			});
+		}
+	</script>
 
 <div class="loading">
 	<p>Map is loading, please wait</p>
@@ -71,7 +83,7 @@ function testGeo(){
 			<span class="textInSlide">Here is a bit of text as a hint for answers input</span><br/>
 			<input id="mainInput" type="text" placeholder="Answers go here">
 			</br>
-			<input class="okBut" type="button" value="OK">
+			<input class="okBut" type="button" value="OK" onClick="submitAnswer();">
 			</br></br>
 		</div>
 	
