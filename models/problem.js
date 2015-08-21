@@ -54,10 +54,16 @@ var schema = new Schema({
     //  Latitude and Longitude
     x: Number,
     y: Number,
-    // Icon on the map
+    // for map
     icon: String,
     iconText: String,
-    iconTitle: String
+    iconTitle: String,
+    vPoints:[
+        {
+            x:Number,
+            y:Number
+        }
+    ]
 });
 
 schema.methods.check = function(userAnswer) {
