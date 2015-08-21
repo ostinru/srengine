@@ -2,7 +2,7 @@ var mongoose = require('../lib/mongoose'),
     Schema = mongoose.Schema;
 
 var coords = new Schema({
-    sessionId: {
+    sessionID: {
     	type: String,
     	required: true
     },

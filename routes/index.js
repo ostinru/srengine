@@ -17,6 +17,7 @@ module.exports = function(app) {
     app.get('/', checkAuth, checkTime, checkFinished, require('./root').renderPage);
     // Gamer's REST API
     // FIXME: add checkREST 
+    app.post(REST_PREFIX + '/coords',checkAuth,require('./coords').post);
     app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
     app.get(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').get);
     app.post(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').post);
@@ -48,6 +49,4 @@ module.exports = function(app) {
 
     app.get(REST_PREFIX + '/time', checkAdmin, require('./game').get);
     app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);
-
-    app.post(REST_PREFIX + '/coords',checkAuth,require('./coords').post)
 }
