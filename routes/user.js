@@ -47,6 +47,9 @@ exports.createUser = function(req, res, next) {
         problems: [],
         problemHistory: [],
         adminBonuses: [],
+        availebleHints: 0,
+        lastActivity: 0,
+        numberOfAttempts: 0
     });
 
     user.save(function(err){
@@ -71,23 +74,23 @@ exports.updateUser = function(req, res, next) {
             return res.sendHttpError(new HttpError(400, "User with id = '" + req.params.userId + "'' not found"));
         }
 
-        var username = req.body.username;
-        var password = req.body.password; // optional
-        var admin = req.body.admin || false;
-
-        if (username)
-            user.username = username;
-        if (password)
-            user.password = password;
-        user.admin = admin;
-
+        user.username = req.body.username;
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+        user.admin = req.body.admin || false;
+        user.problems = req.body.problems;
         if (req.body.problemHistory) {
-            // FIXME: add validation?
-            // FIXME: concurent modification?
             user.problemHistory = req.body.problemHistory;
             user.markModified('problemHistory');
         }
-
+        user.adminBonuses = req.body.adminBonuses;
+        user.markModified('adminBonuses');
+        user.availebleHints = req.body.availebleHints;
+        user.markModified('availebleHints');
+        // takenHints
+        // timeStart
+        // timeFinishs
 
         user.save(function(err){
             if (err){
@@ -120,96 +123,6 @@ exports.deleteUser =  function(req, res, next) {
             else{
                 res.json({ status : "Success"});
             }
-        });
-
-    });
-};
-
-exports.addAdminBonus = exports.updateAdminBonus = function (req, res, next) {
-    var userId = req.params.userId;
-    if (!userId) {
-        return res.sendHttpError(new HttpError(400, "UserId not specified"));
-    }
-    var cost = req.body.cost;
-    if (!cost) {
-        return res.sendHttpError(new HttpError(400, "Cost not specified"));
-    }
-    var message = req.body.message;
-    if (!message) {
-        return res.sendHttpError(new HttpError(400, "Message not specified"));
-    }
-
-    User.findById(userId, function (err, user) {
-        if (!user) {
-            return res.sendHttpError(new HttpError(404, "User not found"));
-        }
-
-        logger.info("user " + user.username);
-
-        if (req.params.bonusId === undefined) {
-            // new bonus
-            var bonus = {
-                cost: cost,
-                message: message,
-                id: new mongoose.Types.ObjectId()
-            };
-            user.adminBonuses.push(bonus);
-        } else {
-            // modify existing
-            user.adminBonuses.forEach(function(bonus) {
-                if (String(bonus.id) == String(req.params.bonusId)) {
-                    bonus.cost = cost;
-                    bonus.message = message;
-                    return false;
-                }
-                return true;
-            });
-            // FIXME: validate that only one bonus was modified!
-        }
-
-        user.markModified('adminBonuses');
-
-        user.save(function (err) {
-            if (err) {
-                return res.sendHttpError(new HttpError(500, err));
-            }
-            logger.info(" saved");
-            return res.json({ status: "Success", bonus: bonus });
-        });
-
-    });
-
-};
-
-exports.deleteAdminBonus = function (req, res, next) {
-    var userId = req.params.userId;
-    if (!userId) {
-        return res.sendHttpError(new HttpError(400, "UserId not specified"));
-    }
-    if (!req.params.bonusId) {
-        return res.sendHttpError(new HttpError(400, "bonusId not specified"));
-    }
-
-    User.findById(userId, function (err, user) {
-        if (!user) {
-            return res.sendHttpError(new HttpError(404, "User not found"));
-        }
-
-        logger.info("user " + user.username);
-
-        user.adminBonuses = _.filter(user.adminBonuses, function(bonus) {
-            return String(bonus.id) != String(req.params.bonusId);
-        });
-        // FIXME: validate that only one bonus was removed!
-
-        user.markModified('adminBonuses');
-
-        user.save(function (err) {
-            if (err) {
-                return res.sendHttpError(new HttpError(500, err));
-            }
-            logger.info(" saved");
-            return res.json({ status: "Success", bonus: bonus });
         });
 
     });

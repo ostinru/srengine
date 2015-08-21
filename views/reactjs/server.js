@@ -9,9 +9,6 @@ module.exports = {
     addUser: superPost("user"),
     updateUser: superPut("user"),
     removeUser: superDelete("user"),
-    addAdminBonus: superPost("user"),
-    updateAdminBonus: superPut("user"),
-    removeAdminBonus: superDelete("user"),
 
     fetchProblems : superFetch('problem'),
     addProblem : superPost('problem'),

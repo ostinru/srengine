@@ -7,6 +7,14 @@ var problems = new Baobab({
 	asynchronous:true // commit on next tick
 });
 
+var users = new Baobab({
+	users: []
+	}, {
+	syncwrite: true,  // Applying modifications immediately
+	asynchronous:true // commit on next tick
+});
+
 module.exports = {
-	problems : problems
+	problems : problems,
+	users: users
 }

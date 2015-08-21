@@ -57,13 +57,7 @@ var schema = new Schema({
             }
     }],
     adminBonuses: [{
-        // FIXME: don't confuse '_id' and 'id'
-        _id: false,
-        id: {
-            type: Schema.Types.ObjectId,
-            required: true
-            // default: function() {return new mongoose.Types.ObjectId(); }
-        },
+        // mongoose will create _id
         message: {
             type: String,
             required: true

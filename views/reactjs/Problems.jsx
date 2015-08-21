@@ -257,7 +257,7 @@ var HintEditor = React.createClass({
 var NewHint = React.createClass({
 
 	propTypes: {
-		problem: React.PropTypes.object.isRequired
+		path: React.PropTypes.object.isRequired
     },
 
 	render: function() {
@@ -419,14 +419,6 @@ var NewProblem = React.createClass({
 
 
 var Problems = React.createClass({
-
-	childContextTypes: {
-		problems: React.PropTypes.instanceOf(Baobab)
-	},
-
-	getChildContext: function() {
-        return context;
-    },
 
 	// https://facebook.github.io/react/tips/initial-ajax.html
 	componentDidMount: function() {

@@ -33,10 +33,6 @@ module.exports = function(app) {
     app.put(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
     app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
     
-    app.post(REST_PREFIX + '/user/:userId/adminbonus/', checkAdmin, require('./user').addAdminBonus);
-    app.put(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').updateAdminBonus);
-    app.delete(REST_PREFIX + '/user/:userId/adminbonus/:bonusId', checkAdmin, require('./user').deleteAdminBonus);
-
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
     app.post(REST_PREFIX + '/problem', checkAdmin, require('./problem').createProblem);
