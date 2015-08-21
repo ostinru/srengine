@@ -1,345 +1,245 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title><%=pageTitle%></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-	
+<head>
+	<title>SR 128</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <script src="/js/jquery.js"> </script>
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark" data-id="dgLoader"></script>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/style-mobile.css">
-	<script src="/js/viewport-units-buggyfill.js"></script>
-	<script src="/js/viewport-units-buggyfill.hacks.js"></script>
-	<script>
-		window.viewportUnitsBuggyfill.init({
-    		refreshDebounceWait: 250,
-    		hacks: window.viewportUnitsBuggyfillHacks
-		});
-	</script>
-
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('.liClick').click(function () {
-
-			if (!$(this).hasClass('active')) {
-				$('.active').removeClass('active');
-				$(this).addClass('active');
-				$('.dropDown')
-					.stop()
-					.slideDown(300);
-			}
-			else{
-				$('.dropDown')
-					.stop()
-					.slideToggle(300);
-				$('.active').removeClass('active');	
-			}
-		});
-		$('#tabs').tabs({
-	        hide: {
-	            effect: "slide",
-	            direction: "left",
-	            duration: 300
-	        }
-	    });
+	<link rel="stylesheet" type="text/css" href="stylesheets/style-mobile.css">
+	<script src="js/viewport-units-buggyfill.js"></script>
+	<script src="js/viewport-units-buggyfill.hacks.js"></script>
+	<script>window.viewportUnitsBuggyfill.init({
+	    refreshDebounceWait: 250,
+	    hacks: window.viewportUnitsBuggyfillHacks
 	});
-
-
-	function testGeo(){
-		if(!navigator.geolocation) {
-	  		alert("Geolocation API doesnt work :(");
-		s}
-	}
 	</script>
-  </head>
 
 
+<script type="text/javascript">
+	//menu
+	$(document).ready(function(){
+		$('.liClick').click(function () {
+
+		if (!$(this).hasClass('active')) {
+			$('.active').removeClass('active');
+			$(this).addClass('active');
+			$('.dropDown')
+				.stop()
+				.slideDown(300);
+		}
+		else{
+			$('.dropDown')
+				.stop()
+				.slideToggle(300);
+			$('.active').removeClass('active');	
+		}
+	});
+	$('#tabs').tabs({
+        hide: {
+            effect: "slide",
+            direction: "left",
+            duration: 300
+        }
+    });
+});
+
+
+function testGeo(){
+	if(!navigator.geolocation) {
+  		alert("Geolocation API doesnt work on your device :(");
+	}
+}
+
+</script>
+</head>
 
 <body onLoad="testGeo();">
 
-	<div class="loading">
-		<p>Map is loading</p>
-	</div>
+<div class="loading">
+	<p>Map is loading, please wait</p>
+</div>
 
-	<div class="mainCont" id="tabs">
-	<ul>
-	<li class="selector" id="sel1">
-		<div class="liClick"><a href="#tabs-1"<span class="menuHead" id="span1">Codes</span></a></div>
-	</li>
-	<li class="selector" id="sel2">
-		<div class="liClick"><a href="#tabs-2"<span class="menuHead" id="span2">Tasks</span></a></div>
-	</li>
-	<li class="selector" id="sel3">
-		<div class="liClick"><a href="#tabs-3"<span class="menuHead" id="span3">Stuff</span></a></div>
-	</li>
-	</ul>
-		<div class = "dropDown" id="drop1">
-			<div class="tabs" id="tabs-1">
-				<span class="textInSlide">Here is a bit of text as a hint for answers input</span><br/>
-				<input id="mainInput" type="text" placeholder="Answers go here">
-				</br>
-				<input class="okBut" type="button" value="OK">
-				</br></br>
-			</div>
-		
-		<div class="tabs" id="tabs-2">
-				<span class="textInSlide">Here goes some other info. Probably a task. Maybe we need another one for level selection, it should be discussed. Anyway it's a nice example of a lot of text going here. Maybe i'll even put a picture inside. And a button.</span></br>
-				<input id="someButton" type="button" value="Questions"></br>
-				<img src="/icons/Assistant.png">
-				</br></br>
-			</div>
-	 
-		<div class="tabs" id="tabs-3">
-				
+<div class="mainCont" id="tabs">
+<ul>
+<li class="selector" id="sel1"><div class="liClick"><a href="#tabs-1"<span class="menuHead" id="span1">Codes</span></a></div></li>
+<li class="selector" id="sel2"><div class="liClick"><a href="#tabs-2"<span class="menuHead" id="span2">Tasks</span></a></div></li>
+<li class="selector" id="sel3"><div class="liClick"><a href="#tabs-3"<span class="menuHead" id="span3">Stuff</span></a></div></li>
+</ul>
+	<div class = "dropDown" id="drop1">
+		<div class="tabs" id="tabs-1">
+			<span class="textInSlide">Here is a bit of text as a hint for answers input</span><br/>
+			<input id="mainInput" type="text" placeholder="Answers go here">
+			</br>
+			<input class="okBut" type="button" value="OK">
+			</br></br>
 		</div>
-	</div>
-	</div>
-
-
-	<div id="map"></div>
-		<script type="text/javascript">
-	    var map,
-			moveMarker,
-			myIcon,
-			myDivIcon;
-		mapReady = false;
-		var watchId;
-		var playerLat, playerLon;
-
-	    DG.then(function () {
-	        map = DG.map('map', {
-	            center: [57.77, 40.90],
-	            zoom: 13,
-				fullscreenControl: false,
-				minZoom: 13,
-				maxBounds: [
-					[57.700070, 40.676097],
-					[57.829414, 41.052981]
-				],
-				zoomControl: false,
-				//watch:true,
-				//setView:true,
-				//enableHighAccuracy:true
-	        });
+	
+	<div class="tabs" id="tabs-2">
+			<span class="textInSlide">Here goes some other info. Probably a task. Maybe we need another one for level selection, it should be discussed. Anyway it's a nice example of a lot of text going here. Maybe i'll even put a picture inside. And a button.</span></br>
+			<img src="/icons/Assistant.png">
+			<br>
+			<input class ="hintButton" id="" type="button" value="Hint 1">
+			<input class ="hintButton" id="" type="button" value="Hint 2">
+			</br></br>
+		</div>
+ 
+	<div class="tabs" id="tabs-3">
 			
-		 DG.control.location({position:'bottomright'/*,follow:true*/}).addTo(map);
-		 DG.control.zoom({position:'bottomleft'}).addTo(map);
-			
-			myIcon = DG.icon({
-	                    iconUrl: '/joker-icon.png',
-	                    iconSize: [48, 48]
-	                });
-			myIcon3 = DG.icon({
-	                    iconUrl: '/icons/Airplane.png',
-	                    iconSize: [48, 48]
-	                });
-			myIcon4 = DG.icon({
-	                    iconUrl: '/icons/Book.png',
-	                    iconSize: [48, 48]
-	                });
+		</div>
 		
-		DG.marker([57.72, 40.89],{
-			icon: myIcon
-		}).addTo(map)
-			.bindPopup('Joker is here. Dont be serious.')
-			.bindLabel('Joker base', {
-			static: true
-		});
-		
-		//тест передвижения маркера и круга по заданному пути-координатам
-		
-		moveMarker = DG.marker([57.743586, 40.909781]).addTo(map);
-		moveMarker2 = DG.marker([57.748591, 40.901949],{icon:myIcon3}).addTo(map);
-		moveMarker3 = DG.marker([57.749965, 40.904867],{icon:myIcon4}).addTo(map);
-		moveCircle = DG.circle([57.743586, 40.909781], 50, {color:'red'}).bindPopup('Circle!').addTo(map);
-		
-		map.setView([57.743586, 40.909781], 13);
-		
-		coordArray = [[57.743586, 40.909781],[57.748591, 40.901949],[57.749965, 40.904867],[57.746014, 40.913601]];
-		coordArray2 = [[57.7446903,40.9163603],[57.7499807,40.9047303],[57.7499807,40.9047303],[57.7454509,40.9072269],[57.7422672,40.9125484],[57.7442828,40.9156812]];
-		coordArray3 = [[57.7644811,40.9307354],[57.7612573,40.9511003],[57.7610742,40.9353933],[57.7691775,40.9163389]];
-		i=0;
-		var x, y, x1, y1, x2, y2 =0;
-	    f = 0;
-		var steps, speed = 0.000001;
-		dist = 0;
-	curNul = false;
-		function move() 
-		{	
-			if (i==0 && !curNul) {curX=parseFloat(coordArray[i][0]).toFixed(5); curY=parseFloat(coordArray[i][1]).toFixed(5); curNul = true;}
-				
-				a = i;
-				b = i+1;
-				if (i!=4) 
-				{
-					if (i==3) b=0;
-					diffX = coordArray[b][0]-coordArray[a][0];
-					diffY = coordArray[b][1]-coordArray[a][1];
-					
-					curNul = true;
-					delta = 0.00001;
-					if (diffX>0) {deltaX = delta;} else {deltaX = delta*(-1);}
-					if (diffY>0) {deltaY = delta;} else {deltaY = delta*(-1);}
-					
-					if (parseFloat(curX).toFixed(5) != parseFloat(coordArray[b][0]).toFixed(5)) curX = parseFloat(curX) + parseFloat(deltaX); 
-					if (parseFloat(curY).toFixed(5) != parseFloat(coordArray[b][1]).toFixed(5)) curY = parseFloat(curY) + parseFloat(deltaY);
+</div>
+</div>
 
-					
-					angle = Math.atan(diffY, diffX);
-				vel = 0.000001;
-					xVel = vel*Math.cos(angle);
-					yVel = vel*Math.sin(angle);
-					
-					curX = parseFloat(curX)+parseFloat(xVel);
-					curY = parseFloat(curY)+parseFloat(yVel);
-					
-					moveMarker.setLatLng([curX,curY]);
-					moveCircle.setLatLng([xVel,yVel]);
-					
 
-					if(parseFloat(curX).toFixed(5)==parseFloat(coordArray[b][0]).toFixed(5) && parseFloat(curY).toFixed(5)==parseFloat(coordArray[b][1]).toFixed(5))
-							{
-								i++;
-							}
-				}
-				else {i=0;curNul=true;};
-				
-		}
-		
-	//конец теста
-		
-	map.whenReady(testCall); //вызываем функцию, когда загрузка карты завершилась
+<div id="map"></div>
+	<script type="text/javascript">
+    var map,
+		moveMarker,
+		myIcon,
+		myDivIcon;
+	mapReady = false;
+	var watchId;
+	var playerLat, playerLon;
 
+    DG.then(function () {
+        map = DG.map('map', {
+            center: [57.77, 40.90],
+            zoom: 13,
+			fullscreenControl: false,
+			minZoom: 13,
+			maxBounds: [
+				[57.700070, 40.676097],
+				[57.829414, 41.052981]
+			],
+			zoomControl: false,
+			//watch:true,
+			//setView:true,
+			//enableHighAccuracy:true
+        });
+		
+	 DG.control.location({position:'bottomright'/*,follow:true*/}).addTo(map);
+	 DG.control.zoom({position:'bottomleft'}).addTo(map);
+		
+
+		myIcon3 = DG.icon({
+                    iconUrl: '/icons/Airplane.png',
+                    iconSize: [48, 48]
+                });
+		myIcon4 = DG.icon({
+                    iconUrl: '/icons/Book.png',
+                    iconSize: [48, 48]
+                });
+	
+	DG.marker([57.72, 40.89],{
+		icon: DG.icon({iconUrl: '/joker-icon.png', iconSize: [48, 48]})
+	}).addTo(map)
+		.bindPopup('Joker is here. Dont be serious.')
+		.bindLabel('Joker base', {
+		static: true
 	});
+	
+	//тест передвижения маркера и круга по заданному пути-координатам
+	
+	moveMarker = DG.marker([57.743586, 40.909781]).addTo(map);
+	moveMarker2 = DG.marker([57.748591, 40.901949],{icon:myIcon3}).addTo(map).bindPopup('').on('click', function (e) {	
+$.ajax({  
+				type: "POST",  
+				url: "/ajax/testCall.php",  
+				data: "level="+e.target._popup.getHeaderContent(),  
+				success: function(data){console.log("loaded "+data);
+				$('#tabs-3').html(data);
+			}  
+				}  
+			);  
+})._popup.setHeaderContent("Level 1");
+	//moveMarker2._popup.setHeaderContent("Level 1");
+	moveMarker3 = DG.marker([57.749999, 40.904867],{icon:myIcon4}).addTo(map).bindPopup('').on('click', function (e) {	
+$.ajax({  
+				type: "POST",  
+				url: "/ajax/testCall.php",  
+				data: "level="+e.target._popup.getHeaderContent(),  
+				success: function(data){console.log("loaded "+data);
+				$('#tabs-3').html(data);
+			}  
+				}  
+			);  
+});;;
+	moveMarker3._popup.setHeaderContent("Level 2");
+	moveCircle = DG.circle([57.743586, 40.909781], 50, {color:'red'}).bindPopup('Circle!').addTo(map);
+	
+	map.setView([57.743586, 40.909781], 13);
+	
+
+map.whenReady(testCall); //вызываем функцию, когда загрузка карты завершилась
+
+});
+
+watchMyAss(); //zapuskaem sluwatelya
+//deltaR = arcDistance(moveMarker2.getLatLng(),moveCircle.getLatLng());
+//intersects(deltaR, moveCircle.getRadius());
 
 
-	function testCall(){  //набор тестов, запускающихся после загрузки карты
-	//$('#tabs-3').load('ajax/tab3.html');
-	setInterval(function() {if (i >= coordArray2.length) i = 0;moveMarker.setLatLng([parseFloat(coordArray2[i][0]),parseFloat(coordArray2[i][1])]);
-			i++;},300);
-
-		myIcon = DG.icon({
-	                    iconUrl: '/batman-logo.png',
-	                    iconSize: [48, 48]
-	                });
-		 
-		myMarker = DG.marker([57.760, 40.901],{
-			icon: myIcon
-		}).addTo(map)
-			.bindPopup('Batman is here. BE serious.')
-			.bindLabel('Batcave');
-		
-	//setInterval(watchMyAss,1000);
-	watchMyAss(); //zapuskaem sluwatelya
-	deltaR = arcDistance(moveMarker2.getLatLng(),moveCircle.getLatLng());
-	intersects(deltaR, moveCircle.getRadius());
-
-
-	//remove this part after position test. Put it in setInterval now
-	setInterval(function () {
-	$('#tabs-3').html('map.getCenter(): ' + map.getCenter() + ' ////<br>locTest(): ' + playerLat + ' ' + playerLon );
-	//up to this
+setInterval(function () {
 	var currentdate = new Date();
-				$.ajax({  
-					type: "POST",  
-					url: "/rest/position",  
-					data: {
-						lat: playerLat,
-						lon: playerLon,
-						timestamp: currentdate
-					},
-					success: console.log("ajaxed")  
-					}  
-				);  
+		$.ajax({
+			type: "POST",
+			url: "/rest/coords",
+			data: {
+				lat: playerLat,
+				lon: playerLon,
+				timestamp: currentdate
+			},
+			success: function() { console.log("ajaxed"); }
+		});  
 	}, 3000);
 
-	}; 
-
-	//Функция проверки на вхождение в круг на сфере
-	function intersects (rPoint,rCircle) {
-	rCircle = rCircle*0.001;
-
-	return rPoint-rCircle <= 0 
-	}
-
-	//Функция расстояния в км между 2мя точками (коорд)
-	function arcDistance(loc1, loc2) {
-	    var rad  = Math.PI / 180,
-	        earth_radius = 6371.009, // close enough
-	        lat1 = loc1.lat * rad,
-	        lat2 = loc2.lat * rad,
-	        dlon = Math.abs(loc1.lng - loc2.lng) * rad,
-	        M    = Math;
-
-	    return earth_radius * M.acos(
-	        (M.sin(lat1) * M.sin(lat2)) + (M.cos(lat1) * M.cos(lat2) * M.cos(dlon))
-	    );
-	}
 
 
-	function watchMyAss(){
-	  //var positionTimer = navigator.geolocation.watchPosition(
-	  watchId = navigator.geolocation.watchPosition(
-		function( position ){
-		
-			//console.log( "Newer Position Found" );
-			playerLat = position.coords.latitude;
-			playerLon = position.coords.longitude;
-			//var currentdate = new Date();
-			//console.log(currentdate);
-			
+//Функция проверки на вхождение в круг на сфере
+function intersects (rPoint,rCircle) {
+rCircle = rCircle*0.001;
+
+return rPoint-rCircle <= 0 
+}
+
+//Функция расстояния в км между 2мя точками (коорд)
+function arcDistance(loc1, loc2) {
+    var rad  = Math.PI / 180,
+        earth_radius = 6371.009, // close enough
+        lat1 = loc1.lat * rad,
+        lat2 = loc2.lat * rad,
+        dlon = Math.abs(loc1.lng - loc2.lng) * rad,
+        M    = Math;
+
+    return earth_radius * M.acos(
+        (M.sin(lat1) * M.sin(lat2)) + (M.cos(lat1) * M.cos(lat2) * M.cos(dlon))
+    );
+}
 
 
-
-			
-			},
-		function error(err) {
-	//	  console.warn('ERROR(' + err.code + '): ' + err.message);
+function watchMyAss(){
+  //var positionTimer = navigator.geolocation.watchPosition(
+  watchId = navigator.geolocation.watchPosition(
+	function( position ){
+	
+		//console.log( "Newer Position Found" );
+		playerLat = position.coords.latitude;
+		playerLon = position.coords.longitude;
+		//var currentdate = new Date();
+		//console.log(currentdate);
 		},
-		{  enableHighAccuracy: true,
-			timeout: 10000,
-			maximumAge: 0}
-	    );	
-		
-	}
+	function error(err) {
+//	  console.warn('ERROR(' + err.code + '): ' + err.message);
+	},
+	{  enableHighAccuracy: true,
+		timeout: 10000,
+		maximumAge: 0}
+    );	
+	
+}
 
-
-	function rndFlag(){
-		rnd = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
-		if (rnd==0)
-			return false
-		else
-			return true;
-	}
-
-	function locTest(){
-		var options = {
-			enableHighAccuracy:true,
-			timeout:10000,
-			maximumAge:0
-		};
-
-		function success(pos) {
-			var crd = pos.coords;
-
-			console.log('Your current position is:');
-			console.log('Latitude : ' + crd.latitude);
-			console.log('Longitude: ' + crd.longitude);
-			console.log('More or less ' + crd.accuracy + ' meters.');
-		}
-
-		function error(err) {
-		  console.warn('ERROR(' + err.code + '): ' + err.message);
-		};
-
-		navigator.geolocation.getCurrentPosition(success,error,options);
-	}
-	</script>
+</script>
 
 </body>
-
 </html>
