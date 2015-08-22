@@ -1,3 +1,4 @@
+var HttpError = require('error').HttpError;
 var User = require('models/user').User;
 var Problem = require('models/problem').Problem;
 var config = require('../config');
@@ -10,7 +11,7 @@ exports.get = function (req, res, next) {
 
     //get all users
     User.find({})
-        .populate('problems problemHistory.problem problemHistory.takenBonuses problemHistory.takenHints problemHistory.adminBonuses')
+        .populate('problems problemHistory.problem')
         .exec(function (err, users) {
             if (err) {
                 return next(err);

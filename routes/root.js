@@ -196,7 +196,7 @@ hasHint = function(hintId, takenHints) {
         if (hintId.equals(item)) {
             return item;
         }
-    });
+});
 };
 
 checkBruteForce = function(user) {
