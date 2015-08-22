@@ -15,6 +15,38 @@
 	});
 	</script>
 
+<script type="text/javascript">
+		function submitAnswer() {
+			$.ajax({
+				type: "POST",
+			//	url: "/rest/",
+				url: "/ajax/answerCheck.php",
+				data: {
+					answer: $('.mainInput').val(),
+					topic: $('.mainInput').attr('id')
+				},
+				success: function(resp) {
+					if (JSON.parse(resp).status==404)
+					{
+						$('#answerStatus').html(JSON.parse(resp).message);
+						$('#answerStatus').removeClass('correct');
+						$('#answerStatus').addClass('wrong');
+					}
+					else {
+						$('#answerStatus').html(JSON.parse(resp).message);
+						drawMarkers(markers);
+						$('#answerStatus').removeClass('wrong');
+						$('#answerStatus').addClass('correct');					
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+						console.log(xhr.status);
+						console.log(thrownError);
+					  }
+				
+			});
+		}
+	</script>
 
 <script type="text/javascript">
 	//menu
@@ -55,21 +87,9 @@ function testGeo(){
 </head>
 
 <body onLoad="testGeo();">
-	<script type="text/javascript">
-		function submitAnswer() {
-			$.ajax({
-				type: "POST",
-				url: "/rest/",
-				data: {
-					answer: $('#mainInput').val(),
-				},
-				success: function(resp) { console.log(resp); }
-			});
-		}
-	</script>
 
 <div class="loading">
-	<p>Map is loading, please wait</p>
+	<p>Карта грузится, ждите</p>
 </div>
 
 <div class="mainCont" id="tabs">
@@ -80,10 +100,10 @@ function testGeo(){
 </ul>
 	<div class = "dropDown" id="drop1">
 		<div class="tabs" id="tabs-1">
-			<span class="textInSlide">Here is a bit of text as a hint for answers input</span><br/>
-			<input id="mainInput" type="text" placeholder="Answers go here">
+			<p id="answerStatus" class="textInSlide">Answer status should be posted here</p><br/>
+			<input class="mainInput" type="text" placeholder="Answers go here">
 			</br>
-			<input class="okBut" type="button" value="OK" onClick="submitAnswer();">
+			<input class="okBut" type="button" value="OK" onclick="submitAnswer();">
 			</br></br>
 		</div>
 	
@@ -130,67 +150,18 @@ function testGeo(){
 			//enableHighAccuracy:true
         });
 		
-	 DG.control.location({position:'bottomright'/*,follow:true*/}).addTo(map);
+	 DG.control.location({position:'bottomright'}).addTo(map);
 	 DG.control.zoom({position:'bottomleft'}).addTo(map);
 		
+markers = DG.featureGroup(); //marker group
 
-		myIcon3 = DG.icon({
-                    iconUrl: '/icons/Airplane.png',
-                    iconSize: [48, 48]
-                });
-		myIcon4 = DG.icon({
-                    iconUrl: '/icons/Book.png',
-                    iconSize: [48, 48]
-                });
-	
-	DG.marker([57.72, 40.89],{
-		icon: DG.icon({iconUrl: '/joker-icon.png', iconSize: [48, 48]})
-	}).addTo(map)
-		.bindPopup('Joker is here. Dont be serious.')
-		.bindLabel('Joker base', {
-		static: true
-	});
-	
-	//тест передвижения маркера и круга по заданному пути-координатам
-	
-	moveMarker = DG.marker([57.743586, 40.909781]).addTo(map);
-	moveMarker2 = DG.marker([57.748591, 40.901949],{icon:myIcon3}).addTo(map).bindPopup('').on('click', function (e) {	
-$.ajax({  
-				type: "POST",  
-				url: "/ajax/testCall.php",  
-				data: "level="+e.target._popup.getHeaderContent(),  
-				success: function(data){console.log("loaded "+data);
-				$('#tabs-3').html(data);
-			}  
-				}  
-			);  
-})._popup.setHeaderContent("Level 1");
-	//moveMarker2._popup.setHeaderContent("Level 1");
-	moveMarker3 = DG.marker([57.749999, 40.904867],{icon:myIcon4}).addTo(map).bindPopup('').on('click', function (e) {	
-$.ajax({  
-				type: "POST",  
-				url: "/ajax/testCall.php",  
-				data: "level="+e.target._popup.getHeaderContent(),  
-				success: function(data){console.log("loaded "+data);
-				$('#tabs-3').html(data);
-			}  
-				}  
-			);  
-});;;
-	moveMarker3._popup.setHeaderContent("Level 2");
-	moveCircle = DG.circle([57.743586, 40.909781], 50, {color:'red'}).bindPopup('Circle!').addTo(map);
-	
-	map.setView([57.743586, 40.909781], 13);
-	
+drawMarkers(markers);
 
-map.whenReady(testCall); //вызываем функцию, когда загрузка карты завершилась
+markers.addTo(map); //adding marker group to map 
 
-});
-
-watchMyAss(); //zapuskaem sluwatelya
-//deltaR = arcDistance(moveMarker2.getLatLng(),moveCircle.getLatLng());
-//intersects(deltaR, moveCircle.getRadius());
-
+map.setView([57.743586, 40.909781], 13);
+	
+map.whenReady(watchMyAss); //вызываем функцию, когда загрузка карты завершилась
 
 setInterval(function () {
 	var currentdate = new Date();
@@ -200,46 +171,53 @@ setInterval(function () {
 			data: {
 				lat: playerLat,
 				lon: playerLon,
-				timestamp: currentdate
+				timestamp: currentdate.toISOString()
 			},
 			success: function() { console.log("ajaxed"); }
 		});  
 	}, 3000);
 
+});
 
 
-//Функция проверки на вхождение в круг на сфере
-function intersects (rPoint,rCircle) {
-rCircle = rCircle*0.001;
+function drawMarkers(markers){
+markers.clearLayers();
+	$.ajax({
+		type: "POST",
+		url: "/ajax/drawMarkers.php",
+		data: "giveall="+true,
+		success: function(data) {
+		
+				curNumber = 0;	
+				var parsed = JSON.parse(data);
 
-return rPoint-rCircle <= 0 
-}
-
-//Функция расстояния в км между 2мя точками (коорд)
-function arcDistance(loc1, loc2) {
-    var rad  = Math.PI / 180,
-        earth_radius = 6371.009, // close enough
-        lat1 = loc1.lat * rad,
-        lat2 = loc2.lat * rad,
-        dlon = Math.abs(loc1.lng - loc2.lng) * rad,
-        M    = Math;
-
-    return earth_radius * M.acos(
-        (M.sin(lat1) * M.sin(lat2)) + (M.cos(lat1) * M.cos(lat2) * M.cos(dlon))
-    );
+				while (curNumber<parsed.length) {
+					DG.marker([parsed[curNumber].X,parsed[curNumber].Y],{icon:DG.icon({iconUrl:parsed[curNumber].icon,iconSize: [48,48]})}).addTo(markers).bindPopup('').on('click', function (e) {
+					$.ajax({  
+						type: "POST",  
+						url: "/ajax/testCall.php",  
+						data: "level="+e.target._popup.getHeaderContent(),  
+						success: function(text) {$('#tabs-3').html(text);
+						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
+						}
+						})
+					})._popup.setHeaderContent(parsed[curNumber].topic);
+					curNumber++;	
+				}
+		},
+			error: function (xhr, ajaxOptions, thrownError) {
+						console.log(xhr.status);
+						console.log(thrownError);
+					  }
+	});
 }
 
 
 function watchMyAss(){
-  //var positionTimer = navigator.geolocation.watchPosition(
   watchId = navigator.geolocation.watchPosition(
 	function( position ){
-	
-		//console.log( "Newer Position Found" );
 		playerLat = position.coords.latitude;
 		playerLon = position.coords.longitude;
-		//var currentdate = new Date();
-		//console.log(currentdate);
 		},
 	function error(err) {
 //	  console.warn('ERROR(' + err.code + '): ' + err.message);
@@ -250,7 +228,6 @@ function watchMyAss(){
     );	
 	
 }
-
 </script>
 
 </body>
