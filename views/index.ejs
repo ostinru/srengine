@@ -19,8 +19,7 @@
 		function submitAnswer() {
 			$.ajax({
 				type: "POST",
-			//	url: "/rest/",
-				url: "/ajax/answerCheck.php",
+				url: "/rest/",
 				data: {
 					answer: $('.mainInput').val(),
 					topic: $('.mainInput').attr('id')
@@ -183,20 +182,25 @@ setInterval(function () {
 function drawMarkers(markers){
 markers.clearLayers();
 	$.ajax({
-		type: "POST",
-		url: "/ajax/drawMarkers.php",
-		data: "giveall="+true,
+		url: "/rest/",
 		success: function(data) {
 		
-				curNumber = 0;	
-				var parsed = JSON.parse(data);
+				var curNumber = 0;	
+				var parsed = data;
 
 				while (curNumber<parsed.length) {
-					DG.marker([parsed[curNumber].X,parsed[curNumber].Y],{icon:DG.icon({iconUrl:parsed[curNumber].icon,iconSize: [48,48]})}).addTo(markers).bindPopup('').on('click', function (e) {
+					DG.marker(
+						[ parsed[curNumber].x, parsed[curNumber].y],
+						{ icon: DG.icon({iconUrl:parsed[curNumber].icon, iconSize: [48,48]})}
+					).addTo(markers)
+					.bindPopup('')
+					.on('click', function (e) {
 					$.ajax({  
 						type: "POST",  
-						url: "/ajax/testCall.php",  
-						data: "level="+e.target._popup.getHeaderContent(),  
+						url: "/rest/",  
+						data: {
+							topic : e.target._popup.getHeaderContent(),  
+						},
 						success: function(text) {$('#tabs-3').html(text);
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						}
@@ -205,10 +209,10 @@ markers.clearLayers();
 					curNumber++;	
 				}
 		},
-			error: function (xhr, ajaxOptions, thrownError) {
-						console.log(xhr.status);
-						console.log(thrownError);
-					  }
+		error: function (xhr, ajaxOptions, thrownError) {
+			console.log(xhr.status);
+			console.log(thrownError);
+		  }
 	});
 }
 
