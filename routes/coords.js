@@ -5,6 +5,7 @@ var Coords = require('models/coords').Coords;
 var Problem = require('models/problem').Problem;
 var _ = require('underscore');
 var aDistance = require('../config').get("aDistance");
+var logger = require('lib/logger')(module);
 
 exports.post = function(req,res,next) {
     var user = req.user;
@@ -26,7 +27,6 @@ exports.post = function(req,res,next) {
             });
             return !opened  && inProblem(problem,coords);
         });
-        console.log(problem);
         if(!problem){
             //мы еще никуда не приехали
             res.json({status:"Success"})
@@ -37,12 +37,12 @@ exports.post = function(req,res,next) {
             takenBonuses:[],
             takenHints:[],
             timeStart:Date.now()});
-        console.log(user.problemHistory);
         user.markModified("problemHistory");
         user.save(function(err){
             if (err) {
                 return res.sendHttpError(new HttpError(500, err));
             }
+            Logger.info('problem ' + problem.topic + ' is opend for ' + user.username);
             return res.json({
                 status:"Success",
                 message:"problem " + problem.topic + " is opened",
@@ -65,8 +65,6 @@ arcDistance = function(loc1, loc2) {
         lat2 = loc2.lat * rad,
         dlon = Math.abs(loc1.lng - loc2.lng) * rad,
         M = Math;
-    console.log(loc1);
-    console.log(loc2);
     return earth_radius * M.acos(
             (M.sin(lat1) * M.sin(lat2)) + (M.cos(lat1) * M.cos(lat2) * M.cos(dlon))
         );
@@ -74,6 +72,5 @@ arcDistance = function(loc1, loc2) {
 
 inProblem = function(problem,coords){
     deltaR = arcDistance({lat:coords.x,lng:coords.y},{lat:problem.x,lng:problem.y})*1000; // в метрах
-    console.log(deltaR);
     return intersects(deltaR, aDistance);
 }
