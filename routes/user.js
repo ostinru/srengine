@@ -8,7 +8,6 @@ var mongoose = require('lib/mongoose.js');
 
 exports.getAllUsers = function (req, res, next) {
     User.find({})
-        .populate('problems problemHistory.problem')
         .exec(function (err, users) {
             if (err) return next(err);
             res.json(users);
