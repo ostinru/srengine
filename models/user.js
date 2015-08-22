@@ -30,6 +30,7 @@ var schema = new Schema({
         ref: 'Problem'
     }],
     problemHistory: [{
+            _id: false,
             problem: {
                 type: Schema.Types.ObjectId,
                 required: true,
