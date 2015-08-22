@@ -46,7 +46,7 @@ exports.post = function(req, res, next) {
         if (problemHistory.solved) {
             return false;
         }
-        return problemHistory.topic === topic;
+        return problemHistory.problem.topic == topic;
     });
 
     if (!ph) {
