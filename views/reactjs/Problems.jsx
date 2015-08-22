@@ -313,13 +313,13 @@ var ProblemEditor = React.createClass({
 		var problem = context.problems.select(path).get();
 
 		return (
-			<Panel header={problem.topic}>
+			<Panel header={problem.topic}  key={problem._id}>
 				<Input type="text" label="_id" initValue={problem._id} readOnly />
 				<Input type="text" ref="topic" label="Topic" initValue={problem.topic} />
 				<Input type='textarea' ref="question" label="Question" initValue={problem.question} />
 				<Input type="number" ref="cost" label="Cost" initValue={problem.cost} />
 			    
-    			<Panel header="Answers" >
+    			<Panel header="Answers">
 	                {problem.answers && problem.answers.map(function(answer, index) {
 	                	return (
 	                		<AnswerEditor path={buildPath(path, 'answers', index)} />
