@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var favicon = require('serve-favicon');
 var morgan = require('morgan'); // logger
 var cookieParser = require('cookie-parser');
-var errorHandler = require('errorhandler');
+//var errorHandler = require('errorhandler');
 
 var app = express();
 
@@ -59,6 +59,7 @@ require('./routes')(app);
 
 // Error handler
 app.use(function (err, req, res, next) {
+    console.log(err);
     if (typeof err == 'number') {
         err = new HttpError(err);
     }
@@ -66,13 +67,8 @@ app.use(function (err, req, res, next) {
     if (err instanceof HttpError) {
         res.sendHttpError(err);
     } else {
-        if (app.get('env') == 'development') {
-            app.use(errorHandler());
-        } else {
-            log.error(err);
-            err = new HttpError(500);
-            res.sendHttpError(err);
-        }
+        err = new HttpError(500);
+        res.sendHttpError(err);
     }
 });
 
