@@ -25,14 +25,14 @@
 					topic: $('.mainInput').attr('id')
 				},
 				success: function(resp) {
-					if (JSON.parse(resp).status==404)
+					if (resp.status==404)
 					{
-						$('#answerStatus').html(JSON.parse(resp).message);
+						$('#answerStatus').html(resp.message);
 						$('#answerStatus').removeClass('correct');
 						$('#answerStatus').addClass('wrong');
 					}
 					else {
-						$('#answerStatus').html(JSON.parse(resp).message);
+						$('#answerStatus').html(resp.message);
 						drawMarkers(markers);
 						$('#answerStatus').removeClass('wrong');
 						$('#answerStatus').addClass('correct');					

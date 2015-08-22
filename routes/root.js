@@ -156,14 +156,18 @@ exports.post = function(req, res, next) {
             ph.solved = true;
             user.markModified('problemHistory');
 
-            user.problems.id(problem._id).remove();
+            user.problems = _.filter(user.problems, function(item) {
+                return ! item._id.equals(problem._id);
+            });
+
             _.each(problem.nextProblems, function(next) {
                 user.problems.push(next);
                 return true;
             });
+            console.log(user.problems);
             user.markModified('problems');
 
-            problemHistory.timeFinish = Date.now();
+            ph.timeFinish = Date.now();
             user.save(function(err) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
