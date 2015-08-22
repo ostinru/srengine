@@ -22,6 +22,16 @@ var buildPath = function() {
 	return result;
 }
 
+var reload = function() {
+    server.fetchProblems(
+    	function() {
+    		console.error('failed to load problems', arguments);
+    	},
+    	function(result) {
+    		context.problems.root.set({problems : result});
+	    });
+}
+
 var AnswerEditor = React.createClass({
 
 	propTypes: {
@@ -96,6 +106,7 @@ var NextProblemEditor = React.createClass({
 		return (
     		<form className='form-inline' action="javascript:void(0);" key={nextProblemId}>
     			<Input type="select" ref="nextProblemId" initValue={nextProblemId} >
+    				<option value={null}>Select problem</option>
     			{problems.map(function(problem) {
     				return (
     					<option value={problem._id}> {problem._id} - {problem.topic}</option>
@@ -110,8 +121,11 @@ var NextProblemEditor = React.createClass({
 
 	updateNextProblemId: function() {
 		var cursor = context.problems.select(this.props.path);
+		var newValue = this.refs.nextProblemId.getValue();
+		if (newValue === null)
+			return;
 		cursor.set(
-			this.refs.nextProblemId.getValue()
+			newValue
 		);
 	},
 
@@ -134,7 +148,8 @@ var NewNextProblem = React.createClass({
 		var problems = context.problems.select('problems').get();
 		return (
     		<form className='form-inline' action="javascript:void(0);">
-    			<Input type="select" ref="nextProblemId" >
+    			<Input type="select" ref="nextProblemId" initValue={null} >
+    				<option value={null}>Select problem</option>
     			{problems.map(function(problem) {
     				return (
     					<option value={problem._id}> {problem._id} - {problem.topic}</option>
@@ -148,8 +163,11 @@ var NewNextProblem = React.createClass({
 
 	addNextProblemId: function() {
 		var cursor = context.problems.select(this.props.path);
+		var newValue = this.refs.nextProblemId.getValue();
+		if (newValue === null)
+			return;
 		cursor.push(
-			this.refs.nextProblemId.getValue()
+			newValue
 		);
 		this.refs.nextProblemId.clear();
 	}
@@ -370,9 +388,7 @@ var ProblemEditor = React.createClass({
 
 		};
 
-		server.updateProblem(problem._id, request, function() {
-			//document.location.reload();
-		});
+		server.updateProblem(problem._id, request, reload, reload);
 	},
 
 	remove: function(serial) {
@@ -383,9 +399,7 @@ var ProblemEditor = React.createClass({
 
 		var problem = context.problems.select(path).get();
 
-		server.removeProblem(problem._id, function() {
-			//document.location.reload();
-		});
+		server.removeProblem(problem._id, reload, reload);
 	}
 
 });
@@ -412,7 +426,7 @@ var NewProblem = React.createClass({
 			cost : this.refs.cost.getValue()
 		}
 
-		server.addProblem(request);
+		server.addProblem(request, reload, reload);
 	}
 
 });
@@ -428,13 +442,7 @@ var Problems = React.createClass({
 			me.forceUpdate();
 		});
 
-	    server.fetchProblems(
-	    	function() {
-	    		console.error('failed to load problems', arguments);
-	    	},
-	    	function(result) {
-	    		context.problems.root.set({problems : result});
-		    });
+		reload();
 	},
 
 	render: function() {

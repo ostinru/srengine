@@ -22,6 +22,30 @@ var buildPath = function() {
 	return result;
 }
 
+
+var reload = function() {
+    server.fetchUsers(
+    	function() {
+    		console.error('failed to load users', arguments);
+    	},
+    	function(result) {
+    		context.users.root.set({users : result});
+	    });
+    
+    server.fetchProblems(
+    	function() {
+    		console.error('failed to load problems', arguments);
+    	},
+    	function(result) {
+    		context.problems.root.set({problems : result});
+	    });
+};
+
+var onError = function() {
+	console.log("error", arguments);
+};
+
+
 var ProblemsEditor = React.createClass({
 
 	propTypes: {
@@ -30,12 +54,13 @@ var ProblemsEditor = React.createClass({
 
 	render: function() {
 		var path = this.props.path;
-		var problemId = context.users.select(path).get()._id;
+		var problemId = context.users.select(path).get();
 		var problems = context.problems.select('problems').get();
 		// FIXME: KEY!!
 		return (
     		<form className='form-inline' action="javascript:void(0);" key={problemId}>
     			<Input type="select" ref="ProblemId" initValue={problemId} >
+    				<option value={null}>Select problem</option>
     			{ problems.map(function(problem) {
     				return (
     					<option value={problem._id}> {problem._id} - {problem.topic}</option>
@@ -50,8 +75,11 @@ var ProblemsEditor = React.createClass({
 
 	updateProblem: function() {
 		var cursor = context.users.select(this.props.path);
+		var newValue = this.refs.ProblemId.getValue();
+		if (newValue === null)
+			return;
 		cursor.set(
-			this.refs.ProblemId.getValue()
+			newValue
 		);
 	},
 
@@ -74,7 +102,8 @@ var NewProblems = React.createClass({
 		var problems = context.problems.select('problems').get();
 		return (
     		<form className='form-inline' action="javascript:void(0);">
-    			<Input type="select" ref="newProblem" >
+    			<Input type="select" ref="newProblem" initValue={null}>
+    				<option value={null}>Select problem</option>
     			{problems.map(function(problem) {
     				return (
     					<option value={problem._id}> {problem._id} - {problem.topic}</option>
@@ -88,8 +117,11 @@ var NewProblems = React.createClass({
 
 	addProblem: function() {
 		var cursor = context.users.select(this.props.path);
+		var newValue = this.refs.newProblem.getValue();
+		if (newValue === null)
+			return;
 		cursor.push(
-			this.refs.newProblem.getValue()
+			newValue
 		);
 		this.refs.newProblem.clear();
 	}
@@ -167,7 +199,7 @@ var NewUser = React.createClass({
 			<Panel header="New User" key="newUser" bsStyle='primary'>
 				<Input label="Username" type="text" ref="username" />
 			    <Input label="Password" type="text" ref="password" />
-			    <Checkbox label="IsAdmin" ref="admin" />
+			    <Checkbox label="IsAdmin" ref="admin" initValue={false}/>
 			    <Button onClick={me.addUser} bsStyle='success'>Save</Button>
 			</Panel>
 		);
@@ -180,7 +212,9 @@ var NewUser = React.createClass({
 			admin : this.refs.admin.getValue()
 		}
 
-		server.addUser(request);
+		server.addUser(request, reload, reload);
+		this.refs.username.clear();
+		this.refs.password.clear();
 	}
 });
 
@@ -236,13 +270,13 @@ var UserEditor = React.createClass({
 			availebleHints: this.refs.availebleHints.getValue()
 		}
 
-		server.updateUser(user._id, request);
+		server.updateUser(user._id, request, reload, reload);
 	},
 
 	remove: function() {
 		var path = this.props.path;
 		var user = context.users.select(path).get();
-		server.removeUser(user._id);
+		server.removeUser(user._id, reload, reload);
 	},
 
 
@@ -262,21 +296,7 @@ var Users = React.createClass({
 			me.forceUpdate();
 		});
 
-	    server.fetchUsers(
-	    	function() {
-	    		console.error('failed to load users', arguments);
-	    	},
-	    	function(result) {
-	    		context.users.root.set({users : result});
-		    });
-	    
-	    server.fetchProblems(
-	    	function() {
-	    		console.error('failed to load problems', arguments);
-	    	},
-	    	function(result) {
-	    		context.problems.root.set({problems : result});
-		    });
+		reload();
 	},
 
 	render: function() {
