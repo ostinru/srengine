@@ -30,11 +30,11 @@ exports.getUser = function(req, res, next){
 };
 
 exports.createUser = function(req, res, next) {
-    if (!req.body.username)
+    if (typeof req.body.username === 'undefined')
         return res.sendHttpError(new HttpError(400, 'Username not specified'));
-    if (!req.body.password)
+    if (typeof req.body.password === 'undefined')
         return res.sendHttpError(new HttpError(400, 'Password not specified'));
-    if (!req.body.admin)
+    if (typeof req.body.admin === 'undefined')
         return res.sendHttpError(new HttpError(400, '\'admin\' not specified'));
 
     logger.debug('CreateUser: ', req.body);
