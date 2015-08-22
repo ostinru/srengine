@@ -195,16 +195,17 @@ markers.clearLayers();
 					).addTo(markers)
 					.bindPopup('')
 					.on('click', function (e) {
-					$.ajax({  
-						type: "POST",  
-						url: "/rest/",  
-						data: {
-							topic : e.target._popup.getHeaderContent(),  
-						},
-						success: function(text) {$('#tabs-3').html(text);
+						$.ajax({  
+							type: "POST",  
+							url: "/rest/",  
+							data: {
+								topic : e.target._popup.getHeaderContent(),  
+							},
+							success: function(text) {
+								$('#tabs-3').html(text);
+							}
+						});
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
-						}
-						})
 					})._popup.setHeaderContent(parsed[curNumber].topic);
 					curNumber++;	
 				}

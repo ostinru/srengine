@@ -36,8 +36,20 @@ exports.post = function(req, res, next) {
     if (!answer) {
         return res.sendHttpError(new HttpError(403, "Ответ не введен или он пустой")); //No answer
     }
-    
-    var problems = user.problems; // populated by loadUser
+
+    var topic = req.body.topic;
+
+    var ph = _.find(user.problemHistory, function(problemHistory) {
+        if (problemHistory.solved) {
+            return false;
+        }
+        return problemHistory.topic === topic;
+    });
+
+    if (!ph) {
+        logger.debug('[%s] problem \'%s\' not found', user.username, topic);
+        return res.sendHttpError(new HttpError(500));
+    }
 
     //
     // check bonuses
@@ -47,23 +59,15 @@ exports.post = function(req, res, next) {
             return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
         }
         var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-
-        // find problem
-        var problem = _.find(problems, function(problem) {
-            var bonus = problem.checkBonuses(bonusStr);
-            return !! bonus;
-        });
-        if (problem) {
+            logger.debug('[%s] send bonus %s', user.username, bonus.text);
+            var problem = ph.problem;
             // find bonus
             var bonus = problem.checkBonuses(bonusStr);
-            // find ProblemHistory
-            var problemHistory = _.find(user.problemHistory, function(problemHistory) {
-                return problem._id === problemHistory.problem; // FIXME: is populated??
-            });
+
             if (bonus) {
                 logger.debug('[%s] got bonus %s', user.username, bonus.text);
-                if (!hasBonus(bonus._id, problemHistory.takenBonuses)) {
-                    problemHistory.takenBonuses.push(bonus._id);
+                if (!hasBonus(bonus._id, ph.takenBonuses)) {
+                    ph.takenBonuses.push(bonus._id);
                     user.markModified('problemHistory');
                     user.save(function(err) {
                         if (err) {
@@ -76,7 +80,7 @@ exports.post = function(req, res, next) {
                     return res.json({ status : "Success", bonus : bonus, message: "Уже был зачислен:  " + answer});
                 }
             }
-        }
+
         // not found:   
         user.lastActivity = Date.now();
         user.save(function(err) {
@@ -138,20 +142,15 @@ exports.post = function(req, res, next) {
         if (checkBruteForce(user)) {
             return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек"));
         }
-        // find problem
-        var problem = _.find(problems, function(problem) {
-            var answer = problem.check(answer);
-            return !! answer;
-        });
 
-        if (problem) {
+        var problem = ph.problem;
+        var correct = !! problem.check(answer);
+
+        if (correct) {
+
             logger.debug('[%s] answer problem.', user.username);
 
-            var problemHistory = _.find(user.problemHistory, function(problemHistory) {
-                return problem._id === problemHistory.problem; // FIXME: is populated??
-            });
-
-            problemHistory.solved = true;
+            ph.solved = true;
             user.markModified('problemHistory');
 
             user.problems.id(problem._id).remove();
@@ -159,6 +158,7 @@ exports.post = function(req, res, next) {
                 user.problems.push(next);
                 return true;
             });
+            user.markModified('problems');
 
             problemHistory.timeFinish = Date.now();
             user.save(function(err) {
