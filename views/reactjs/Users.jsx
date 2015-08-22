@@ -244,7 +244,7 @@ var UserEditor = React.createClass({
 			    <Panel header="Admin bonuses and punishments">
 			    	{user.adminBonuses && user.adminBonuses.map(function(bonus, index) {
 			    		return (
-			    			<AdminBonusEditor path={buildPath(path, 'problems', index)} />
+			    			<AdminBonusEditor path={buildPath(path, 'adminBonuses', index)} />
 			    		);
 			    	})}
 			    	<NewAdminBonus path={buildPath(path, 'adminBonuses')} />
