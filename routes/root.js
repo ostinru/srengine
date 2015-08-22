@@ -21,8 +21,11 @@ exports.get = function(req, res, next){
     var user = req.user;
     var problems = user.problems; // populated by loadUser
 
-    var result = _.map(user.problems, function(problem) {
-        return problem.getPublicFields();
+    var result = _.map(problems, function(problem) {
+        var activeProblem = _.find(user.problemHistory,function(activeProblem){
+            return activeProblem.problem._id.equals(problem._id);
+        });
+        return problem.getPublicFields(activeProblem != undefined);
     })
 
     res.json(result);

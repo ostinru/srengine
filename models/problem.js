@@ -78,11 +78,15 @@ schema.methods.checkBonuses = function(userBonus) {
     });
 };
 
-schema.methods.getPublicFields = function() {
+schema.methods.getPublicFields = function(activeProblem) {
+    var question = this.question;
+    if (!activeProblem){
+        question = undefined;
+    }
     return {
         number: this.number,
         topic: this.topic,
-        question: this.question,
+        question: question,
         //  Latitude and Longitude
         x: this.x,
         y: this.y,

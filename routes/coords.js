@@ -16,10 +16,8 @@ exports.post = function(req,res,next) {
         y: req.body.lon,
         timestamp: Date.now(),
         userAgent: ''});
-
-    coords.save(function(err){
+      coords.save(function(err){
         if (err) {
-            console.log(err);
             return res.sendHttpError(new HttpError(500, err));
         }
         var problem = _.find(user.problems, function(problem) {
@@ -67,12 +65,15 @@ arcDistance = function(loc1, loc2) {
         lat2 = loc2.lat * rad,
         dlon = Math.abs(loc1.lng - loc2.lng) * rad,
         M = Math;
+    console.log(loc1);
+    console.log(loc2);
     return earth_radius * M.acos(
             (M.sin(lat1) * M.sin(lat2)) + (M.cos(lat1) * M.cos(lat2) * M.cos(dlon))
         );
 }
 
 inProblem = function(problem,coords){
-     deltaR = arcDistance({lat:coords.x,lng:coords.y},{lat:problem.x,lng:problem.y});
+    deltaR = arcDistance({lat:coords.x,lng:coords.y},{lat:problem.x,lng:problem.y})*1000; // в метрах
+    console.log(deltaR);
     return intersects(deltaR, aDistance);
 }
