@@ -172,7 +172,11 @@ setInterval(function () {
 				lon: playerLon,
 				timestamp: currentdate.toISOString()
 			},
-			success: function() { console.log("ajaxed"); }
+			success: function(resp) {
+				if (resp.reload) {
+					alert(resp.message);
+				}
+			}
 		});  
 	}, 3000);
 
