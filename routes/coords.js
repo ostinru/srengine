@@ -17,18 +17,19 @@ exports.post = function(req,res,next) {
         y: req.body.lon,
         timestamp: Date.now(),
         userAgent: ''});
-      coords.save(function(err){
+    coords.save(function(err){
         if (err) {
+            Logger.info('coords not saved',err);
             return res.sendHttpError(new HttpError(500, err));
         }
-        var problem = _.find(user.problems, function(problem) {
-            var opened  = _.find(user.problemHistory, function(strProblem){
-                 return strProblem.problem._id.equals(problem._id);
+         var problem = _.find(user.problems, function(problem) {
+            var opened = _.find(user.problemHistory, function (strProblem) {
+                return strProblem.problem._id.equals(problem._id);
             });
-            return !opened  && inProblem(problem,coords);
+            return !opened && inProblem(problem, coords);
         });
         if(!problem){
-            //мы еще никуда не приехали
+            //РјС‹ РµС‰Рµ РЅРёРєСѓРґР° РЅРµ РїСЂРёРµС…Р°Р»Рё
             res.json({status:"Success"})
         }
         user.problemHistory.push({
@@ -40,6 +41,7 @@ exports.post = function(req,res,next) {
         user.markModified("problemHistory");
         user.save(function(err){
             if (err) {
+                Logger.info('user ' + user.username + ' not saved',err);
                 return res.sendHttpError(new HttpError(500, err));
             }
             Logger.info('problem ' + problem.topic + ' is opend for ' + user.username);
@@ -52,12 +54,12 @@ exports.post = function(req,res,next) {
     })
 }
 
-//Функция проверки на вхождение в круг на сфере
+//Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё РЅР° РІС…РѕР¶РґРµРЅРёРµ РІ РєСЂСѓРі РЅР° СЃС„РµСЂРµ
 intersects = function(rPoint,rCircle) {
      return rPoint-rCircle <= 0
 }
 
-//Функция расстояния в км между 2мя точками (коорд)
+//Р¤СѓРЅРєС†РёСЏ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РІ РєРј РјРµР¶РґСѓ 2РјСЏ С‚РѕС‡РєР°РјРё (РєРѕРѕСЂРґ)
 arcDistance = function(loc1, loc2) {
     var rad = Math.PI / 180,
         earth_radius = 6371.009, // close enough
@@ -71,6 +73,6 @@ arcDistance = function(loc1, loc2) {
 }
 
 inProblem = function(problem,coords){
-    deltaR = arcDistance({lat:coords.x,lng:coords.y},{lat:problem.x,lng:problem.y})*1000; // в метрах
+    deltaR = arcDistance({lat:coords.x,lng:coords.y},{lat:problem.x,lng:problem.y})*1000; // РІ РјРµС‚СЂР°С…
     return intersects(deltaR, aDistance);
 }

@@ -17,8 +17,8 @@ module.exports = function(app) {
     app.get('/', checkAuth, checkTime, checkFinished, require('./root').renderPage);
     // Gamer's REST API
     // FIXME: add checkREST 
-    app.post(REST_PREFIX + '/coords',checkAuth,require('./coords').post);
-    app.get(REST_PREFIX + '/message', checkAuth, require('./message').get);
+    app.post(REST_PREFIX + '/coords',checkAuth, checkTime, require('./coords').post);
+    app.get(REST_PREFIX + '/message', checkAuth, checkTime, require('./message').get);
     app.get(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').get);
     app.post(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').post);
 

@@ -5,6 +5,8 @@ var HttpError = require('error').HttpError;
 var _ = require('underscore');
 var config = require('../config');
 
+var checkFinished = require('middleware/checkFinished');
+
 var BONUS_KEY_WORD = "бонус";
 var HINT_KEY_WORD = "подсказка";
 var SKIPPROBLEM_KEY_WORD = "автопереход";
@@ -35,7 +37,6 @@ exports.get = function(req, res, next){
         });
         res.json(p);
     }
-
     res.json(result);
 };
 
@@ -180,6 +181,7 @@ exports.post = function(req, res, next) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
                 }
+                checkFinished;
                 return res.json({ status : "Success", correctAnswer: true,message: "зачислено:  " + answer})
             });
         }

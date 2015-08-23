@@ -213,7 +213,7 @@ markers.clearLayers();
 						});
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 					})._popup.setHeaderContent(parsed[curNumber].topic);
-					DG.circle([parsed[curNumber].X,parsed[curNumber].Y], 50, {color: 'black', fillColor:'yellow', clickable:'false'}).addTo(markers);
+					DG.circle([parsed[curNumber].x,parsed[curNumber].y], 50, {color: 'black', fillColor:'yellow', clickable:'false'}).addTo(markers);
 					curNumber++;	
 				}
 		},

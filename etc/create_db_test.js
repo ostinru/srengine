@@ -45,6 +45,21 @@ function generateIds(callback) {
 function createProblems(callback) {
     var problems = [];
 
+    var problem4 = new Problem;
+    problem4.topic = "Топик " + 4;
+    problem4.number = 4;
+    problem4.question = "Текст задания";
+    problem4.answers = ['1'];
+    problem4.cost = 10;
+    problem4.hints = [];
+    problem4.bonuses = [];
+    problem4._id = ids[4];
+    problem4.nextProblems = [];
+    problem4.x = 57.759712;
+    problem4.y = 40.958278;
+    problem4.icon = "images/pony.png";
+    problems.push(problem4);
+
     var problem3 = new Problem;
     problem3.topic = "Топик " + 3;
     problem3.number = 3;
@@ -55,8 +70,9 @@ function createProblems(callback) {
     problem3.bonuses = [];
     problem3._id = ids[3];
     problem3.nextProblems = [];
-    problem3.x = 57.765055;
-    problem3.y = 40.951276;
+    problem3.x = 57.759203;
+    problem3.y = 40.960606;
+    problem3.icon = "images/pony.png";
     problems.push(problem3);
 
     var problem2 = new Problem;
@@ -69,8 +85,9 @@ function createProblems(callback) {
     problem2.bonuses = [];
     problem2._id = ids[2];
     problem2.nextProblems = [];
-    problem2.x = 57.768488;
-    problem2.y = 40.950868;
+    problem2.x = 57.747588;
+    problem2.y = 40.923119;
+    problem2.icon = "images/pony.png";
     problems.push(problem2);
 
     var problem1 = new Problem;
@@ -82,9 +99,10 @@ function createProblems(callback) {
     problem1.hints = [];
     problem1.bonuses = [];
     problem1._id = ids[1];
-    problem1.nextProblems = [problem2._id,problem3._id];
-    problem1.x = 57.762085;
-    problem1.y = 40.951845;
+    problem1.nextProblems = [problem2._id,problem3._id,problem4._id];
+    problem1.x = 57.744519;
+    problem1.y = 40.911275;
+    problem1.icon = "images/pony.png";
     problems.push(problem1);
 
     async.each(problems, function (problemData, callback) {
