@@ -3,11 +3,6 @@ var mongoose = require('../lib/mongoose'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({
-    number:{
-        type:Number,
-        unique: true,
-        required: true
-    },
     topic: {
         type: String,
         unique: true,
@@ -84,7 +79,6 @@ schema.methods.getPublicFields = function(activeProblem) {
         question = undefined;
     }
     return {
-        number: this.number,
         topic: this.topic,
         question: question,
         //  Latitude and Longitude

@@ -47,7 +47,6 @@ function createProblems(callback) {
 
     var problem4 = new Problem;
     problem4.topic = "Топик " + 4;
-    problem4.number = 4;
     problem4.question = "Текст задания";
     problem4.answers = ['1'];
     problem4.cost = 10;
@@ -62,7 +61,6 @@ function createProblems(callback) {
 
     var problem3 = new Problem;
     problem3.topic = "Топик " + 3;
-    problem3.number = 3;
     problem3.question = "Текст задания";
     problem3.answers = ['1'];
     problem3.cost = 10;
@@ -77,7 +75,6 @@ function createProblems(callback) {
 
     var problem2 = new Problem;
     problem2.topic = "Топик " + 2;
-    problem2.number = 2;
     problem2.question = "Текст задания";
     problem2.answers = ['1'];
     problem2.cost = 10;
@@ -92,7 +89,6 @@ function createProblems(callback) {
 
     var problem1 = new Problem;
     problem1.topic = "Топик " + 1;
-    problem1.number = 1;
     problem1.question = "Текст задания";
     problem1.answers = ['1'];
     problem1.cost = 10;
@@ -113,7 +109,7 @@ function createProblems(callback) {
 
 function createUsers(callback) {
     //example of user: {username: 'admin', password: '123123123', admin: true}
-    Problem.find({number: 1}, function (err, problems) {
+    Problem.findById(ids[1], function (err, problems) {
         var admin = new mongoose.models.User({username: 'superAdmin', password: '1', admin: true});
         admin.save(callback);
         var user = new mongoose.models.User({
