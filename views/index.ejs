@@ -195,14 +195,12 @@ markers.clearLayers();
 					).addTo(markers)
 					.bindPopup('')
 					.on('click', function (e) {
+						var url = 
 						$.ajax({  
-							type: "POST",  
-							url: "/rest/",  
-							data: {
-								topic : e.target._popup.getHeaderContent(),  
-							},
-							success: function(text) {
-								$('#tabs-3').html(text);
+							type: "GET",  
+							url: "/rest/?topic=" + e.target._popup.getHeaderContent(),
+							success: function(resp) {
+								$('#tabs-3').html(resp.question);
 							}
 						});
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());

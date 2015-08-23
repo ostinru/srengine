@@ -28,6 +28,14 @@ exports.get = function(req, res, next){
         return problem.getPublicFields(activeProblem != undefined);
     })
 
+    // TODO: remove this bullshit
+    if (req.query.topic) {
+        var p = _.find(result, function(problem) {
+            return problem.topic === req.query.topic;
+        });
+        res.json(p);
+    }
+
     res.json(result);
 };
 
