@@ -30,12 +30,14 @@
 						$('#answerStatus').html(resp.message);
 						$('#answerStatus').removeClass('correct');
 						$('#answerStatus').addClass('wrong');
+						$('.mainInput').val("")
 					}
 					else {
 						$('#answerStatus').html(resp.message);
-						drawMarkers(markers);
 						$('#answerStatus').removeClass('wrong');
-						$('#answerStatus').addClass('correct');					
+						$('#answerStatus').addClass('correct');
+						$('.mainInput').val("")
+						drawMarkers(markers);						
 					}
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
@@ -78,7 +80,7 @@
 
 function testGeo(){
 	if(!navigator.geolocation) {
-  		alert("Geolocation API doesnt work on your device :(");
+  		alert("API геолокации не поддерживается вашим устройством :(");
 	}
 }
 
@@ -93,13 +95,14 @@ function testGeo(){
 
 <div class="mainCont" id="tabs">
 <ul>
-<li class="selector" id="sel1"><div class="liClick"><a href="#tabs-1"<span class="menuHead" id="span1">Codes</span></a></div></li>
-<li class="selector" id="sel2"><div class="liClick"><a href="#tabs-2"<span class="menuHead" id="span2">Tasks</span></a></div></li>
-<li class="selector" id="sel3"><div class="liClick"><a href="#tabs-3"<span class="menuHead" id="span3">Stuff</span></a></div></li>
+<li class="selector" id="sel1"><div class="liClick"><a href="#tabs-1"<span class="menuHead" id="span1">Коды</span></a></div></li>
+<li class="selector" id="sel2"><div class="liClick"><a href="#tabs-2"<span class="menuHead" id="span2">Дела</span></a></div></li>
+<li class="selector" id="sel3"><div class="liClick"><a href="#tabs-3"<span class="menuHead" id="span3">Инфо</span></a></div></li>
 </ul>
 	<div class = "dropDown" id="drop1">
 		<div class="tabs" id="tabs-1">
 			<p id="answerStatus" class="textInSlide">Answer status should be posted here</p><br/>
+			<p id="currentTask"></p>
 			<input class="mainInput" type="text" placeholder="Answers go here">
 			</br>
 			<input class="okBut" type="button" value="OK" onclick="submitAnswer();">
@@ -107,7 +110,7 @@ function testGeo(){
 		</div>
 	
 	<div class="tabs" id="tabs-2">
-			<span class="textInSlide">Here goes some other info. Probably a task. Maybe we need another one for level selection, it should be discussed. Anyway it's a nice example of a lot of text going here. Maybe i'll even put a picture inside. And a button.</span></br>
+			<span class="textInSlide" id="taskText">Плэйсхолдер для текста задания</span></br>
 			<img src="/icons/Assistant.png">
 			<br>
 			<input class ="hintButton" id="" type="button" value="Hint 1">
@@ -204,11 +207,13 @@ markers.clearLayers();
 							type: "GET",  
 							url: "/rest/?topic=" + e.target._popup.getHeaderContent(),
 							success: function(resp) {
-								$('#tabs-3').html(resp.question);
+						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
+						$('#currentTask').html(e.target._popup.getHeaderContent());
 							}
 						});
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 					})._popup.setHeaderContent(parsed[curNumber].topic);
+					DG.circle([parsed[curNumber].X,parsed[curNumber].Y], 50, {color: 'black', fillColor:'yellow', clickable:'false'}).addTo(markers);
 					curNumber++;	
 				}
 		},
