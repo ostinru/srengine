@@ -31,13 +31,13 @@ module.exports = function(app) {
     app.get(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').getUser);
     app.post(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
     app.put(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
-    app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
+//    app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
     
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
     app.post(REST_PREFIX + '/problem', checkAdmin, require('./problem').createProblem);
     app.put(REST_PREFIX + '/problem/:problemId', checkAdmin,  require('./problem').updateProblem);
-    app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').deleteProblem);
+//    app.delete(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').deleteProblem);
 
     app.get(REST_PREFIX + '/statistics', checkAdmin, require('./statistics').get);
 
