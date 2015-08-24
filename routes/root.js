@@ -60,7 +60,7 @@ exports.post = function(req, res, next) {
 
     if (!ph) {
         logger.debug('[%s] problem \'%s\' not found', user.username, topic);
-        return res.sendHttpError(new HttpError(500));
+        return res.sendHttpError(new HttpError(404, "Задание не открыто. Необходимо приехать к маркеру на карте."));
     }
 
     //
