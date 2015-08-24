@@ -35,7 +35,7 @@ exports.get = function(req, res, next){
         var p = _.find(result, function(problem) {
             return problem.topic === req.query.topic;
         });
-        res.json(p);
+        return res.json(p);
     }
     res.json(result);
 };
