@@ -373,6 +373,7 @@ var ProblemEditor = React.createClass({
 		var problem = context.problems.select(path).get();
 
 		var request = {
+			__v : problem.__v,
 			topic : this.refs.topic.getValue(),
 			question : this.refs.question.getValue(),
 			cost : this.refs.cost.getValue(),
@@ -388,7 +389,10 @@ var ProblemEditor = React.createClass({
 
 		};
 
-		server.updateProblem(problem._id, request, reload, reload);
+		server.updateProblem(problem._id, request, function() {
+			alert('Failed to update');
+			reload();
+		}, reload);
 	},
 
 	remove: function(serial) {
@@ -399,7 +403,10 @@ var ProblemEditor = React.createClass({
 
 		var problem = context.problems.select(path).get();
 
-		server.removeProblem(problem._id, reload, reload);
+		server.removeProblem(problem._id, function() {
+			alert("Failed to remove");
+			reload();
+		}, reload);
 	}
 
 });
@@ -426,7 +433,10 @@ var NewProblem = React.createClass({
 			cost : this.refs.cost.getValue()
 		}
 
-		server.addProblem(request, reload, reload);
+		server.addProblem(request, function() {
+			alert("Failed to create");
+			reload();
+		}, reload);
 	}
 
 });

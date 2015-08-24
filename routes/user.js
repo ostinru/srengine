@@ -54,7 +54,7 @@ exports.createUser = function(req, res, next) {
     user.save(function(err){
         if (err){
             logger.debug(err);
-            res.json(err);
+            res.sendHttpError(new HttpError(400, '' + err.name + ' - ' + err.message));
         }
         else{
             logger.debug('CreateUser OK:', req.body);
@@ -73,6 +73,7 @@ exports.updateUser = function(req, res, next) {
             return res.sendHttpError(new HttpError(400, "User with id = '" + req.params.userId + "'' not found"));
         }
 
+        user.__v = req.body.__v;
         user.username = req.body.username;
         if (req.body.password) {
             user.password = req.body.password;
@@ -94,7 +95,7 @@ exports.updateUser = function(req, res, next) {
         user.save(function(err){
             if (err){
                 logger.debug(err);
-                res.json(err);
+                res.sendHttpError(new HttpError(400, err));
             }
             else{
                 res.json({ status : "Success"});
@@ -117,7 +118,7 @@ exports.deleteUser =  function(req, res, next) {
         user.remove(function(err){
             if (err){
                 logger.debug(err);
-                res.json(err);
+                res.sendHttpError(new HttpError(400, err));
             }
             else{
                 res.json({ status : "Success"});

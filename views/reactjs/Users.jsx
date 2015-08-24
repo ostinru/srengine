@@ -212,7 +212,10 @@ var NewUser = React.createClass({
 			admin : this.refs.admin.getValue()
 		}
 
-		server.addUser(request, reload, reload);
+		server.addUser(request, function() {
+			alert('Failed to create user');
+			reload();
+		}, reload);
 		this.refs.username.clear();
 		this.refs.password.clear();
 	}
@@ -262,6 +265,7 @@ var UserEditor = React.createClass({
 		var user = context.users.select(path).get();
 
 		var request = {
+			__v : user.__v,
 			username : this.refs.username.getValue(),
 			password : this.refs.password.getValue(),
 			admin : this.refs.admin.getValue(),
@@ -270,13 +274,19 @@ var UserEditor = React.createClass({
 			availebleHints: this.refs.availebleHints.getValue()
 		}
 
-		server.updateUser(user._id, request, reload, reload);
+		server.updateUser(user._id, request, function() {
+			alert("Failed to update");
+			reload();
+		}, reload);
 	},
 
 	remove: function() {
 		var path = this.props.path;
 		var user = context.users.select(path).get();
-		server.removeUser(user._id, reload, reload);
+		server.removeUser(user._id, function() {
+			alert('Failed to remove');
+			reload();
+		}, reload);
 	},
 
 

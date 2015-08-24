@@ -42,10 +42,10 @@ exports.createProblem = function(req, res, next) {
     problem.save(function(err){
         if (err){
             logger.info(err);
-            res.json(err);
+            return res.sendHttpError(new HttpError(400, err));
         }
         else{
-            res.json({ status : "Success"});
+            return res.json({ status : "Success"});
         }
     });
 };
@@ -60,7 +60,7 @@ exports.updateProblem = function(req, res, next) {
         var body = req.body;
 
         // Rely on mongoose validation
-
+        problem.__v = body.__v;
         problem.topic = body.topic;
         
         problem.question = body.question;
@@ -89,10 +89,10 @@ exports.updateProblem = function(req, res, next) {
         problem.save(function(err){
             if (err){
                 logger.info(err);
-                res.json(err);
+                return res.sendHttpError(new HttpError(400, err));
             }
             else{
-                res.json({ status : "Success"});
+                return res.json({ status : "Success"});
             }
         });
 
@@ -109,10 +109,10 @@ exports.deleteProblem = function(req, res, next) {
         problem.remove(function(err){
             if (err){
                 logger.debug(err);
-                res.json(err);
+                return res.sendHttpError(new HttpError(400, err));
             }
             else{
-                res.json({ status : "Success"});
+                return res.json({ status : "Success"});
             }
         });
     });
