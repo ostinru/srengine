@@ -37,6 +37,9 @@
 						$('#answerStatus').removeClass('wrong');
 						$('#answerStatus').addClass('correct');
 						$('.mainInput').val("")
+						drawMarkers(markers);
+						$('#currentTask').html('');
+						$('.mainInput').attr('id','');						
 						drawMarkers(markers);						
 					}
 				},
@@ -101,6 +104,15 @@ function testGeo(){
 </ul>
 	<div class = "dropDown" id="drop1">
 		<div class="tabs" id="tabs-1">
+<<<<<<< HEAD
+		<p id="currentTask"></p>
+		<p id="answerStatus" class="textInSlide"></p><br/>
+			<input class="mainInput" type="text" placeholder="Введите код">
+=======
+			<p id="answerStatus" class="textInSlide"></p><br/>
+			<p id="currentTask"></p>
+			<input class="mainInput" type="text" placeholder="Answers go here">
+>>>>>>> 59cc1c6332e170abfb7ecd332db812bf67b74d24
 			<p id="answerStatus" class="textInSlide">Answer status should be posted here</p><br/>
 			<p id="currentTask"></p>
 			<input class="mainInput" type="text" placeholder="Answers go here">
@@ -113,6 +125,15 @@ function testGeo(){
 		</div>
 	
 	<div class="tabs" id="tabs-2">
+<<<<<<< HEAD
+			<span class="textInSlide" id="taskText"></span></br>
+=======
+			<span class="textInSlide" id="taskText">Выберите задание на карте</span></br>
+			<br>
+			<input class ="hintButton" style="display:none;" id="" type="button" value="Hint 1">
+			<input class ="hintButton" style="display:none;" id="" type="button" value="Hint 2">
+			</br></br>
+>>>>>>> 59cc1c6332e170abfb7ecd332db812bf67b74d24
 			<span class="textInSlide" id="taskText">Плэйсхолдер для текста задания</span></br>
 			<img src="/icons/Assistant.png">
 			<br>
@@ -252,5 +273,6 @@ function watchMyAss(){
 </script>
 
 </body>
+</html>
 </html>
 </html>
