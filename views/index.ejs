@@ -42,9 +42,12 @@
 						$('.mainInput').attr('id','');						
 					}
 				},
-				error: function (xhr, ajaxOptions, thrownError) {
-						console.log(xhr.status);
-						console.log(thrownError);
+				error: function (xhr) {
+						var resp = xhr.responseJSON;
+						$('#answerStatus').html(resp.message);
+						$('#answerStatus').removeClass('correct');
+						$('#answerStatus').addClass('wrong');
+						$('.mainInput').val("")
 					  }
 				
 			});
@@ -206,8 +209,10 @@ markers.clearLayers();
 							success: function(resp) {
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						$('#currentTask').html(e.target._popup.getHeaderContent());
+						$('#taskText').html(resp.question);
 							}
 						});
+						$('#taskText').html('');
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 					})._popup.setHeaderContent(parsed[curNumber].topic);
 					DG.circle([parsed[curNumber].x,parsed[curNumber].y], 50, {color: 'black', fillColor:'yellow', clickable:'false'}).addTo(markers);
