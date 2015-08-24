@@ -71,7 +71,7 @@ exports.post = function(req, res, next) {
             return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
         }
         var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-            logger.debug('[%s] send bonus %s', user.username, bonus.text);
+            logger.debug('[%s] send bonus %s', user.username, bonusStr);
             var problem = ph.problem;
             // find bonus
             var bonus = problem.checkBonuses(bonusStr);
