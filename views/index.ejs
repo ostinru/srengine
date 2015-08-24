@@ -101,7 +101,7 @@ function testGeo(){
 </ul>
 	<div class = "dropDown" id="drop1">
 		<div class="tabs" id="tabs-1">
-			<p id="answerStatus" class="textInSlide">Answer status should be posted here</p><br/>
+			<p id="answerStatus" class="textInSlide"></p><br/>
 			<p id="currentTask"></p>
 			<input class="mainInput" type="text" placeholder="Answers go here">
 			</br>
@@ -110,11 +110,10 @@ function testGeo(){
 		</div>
 	
 	<div class="tabs" id="tabs-2">
-			<span class="textInSlide" id="taskText">Плэйсхолдер для текста задания</span></br>
-			<img src="/icons/Assistant.png">
+			<span class="textInSlide" id="taskText">Выберите задание на карте</span></br>
 			<br>
-			<input class ="hintButton" id="" type="button" value="Hint 1">
-			<input class ="hintButton" id="" type="button" value="Hint 2">
+			<input class ="hintButton" style="display:none;" id="" type="button" value="Hint 1">
+			<input class ="hintButton" style="display:none;" id="" type="button" value="Hint 2">
 			</br></br>
 		</div>
  
@@ -209,6 +208,7 @@ markers.clearLayers();
 							success: function(resp) {
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						$('#currentTask').html(e.target._popup.getHeaderContent());
+						$('#taskText').html(resp.question);
 							}
 						});
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
