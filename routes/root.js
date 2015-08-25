@@ -92,14 +92,15 @@ exports.post = function(req, res, next) {
                     return res.json({ status : "Success", message: "Уже был зачислен:  " + bonusStr});
                 }
             }
-
-        // not found:   
-        user.lastActivity = Date.now();
-        user.save(function(err) {
-            if (err)
-                return logger.log(err);
-        });
-        return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
+            else {
+                // not found:
+                user.lastActivity = Date.now();
+                user.save(function(err) {
+                    if (err)
+                        return logger.log(err);
+                });
+                return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
+            }
     }
     //
     // check hints
