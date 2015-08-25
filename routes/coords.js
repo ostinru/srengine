@@ -34,6 +34,25 @@ exports.post = function(req,res,next) {
             //мы еще никуда не приехали
             return res.json({status:"Success"})
         }
+
+        // Приехали. Проверяем читинг:
+        if (user.problemHistory.length != 0) {
+            var last = user.problemHistory[user.problemHistory.length-1];
+            var tdiff = (new Date()).getTime() - last.timeStart.getTime();
+            tdiff = tdiff / 1000 / 3600;
+
+            var dist = arcDistance({lat: last.problem.x, lng:last.problem.y}, {lat: problem.x, lng: problem.y});
+
+            var speed = dist / tdiff;
+
+            logger.info('[%s] SpeedCheck', user.username, dist, tdiff, speed);
+
+            if (speed > 60) {
+                return res.sendHttpError(new HttpError(500, 'Faster than light!'));
+            }
+        }
+
+        // Ок
         user.problemHistory.push({
             problem:problem._id,
             solved:false,
