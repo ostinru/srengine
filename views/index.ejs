@@ -6,13 +6,22 @@
 	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=full&skin=dark" data-id="dgLoader"></script>
-	<link rel="stylesheet" type="text/css" href="stylesheets/style-mobile.css">
 	<script src="js/viewport-units-buggyfill.js"></script>
 	<script src="js/viewport-units-buggyfill.hacks.js"></script>
-	<script>window.viewportUnitsBuggyfill.init({
-	    refreshDebounceWait: 250,
-	    hacks: window.viewportUnitsBuggyfillHacks
-	});
+<script type="text/javascript">
+	if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i))
+ 	{
+		document.write('<link rel="stylesheet" 	type="text/css"       href="stylesheets/style-apple.css">')
+	}
+	else
+	{
+		document.write('<link rel="stylesheet" 	type="text/css"       href="stylesheets/style-mobile.css">');
+		window.viewportUnitsBuggyfill.init({
+			refreshDebounceWait: 250,
+			hacks: window.viewportUnitsBuggyfillHacks
+		});
+	}
+	
 	</script>
 
 <script type="text/javascript">
