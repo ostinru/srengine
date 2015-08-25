@@ -16,10 +16,12 @@ exports.post = function(req,res,next) {
         x: req.body.lat,
         y: req.body.lon,
         timestamp: Date.now(),
-        userAgent: ''});
+        userAgent: ''
+    });
+
     coords.save(function(err){
         if (err) {
-            Logger.info('coords not saved',err);
+            logger.info('coords not saved');
             return res.sendHttpError(new HttpError(500, err));
         }
          var problem = _.find(user.problems, function(problem) {
@@ -30,21 +32,22 @@ exports.post = function(req,res,next) {
         });
         if(!problem){
             //мы еще никуда не приехали
-            res.json({status:"Success"})
+            return res.json({status:"Success"})
         }
         user.problemHistory.push({
             problem:problem._id,
             solved:false,
             takenBonuses:[],
             takenHints:[],
-            timeStart:Date.now()});
+            timeStart:Date.now()
+        });
         user.markModified("problemHistory");
         user.save(function(err){
             if (err) {
-                Logger.info('user ' + user.username + ' not saved',err);
+                logger.info('user ' + user.username + ' not saved', err);
                 return res.sendHttpError(new HttpError(500, err));
             }
-            Logger.info('problem ' + problem.topic + ' is opend for ' + user.username);
+            logger.info('problem ' + problem.topic + ' is opend for ' + user.username);
             return res.json({
                 status:"Success",
                 message:"problem " + problem.topic + " is opened",
