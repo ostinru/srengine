@@ -85,11 +85,11 @@ exports.post = function(req, res, next) {
                         if (err) {
                             return res.sendHttpError(new HttpError(500, err));
                         }
-                        return res.json({ status : "Success", bonus : bonus, message: "зачислено:  " + answer});
+                        return res.json({ status : "Success", message: "зачислено:  " + bonusStr});
                     });
                 }
                 else {
-                    return res.json({ status : "Success", bonus : bonus, message: "Уже был зачислен:  " + answer});
+                    return res.json({ status : "Success", message: "Уже был зачислен:  " + bonusStr});
                 }
             }
 
@@ -158,9 +158,11 @@ exports.post = function(req, res, next) {
         var problem = ph.problem;
         var correct = !! problem.check(answer);
 
+        logger.debug('[%s] send [%s] (%s):', user.username, answer, correct);
+
         if (correct) {
 
-            logger.debug('[%s] answer problem.', user.username);
+            logger.debug('[%s] problem answered.', user.username);
 
             ph.solved = true;
             user.markModified('problemHistory');
@@ -182,7 +184,7 @@ exports.post = function(req, res, next) {
                     return res.sendHttpError(new HttpError(500, err));
                 }
                 checkFinished;
-                return res.json({ status : "Success", correctAnswer: true,message: "зачислено:  " + answer})
+                return res.json({ status : "Success", correctAnswer: true, message: "зачислено:  " + answer})
             });
         }
         else {
