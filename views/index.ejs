@@ -129,7 +129,7 @@ function testGeo(){
 		</div>
  
 	<div class="tabs" id="tabs-3">
-			
+			<span id="adminMessage"> </span>
 		</div>
 		
 </div>
@@ -194,6 +194,24 @@ setInterval(function () {
 			}
 		});  
 	}, 3000);
+
+setInterval(function () {
+	$.ajax({
+		type: "GET",
+		url: "/rest/message",
+		success: function (resp) {
+			if (resp.message.length>0){
+			i = 0;
+			$('#adminMessage').html('');
+			while (i<resp.message.length){
+				$('#adminMessage').html($('#adminMessage').html()+'<p>'+resp[i].message+'</p>');
+				i++;
+				}
+			}
+			
+		}
+	});},60000);
+
 
 });
 
