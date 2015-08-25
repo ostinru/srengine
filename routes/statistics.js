@@ -28,10 +28,10 @@ exports.get = function (req, res, next) {
                 }
                 _.each(users, function (user) {
                     //for  one user
-                    var history = [];
-                    var total = _.reduce(user.problemHistory, function (memo, structProblem) {
+                     var history = [];
 
-                        console.log('strProblem=',structProblem);
+                    var total = _.reduce(user.problemHistory, function (memo, structProblem) {
+                        var status = 'activate';
                         var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
                             var bonus = _.find(structProblem.problem.bonuses, function (bonus) {
                                 return bonusId.equals(bonus._id);
@@ -49,7 +49,7 @@ exports.get = function (req, res, next) {
                         var problemTotal = 0;
                         if (structProblem.solved) {
                             problemTotal = structProblem.problem.cost + totalBonus - totalHint;
-                            console.log(problemTotal,structProblem.problem.cost,totalBonus,totalHint);
+                            status = 'agreed';
                         }
 
                         history.push({
@@ -58,6 +58,7 @@ exports.get = function (req, res, next) {
                             'numbBonuses': structProblem.takenBonuses.length,
                             'numbHints': structProblem.takenHints.length,
                             'solved': structProblem.solved,
+                            'status': status,// notavailable, available, activate, agreed
                             'timeStart': structProblem.timeStart.format("HH:MM:ss"),
                             'timeFinish': structProblem.timeFinish.format("HH:MM:ss")
                         });
@@ -70,12 +71,20 @@ exports.get = function (req, res, next) {
                             return structProblem.problem._id.equals(problem._id);
                         });
                         if (!findProblem) {
+                            var status = 'notavailable';
+                            var isAvailable = _.find(user.problems, function (structProblem) {
+                                return structProblem._id.equals(problem._id);
+                            });
+                            if (isAvailable){
+                                status = 'available';
+                            }
                             history.push({
                                 'topic': problem.topic,
                                 'total': 0,
                                 'numbBonuses': 0,
                                 'numbHints': 0,
                                 'solved': false,
+                                'status': status,
                                 'timeStart': finishTime.format("HH:MM:ss"),
                                 'timeFinish': finishTime.format("HH:MM:ss")
                             });
@@ -92,6 +101,7 @@ exports.get = function (req, res, next) {
                         'numbBonuses': 0,
                         'numbHints': 0,
                         'solved': true,
+                        'status': 'available',
                         'timeStart': finishTime.format("HH:MM:ss"),
                         'timeFinish': finishTime.format("HH:MM:ss")
                     });

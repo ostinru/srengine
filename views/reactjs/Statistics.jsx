@@ -17,8 +17,19 @@ var Team = React.createClass({
                 <td>{team.total}</td>
                 {
                     team.history.map(function(problem){
+
+                        var color = {
+                            'notavailable': '#bbb84a',
+                            'available':'#a5abf2',
+                            'activate':'#fff785',
+                            'agreed':'#119f37'
+                        }[problem.status];
                         return (
-                            <td>
+                            <td style = {
+                                    {
+                                        'background-color': color
+                                    }
+                                }>
                                 <table>
                                     <tr><td>{problem.topic}</td></tr>
                                     <tr><td>балл: {problem.total}</td></tr>
@@ -65,9 +76,9 @@ var Statistic = React.createClass({
         var problems = this.state.problems;
         var statistics = this.state.statistics;
         return (
-            <Panel header="Statisctic">
+            <Panel header="Статистика">
                 <Table responsive>
-                    <thead Статистика>
+                    <thead>
                     <tr>
                         <th>Место</th>
                         <th>Команда</th>
