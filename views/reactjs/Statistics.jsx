@@ -19,7 +19,7 @@ var Team = React.createClass({
                     team.history.map(function(problem){
 
                         var color = {
-                            'notavailable': '#bbb84a',
+                            'notavailable': 'grey',
                             'available':'#a5abf2',
                             'activate':'#fff785',
                             'agreed':'#119f37'

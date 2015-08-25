@@ -72,8 +72,8 @@ exports.get = function (req, res, next) {
                         });
                         if (!findProblem) {
                             var status = 'notavailable';
-                            var isAvailable = _.find(user.problems, function (structProblem) {
-                                return structProblem._id.equals(problem._id);
+                            var isAvailable = _.find(user.problems, function (availableProblemId) {
+                                return availableProblemId.equals(problem._id);
                             });
                             if (isAvailable){
                                 status = 'available';
