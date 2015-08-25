@@ -183,7 +183,6 @@ exports.post = function(req, res, next) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
                 }
-                checkFinished;
                 return res.json({ status : "Success", correctAnswer: true, message: "зачислено:  " + answer})
             });
         }

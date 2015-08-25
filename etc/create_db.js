@@ -55,6 +55,9 @@ function createProblems(callback) {
         problem.bonuses = [{text:'1',cost:20}];
         problem._id = ids[i];
         problems.push(problem);
+        problem.x = 57.7 + i/100;
+        problem.y = 40.9 + i/100;
+        problem.icon = 'images/pony.png'
     }
 
     async.each(problems, function (problemData, callback) {
