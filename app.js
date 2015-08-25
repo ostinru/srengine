@@ -43,7 +43,10 @@ app.use(expressSessions({
     store: new MongoStore({
         url : config.get('mongoose:uri'),
         touchAfter: 3600 // time period in seconds 
-    })
+    }),
+    cookie: {
+	maxAge: 20*3600000 // 20*hour
+    }
 }));
 app.use(require('middleware/loadUser'));
 app.use(require('middleware/resLocals'));
