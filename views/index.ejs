@@ -145,6 +145,7 @@ function testGeo(){
 	mapReady = false;
 	var watchId;
 	var playerLat, playerLon;
+	var userVer;
 
     DG.then(function () {
         map = DG.map('map', {
@@ -186,8 +187,9 @@ setInterval(function () {
 				timestamp: currentdate.toISOString()
 			},
 			success: function(resp) {
-				if (resp.reload) {
-					alert(resp.message);
+				if (userVer != resp.userV) {userV=resp.userV; drawMarkers(markers);}
+				if (resp.visited) {
+					alert("Задание открыто, нажмите на маркер");
 				}
 			}
 		});  
@@ -217,10 +219,16 @@ markers.clearLayers();
 							type: "GET",  
 							url: "/rest/?topic=" + e.target._popup.getHeaderContent(),
 							success: function(resp) {
-						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
+						if (resp.question=="undefined"){
+							$('#taskText').html('Вы ещё не доехали до этого задания!');
+							}
+						else {
+                        $('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						$('#currentTask').html(e.target._popup.getHeaderContent());
 						$('#taskText').html(resp.question);
 						$('#answerStatus').html('');
+							} 
+
 							}
 						});
 						$('#taskText').html('');
