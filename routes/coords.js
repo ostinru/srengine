@@ -22,7 +22,7 @@ exports.post = function(req,res,next) {
     coords.save(function(err){
         if (err) {
             logger.info('coords not saved');
-            return res.sendHttpError(new HttpError(500, err));
+            return res.json({status: 'Fail', userV: user.__v}); // ERROR
         }
          var problem = _.find(user.problems, function(problem) {
             var opened = _.find(user.problemHistory, function (strProblem) {
@@ -32,7 +32,7 @@ exports.post = function(req,res,next) {
         });
         if(!problem){
             //мы еще никуда не приехали
-            return res.json({status:"Success"})
+            return res.json({status:"Success", userV: user.__v})
         }
 
         // Приехали. Проверяем читинг:
@@ -48,7 +48,7 @@ exports.post = function(req,res,next) {
             logger.info('[%s] SpeedCheck', user.username, dist, tdiff, speed);
 
             if (speed > 60) {
-                return res.sendHttpError(new HttpError(500, 'Faster than light!'));
+                return res.json({status: 'Fail', message: 'Faster than light!', userV: user.__v});
             }
         }
 
@@ -64,13 +64,14 @@ exports.post = function(req,res,next) {
         user.save(function(err){
             if (err) {
                 logger.info('user ' + user.username + ' not saved', err);
-                return res.sendHttpError(new HttpError(500, err));
+                return res.json({status: fail, message: 'DB error: user not saved', userV: user.__v});
             }
             logger.info('problem ' + problem.topic + ' is opend for ' + user.username);
             return res.json({
                 status:"Success",
                 message:"problem " + problem.topic + " is opened",
-                reload:true
+                userV: user.__v,
+                visited:true
             })
         });
     })
