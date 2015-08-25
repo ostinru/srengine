@@ -11,7 +11,7 @@ exports.get = function (req, res, next) {
 
     //get all users
     User.find({})
-        .populate('problems problemHistory.problem')
+        .populate('problemHistory.problem')
         .exec(function (err, users) {
             if (err) {
                 return next(err);
@@ -31,17 +31,25 @@ exports.get = function (req, res, next) {
                     var history = [];
                     var total = _.reduce(user.problemHistory, function (memo, structProblem) {
 
-                        var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonus) {
+                        console.log('strProblem=',structProblem);
+                        var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
+                            var bonus = _.find(structProblem.problem.bonuses, function (bonus) {
+                                return bonusId.equals(bonus._id);
+                            });
                             return memo + bonus.cost;
                         }, 0);
 
-                        var totalHint = _.reduce(structProblem.takenHints, function (memo, hint) {
+                        var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
+                            var hint = _.find(structProblem.problem.hints, function (hint) {
+                                return hintId.equals(hint._id);
+                            });
                             return memo + hint.cost;
                         }, 0);
 
                         var problemTotal = 0;
                         if (structProblem.solved) {
                             problemTotal = structProblem.problem.cost + totalBonus - totalHint;
+                            console.log(problemTotal,structProblem.problem.cost,totalBonus,totalHint);
                         }
 
                         history.push({
@@ -65,8 +73,8 @@ exports.get = function (req, res, next) {
                             history.push({
                                 'topic': problem.topic,
                                 'total': 0,
-                                'numbBonuses': "",
-                                'numbHints': "",
+                                'numbBonuses': 0,
+                                'numbHints': 0,
                                 'solved': false,
                                 'timeStart': finishTime.format("HH:MM:ss"),
                                 'timeFinish': finishTime.format("HH:MM:ss")
@@ -79,10 +87,10 @@ exports.get = function (req, res, next) {
                         return memo + bonus.cost;
                     },0);
                     history.push({
-                        'topic': '┗┃・ □ ・┃┛',
+                        'topic': '   ',
                         'total': totalAdminBonuses,
-                        'numbBonuses': "",
-                        'numbHints': "",
+                        'numbBonuses': 0,
+                        'numbHints': 0,
                         'solved': true,
                         'timeStart': finishTime.format("HH:MM:ss"),
                         'timeFinish': finishTime.format("HH:MM:ss")

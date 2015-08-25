@@ -52,7 +52,7 @@ function createProblems(callback) {
         problem.answers = ['1'];
         problem.cost = 10;
         problem.hints = [];
-        problem.bonuses = [];
+        problem.bonuses = [{text:'1',cost:20}];
         problem._id = ids[i];
         problems.push(problem);
     }
@@ -76,7 +76,7 @@ function createUsers(callback) {
                     throw err;
                 }
                 var problem = problems[j];
-                user.problemHistory.push({problem: problem._id, solved: true});
+                user.problemHistory.push({problem: problem._id, solved: true, takenBonuses:[problem.bonuses[0]._id]});
             }
             user.save(callback);
         }
