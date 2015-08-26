@@ -212,6 +212,9 @@ setInterval(function () {
 				if (resp.reload) {
 					window.location.reload();
 				}
+				if (resp.navigate) {
+					// window.location.href = resp.navigate;
+				}
 				if (userVer != resp.userV) {userV=resp.userV; drawMarkers(markers);}
 				if (resp.visited) {
 					alert("Задание открыто, нажмите на маркер");

@@ -48,7 +48,7 @@ exports.post = function(req,res,next) {
             logger.info('[%s] SpeedCheck', user.username, dist, tdiff, speed);
 
             if (speed > 60) {
-                return res.json({status: 'Fail', message: 'Faster than light!', userV: user.__v});
+                return res.json({status: 'Fail', message: 'Faster than light!', userV: user.__v, navigate: 'images/speed.jpeg'});
             }
         }
 
