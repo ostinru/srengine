@@ -6,6 +6,7 @@ var Button = Bootstrap.Button;
 var Glyphicon = Bootstrap.Glyphicon;
 var Panel = Bootstrap.Panel;
 var Input = require('./controls/Input.jsx');
+var Checkbox = require('./controls/Checkbox.jsx');
 
 // FIXME: normal context!!
 var context = require('./context');
@@ -362,6 +363,8 @@ var ProblemEditor = React.createClass({
 			    <Input type="text" ref="iconText" label="iconText" initValue={problem.iconText} />
 			    <Input type="text" ref="iconTitle" label="iconTitle" initValue={problem.iconTitle} />
 
+			    <Checkbox label="forHints" ref="forHints" initValue={problem.forHints} />
+
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
 		    </Panel>
@@ -386,6 +389,7 @@ var ProblemEditor = React.createClass({
 			hints : problem.hints,
 			bonuses : problem.bonuses,
 			nextProblems: problem.nextProblems,
+			forHints: this.refs.forHints.getValue()
 
 		};
 

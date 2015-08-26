@@ -37,6 +37,7 @@ exports.createProblem = function(req, res, next) {
         cost: req.body.cost,
         hints: [],
         bonuses: [],
+        forHints: false,
     });
 
     problem.save(function(err){
@@ -85,6 +86,8 @@ exports.updateProblem = function(req, res, next) {
         problem.icon = body.icon;
         problem.iconText = body.iconText;
         problem.iconTitle = body.iconTitle
+
+        problem.forHints = body.forHints;
 
         problem.save(function(err){
             if (err){
