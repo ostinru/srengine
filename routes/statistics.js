@@ -3,7 +3,7 @@ var User = require('models/user').User;
 var Problem = require('models/problem').Problem;
 var config = require('../config');
 var logger = require('lib/logger')(module);
-var finishTime = new Date(config.get('finishTime'));
+var startTime = new Date(config.get('startTime'));
 var _ = require('underscore');
 var dateFormat = require('dateformat');
 
@@ -28,29 +28,32 @@ exports.get = function (req, res, next) {
                 }
                 _.each(users, function (user) {
                     //for  one user
-                     var history = [];
-
+                    var history = [];
+                    var lastProblemTimestamp = startTime;
                     var total = _.reduce(user.problemHistory, function (memo, structProblem) {
                         var status = 'activate';
                         var totalBonus = _.reduce(structProblem.takenBonuses, function (memo, bonusId) {
                             var bonus = _.find(structProblem.problem.bonuses, function (bonus) {
                                 return bonusId.equals(bonus._id);
                             });
-                            return memo + bonus.cost;
+                            return memo + !bonus===undefined ? bonus.cost : 0;
                         }, 0);
 
                         var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
                             var hint = _.find(structProblem.problem.hints, function (hint) {
                                 return hintId.equals(hint._id);
                             });
-                            return memo + hint.cost;
+                            return memo + !hint===undefined ? hint.cost : 0;
                         }, 0);
 
                         var problemTotal = 0;
                         if (structProblem.solved) {
                             problemTotal = structProblem.problem.cost + totalBonus - totalHint;
                             status = 'agreed';
-                        }
+                           if (structProblem.timeFinish > lastProblemTimestamp){
+                                lastProblemTimestamp = structProblem.timeFinish;
+                            }
+                         }
 
                         history.push({
                             'topic': structProblem.problem.topic,
@@ -59,8 +62,8 @@ exports.get = function (req, res, next) {
                             'numbHints': structProblem.takenHints.length,
                             'solved': structProblem.solved,
                             'status': status,// notavailable, available, activate, agreed
-                            'timeStart': structProblem.timeStart.format("HH:MM:ss"),
-                            'timeFinish': structProblem.timeFinish.format("HH:MM:ss")
+                            'timeStart': structProblem.timeStart.format("dd.mm.yy HH:MM:ss"),
+                            'timeFinish': structProblem.timeFinish.format("dd.mm.yy HH:MM:ss")
                         });
                         return memo + problemTotal;
                     }, 0);
@@ -85,10 +88,19 @@ exports.get = function (req, res, next) {
                                 'numbHints': 0,
                                 'solved': false,
                                 'status': status,
-                                'timeStart': finishTime.format("HH:MM:ss"),
-                                'timeFinish': finishTime.format("HH:MM:ss")
+                                'timeStart': startTime.format("dd.mm.yy HH:MM:ss"),
+                                'timeFinish': startTime.format("dd.mm.yy HH:MM:ss")
                             });
                         }
+                    });
+
+                    history.sort(function(a,b){
+                        if (a.topic > b.topic)
+                            return 1;
+                        else if (a.topic < b.topic)
+                            return -1;
+                        else
+                            return 0;
                     });
 
                     //push admin bonuses
@@ -102,15 +114,36 @@ exports.get = function (req, res, next) {
                         'numbHints': 0,
                         'solved': true,
                         'status': 'available',
-                        'timeStart': finishTime.format("HH:MM:ss"),
-                        'timeFinish': finishTime.format("HH:MM:ss")
+                        'timeStart': startTime.format("dd.mm.yy HH:MM:ss"),
+                        'timeFinish': startTime.format("dd.mm.yy HH:MM:ss")
                     });
 
-                    var userStatistic = {'user': user.username, 'total': total + totalAdminBonuses, 'history': history};
+                    var userStatistic = {
+                        'user': user.username,
+                        'total': total + totalAdminBonuses,
+                        'history': history,
+                        'timeFinish':lastProblemTimestamp,
+                        'publicTimeFinish':lastProblemTimestamp.format("dd.mm.yy HH:MM:ss"),
+                        'availableHints':user.availableHints
+                    };
                     allStatistic.push(userStatistic);
                 });
                 allStatistic.sort(function (a, b) {
-                    return b.total - a.total
+                    if(a.total > b.total){
+                        return -1;
+                    }
+                    if(a.total < b.total){
+                        return 1;
+                    }
+                    if(a.total === b.total){
+                        if(a.timeFinish > b.timeFinish){
+                            return -1;
+                        }
+                        if(a.timeFinish < b.timeFinish){
+                            return 1;
+                        }
+                    }
+                    return 0;
                 });
                 res.json({problems: problems, allStatistics: allStatistic});
             })

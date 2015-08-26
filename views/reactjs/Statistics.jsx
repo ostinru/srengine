@@ -14,7 +14,15 @@ var Team = React.createClass({
             <tr>
                 <td>{index + 1}</td>
                 <td>{team.user}</td>
-                <td>{team.total}</td>
+                <td>
+                    <table>
+                        <tr><td>{team.total}</td></tr>
+                        <tr><td>---</td></tr>
+                        <tr><td>{team.publicTimeFinish}</td></tr>
+                        <tr><td>---</td></tr>
+                        <tr><td>{team.availableHints}</td></tr>
+                    </table>
+                </td>
                 {
                     team.history.map(function(problem){
 
@@ -35,6 +43,7 @@ var Team = React.createClass({
                                     <tr><td>балл: {problem.total}</td></tr>
                                     <tr><td>бон: {problem.numbBonuses}</td></tr>
                                     <tr><td>подск: {problem.numbHints}</td></tr>
+                                    <tr><td>{problem.timeFinish}</td></tr>
                                 </table>
                             </td>)
                     })
