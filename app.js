@@ -45,7 +45,7 @@ app.use(expressSessions({
         touchAfter: 3600 // time period in seconds 
     }),
     cookie: {
-	maxAge: 20*3600000 // 20*hour
+	maxAge: 200*3600000 // 200*hour
     }
 }));
 app.use(require('middleware/loadUser'));
