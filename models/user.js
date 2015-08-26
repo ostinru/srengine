@@ -68,7 +68,7 @@ var schema = new Schema({
             required: true
         }
     }],
-    availebleHints: {
+    availableHints: {
         type:Number,
         default:0
     },

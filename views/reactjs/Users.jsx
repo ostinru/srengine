@@ -252,7 +252,7 @@ var UserEditor = React.createClass({
 			    	})}
 			    	<NewAdminBonus path={buildPath(path, 'adminBonuses')} />
 			    </Panel>
-			    <Input label="AvailebleHints" type="number" ref="availebleHints" initValue={user.availebleHints} />
+			    <Input label="AvailableHints" type="number" ref="availableHints" initValue={user.availableHints} />
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
 			</Panel>
@@ -271,7 +271,7 @@ var UserEditor = React.createClass({
 			admin : this.refs.admin.getValue(),
 			problems: user.problems,
 			adminBonuses: user.adminBonuses,
-			availebleHints: this.refs.availebleHints.getValue()
+			availableHints: this.refs.availableHints.getValue()
 		}
 
 		server.updateUser(user._id, request, function() {

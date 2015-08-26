@@ -27,7 +27,7 @@ exports.get = function(req, res, next){
         var activeProblem = _.find(user.problemHistory,function(activeProblem){
             return activeProblem.problem._id.equals(problem._id);
         });
-        return problem.getPublicFields(activeProblem != undefined);
+        return problem.getPublicFields(activeProblem);
     })
 
     // TODO: remove this bullshit
@@ -106,30 +106,36 @@ exports.post = function(req, res, next) {
     // check hints
     //
     else if (answer.indexOf(HINT_KEY_WORD) == 0) {
-        return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
-        /*
+
         var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
         var hintNumber = parseInt(hintNumberStr);
+        if(user.availableHints == 0){
+            return res.sendHttpError(new HttpError(400,"У вас не достаточно подсказок"));
+        }
         if (isNaN(hintNumber)) {
             return res.sendHttpError(new HttpError(500, "Нет номера подсказки '" + hintNumberStr + "'"));//Can't parse hint numer
         }
+        var problem = ph.problem;
+
         var hint = problem.hints[hintNumber - 1];
         if (hint === undefined) {
             return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
         }
-        logger.debug('[%s] got hint #%s', user.username, hintNumber);
-        if (! hasHint(hint._id, problemHistory.takenHints)) {
-            problemHistory.takenHints.push(hint._id);
+        if (! hasHint(hint._id, ph.takenHints)) {
+            ph.takenHints.push(hint._id);
             user.markModified('problemHistory');
+            user.availableHints = user.availableHints - 1;
             user.save(function(err) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
                 }
-                return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
+                logger.debug('[%s] got hint #%s', user.username, hintNumber);
+                return res.json({ status : "Success", message: "зачислено:  " + answer});
             });
         }
-        return res.json({ status : "Success", hint : hint, message: "Уже был зачислен:  " + answer});
-        */
+        else {
+            return res.json({status: "Success", message: "Уже был зачислен:  " + answer});
+        }
     }
     //
     // skip problem
@@ -180,6 +186,11 @@ exports.post = function(req, res, next) {
             user.markModified('problems');
 
             ph.timeFinish = Date.now();
+
+            if(problem.forHints) {
+                user.availableHints = user.availableHints + 1;
+            }
+
             user.save(function(err) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));

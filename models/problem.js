@@ -20,6 +20,10 @@ var schema = new Schema({
         type: Number,
         required: true
     },
+    forHints:{
+        type: Boolean,
+        default: false
+    },
     bonuses: [{
         // mongoose will create _id
         text: {
@@ -73,17 +77,31 @@ schema.methods.checkBonuses = function(userBonus) {
     });
 };
 
+//activeProblem - instance of problemHistory
 schema.methods.getPublicFields = function(activeProblem) {
     var question = this.question;
-    if (!activeProblem){
+    var hints = [];
+    if (activeProblem==undefined){
         question = undefined;
+    }else{
+        hints = _.filter(this.hints, function(hint) {
+            return _.find(activeProblem.takenHints, function (takenHintId) {
+                return takenHintId.equals(hint._id);
+            });
+        });
+        hints = _.map(hints, function(hint) {
+            return hint.text;
+        })
     }
+
     return {
         topic: this.topic,
         question: question,
         //  Latitude and Longitude
         x: this.x,
         y: this.y,
+        //
+        hints:hints,
         // Icon on the map
         icon: this.icon,
         iconText: this.iconText,

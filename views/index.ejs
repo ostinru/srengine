@@ -62,6 +62,24 @@
 				
 			});
 		}
+	function getHint(value) {
+		$.ajax({
+			type: "POST",
+			url: "/rest/",
+			data: {
+				answer: value,
+				topic: $('.mainInput').attr('id')
+			},
+			success: function(resp) {
+				if (resp.hints.length > 0) {
+					i = 0;
+					while (i < resp.hints.length) {
+						$('#hints').html($('#hints').html()+'<p>' + resp.hints[i].text+'</p>');
+					}
+				}
+			}
+
+				});}
 	</script>
 
 <script type="text/javascript">
@@ -126,6 +144,9 @@ function testGeo(){
 	
 	<div class="tabs" id="tabs-2">
 			<span class="textInSlide" id="taskText"></span></br>
+			<span id="hints"></span></br>
+			<input class ="hintButton" id="" type="button" value="подсказка 1" onclick="getHint(this.value);">
+			<input class ="hintButton" id="" type="button" value="подсказка 2" onclick="getHint(this.value);">
 		</div>
  
 	<div class="tabs" id="tabs-3">
