@@ -168,8 +168,8 @@ var AdminBonusEditor = React.createClass({
 		var bonus = context.users.select(this.props.path).get();
 		return (
 			<form className='form-inline' action="javascript:void(0);" key={bonus._id}>
-    			<Input label="Cost" type="number" ref="cost" initValue={bonus.cost}/>
     			<Input label="Message" type="text" ref="message" initValue={bonus.message} />
+    			<Input label="Cost" type="number" ref="cost" initValue={bonus.cost}/>
     			<Button onClick={me.updateAdminBonus}><Glyphicon glyph='ok' /></Button>
     			<Button onClick={me.removeAdminBonus}><Glyphicon glyph='remove' /></Button>
 			</form>
