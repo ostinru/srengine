@@ -25,10 +25,19 @@ exports.post = function(req,res,next) {
             return res.json({status: 'Fail', userV: user.__v}); // ERROR
         }
          var problem = _.find(user.problems, function(problem) {
+            // проверяем читинг:
+            if (problem.x == coords.x && problem.y == coords.y) {
+                logger.info('[%s] Anti-cheat', user.username, coords.x, coords.y);
+                return false;
+            }
+            // проверяем расстояние
+            if (!inProblem(problem, coords)) {
+                return false;
+            }
             var opened = _.find(user.problemHistory, function (strProblem) {
                 return strProblem.problem._id.equals(problem._id);
             });
-            return !opened && inProblem(problem, coords);
+            return !opened;
         });
         if(!problem){
             //мы еще никуда не приехали
