@@ -137,10 +137,10 @@ exports.get = function (req, res, next) {
                     }
                     if(a.total === b.total){
                         if(a.timeFinish > b.timeFinish){
-                            return -1;
+                            return 1;
                         }
                         if(a.timeFinish < b.timeFinish){
-                            return 1;
+                            return -1;
                         }
                     }
                     return 0;
