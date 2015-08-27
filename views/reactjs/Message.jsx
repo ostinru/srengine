@@ -37,7 +37,7 @@ var Message = React.createClass({
 			<Panel header="Administarator's messages" >
 				<form className='form-inline' action="javascript:void(0);">
 					<Input ref="message" name="message" type="text" />
-					<Button bsStyle='primary' onClick={this.onSubmit}>Отправить</Button>
+					<Button bsStyle='success' onClick={this.onSubmit}>Отправить</Button>
 				</form>
 				<br/>
 				<Table bordered hover striped >

@@ -138,9 +138,9 @@ var NewAdminBonus = React.createClass({
 		var me = this;
 		return (
 	    	<form className='form-inline' action="javascript:void(0);">
-	    		<Input label="Cost" type="number" ref="cost" />
 	    		<Input label="Message" type="text" ref="message" />
-	    		<Button onClick={me.addAdminBonus}>Add</Button>
+	    		<Input label="Cost" type="number" ref="cost" />
+	    		<Button onClick={me.addAdminBonus}><Glyphicon glyph='plus'/></Button>
 	    	</form>
 		);
 	},
@@ -200,7 +200,7 @@ var NewUser = React.createClass({
 				<Input label="Username" type="text" ref="username" />
 			    <Input label="Password" type="text" ref="password" />
 			    <Checkbox label="IsAdmin" ref="admin" initValue={false}/>
-			    <Button onClick={me.addUser} bsStyle='success'>Save</Button>
+			    <Button onClick={me.addUser} bsStyle='success'><Glyphicon glyph='plus'/> Add user</Button>
 			</Panel>
 		);
 	},
@@ -236,7 +236,7 @@ var UserEditor = React.createClass({
 				<Input label="Username" type="text" ref="username" initValue={user.username} />
 			    <Input label="Password" type="text" ref="password" initValue={user.password} />
 			    <Checkbox label="IsAdmin" ref="admin" initValue={user.admin} />
-			    <Panel header="Availeble Problems" >
+			    <Panel header="Available Problems" >
 			    	{user.problems && user.problems.map(function(problem, index) {
 		            	return (
 		            		<ProblemsEditor key={problem._id} path={buildPath(path, 'problems', index)} />

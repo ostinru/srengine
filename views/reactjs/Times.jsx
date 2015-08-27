@@ -48,7 +48,7 @@ var Times = React.createClass({
                 <Panel header="Start/Finish time">
                 	<Input type="text" ref="startTime" label="Start time" initValue={this.state.startTime} />
                   	<Input type='text' ref="finishTime" label='Finish time' initValue={this.state.finishTime} />
-                  	<Button onClick={this.handleSave}><Glyphicon glyph='ok'/> Save</Button>
+                  	<Button onClick={this.handleSave} bsStyle='success'><Glyphicon glyph='ok'/> Save</Button>
                 </Panel>
 		);
 	},

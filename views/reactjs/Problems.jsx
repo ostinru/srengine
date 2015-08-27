@@ -426,7 +426,7 @@ var NewProblem = React.createClass({
 				<Input type='textarea' ref="question" label="Text" />
 				<Input type="number" ref="cost" label="Cost" />
 			    
-			    <Button onClick={me.addProblem}><Glyphicon glyph='plus'/> Add Problem</Button>
+			    <Button onClick={me.addProblem} bsStyle='success'><Glyphicon glyph='plus'/> Add Problem</Button>
 		    </Panel>
 		);
 	},
