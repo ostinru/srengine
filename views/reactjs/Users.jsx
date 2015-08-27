@@ -178,7 +178,7 @@ var AdminBonusEditor = React.createClass({
 
 	updateAdminBonus: function() {
 		var cursor = context.users.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			cost : this.refs.cost.getValue(),
 			message : this.refs.message.getValue(),
 		});

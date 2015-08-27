@@ -125,6 +125,7 @@ var NextProblemEditor = React.createClass({
 		var newValue = this.refs.nextProblemId.getValue();
 		if (newValue === null)
 			return;
+
 		cursor.set(
 			newValue
 		);
@@ -196,7 +197,7 @@ var BonusEditor = React.createClass({
 
 	updateBonus: function() {
 		var cursor = context.problems.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			text: this.refs.text.getValue(),
 			cost: this.refs.cost.getValue(),
 		});
@@ -257,7 +258,7 @@ var HintEditor = React.createClass({
 
 	updateHint: function() {
 		var cursor = context.problems.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			text: this.refs.text.getValue(),
 			cost: this.refs.cost.getValue(),
 		});
