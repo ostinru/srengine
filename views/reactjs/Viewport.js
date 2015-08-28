@@ -5,6 +5,7 @@ var Times = require('./Times.jsx');
 var Problems = require('./Problems.jsx');
 var Users = require('./Users.jsx');
 var Message = require('./Message.jsx');
+var Map = require('./Map.jsx');
 var Statistics = require('./Statistics.jsx');
 
 var Viewport = React.createClass({
@@ -19,7 +20,8 @@ var Viewport = React.createClass({
         '/problems': 'renderProblems',
         '/users': 'renderUsers',
         '/statistics': 'renderStatistics',
-        '/message': 'renderMessage'
+        '/message': 'renderMessage',
+        '/map': 'renderMap',
     },
 
     getInitialState: function() {
@@ -40,6 +42,9 @@ var Viewport = React.createClass({
     },
     renderMessage : function() {
         return <Message />
+    },
+    renderMap : function() {
+        return <Map />
     },
     notFound: function(path) {
         return <div className="not-found">Page Not Found: {path}</div>;

@@ -43,6 +43,8 @@ module.exports = function(app) {
 
     app.post(REST_PREFIX + '/message', checkAdmin, require('./message').post);
 
+    app.get(REST_PREFIX + '/coords',checkAdmin, require('./coords').get);
+
     app.get(REST_PREFIX + '/time', checkAdmin, require('./game').get);
     app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);
 }

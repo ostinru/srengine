@@ -15,6 +15,7 @@ var Menu = React.createClass({
 					<NavItem href="users">Users</NavItem>
 					<NavItem href="statistics">Statistics</NavItem>
 					<NavItem href="message">Admin messages</NavItem>
+					<NavItem href="map">Map</NavItem>
 				</Nav>
 			</Navbar>
 			);

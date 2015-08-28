@@ -7,6 +7,17 @@ var _ = require('underscore');
 var aDistance = require('../config').get("aDistance");
 var logger = require('lib/logger')(module);
 
+var store = {};
+
+exports.get = function(req, res, next) {
+    var now = Date.now(); // milliseconds
+    // cleanup store:
+    store = _.pick(store, function(value, key) {
+        return value.timestamp + 5*60*1000 > now; // store sessions's coords 5 minutes
+    });
+    res.json(store);
+};
+
 exports.post = function(req,res,next) {
     var user = req.user;
 
@@ -24,10 +35,16 @@ exports.post = function(req,res,next) {
             logger.info('coords not saved');
             return res.json({status: 'Fail', userV: user.__v}); // ERROR
         }
+
+        var plainCoords = coords.toObject();
+        plainCoords.notes = '';
+        store[plainCoords.sessionID] = plainCoords;
+
          var problem = _.find(user.problems, function(problem) {
             // проверяем читинг:
             if (problem.x == coords.x && problem.y == coords.y) {
                 logger.info('[%s] Anti-cheat', user.username, coords.x, coords.y);
+                plainCoords.note = 'Exact hit!'
                 return false;
             }
             // проверяем расстояние
@@ -57,6 +74,7 @@ exports.post = function(req,res,next) {
             logger.info('[%s] SpeedCheck', user.username, dist, tdiff, speed);
 
             if (speed > 60) {
+                plainCoords.note = 'Faster than light! Speed: ' + speed;
                 return res.json({status: 'Fail', message: 'Faster than light!', userV: user.__v, navigate: 'images/speed.jpeg'});
             }
         }
