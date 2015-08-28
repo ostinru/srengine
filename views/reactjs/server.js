@@ -21,6 +21,9 @@ module.exports = {
 }
 
 var $ = require('jquery');
+
+$.ajaxSetup({ cache: false });
+
 var REST_PREFIX = 'rest';
 
 function superFetch(urlsfx) {
