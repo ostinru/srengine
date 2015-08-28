@@ -365,6 +365,7 @@ var ProblemEditor = React.createClass({
 			    <Input type="text" ref="iconTitle" label="iconTitle" initValue={problem.iconTitle} />
 
 			    <Checkbox label="forHints" ref="forHints" initValue={problem.forHints} />
+			    <Input type="text" label="vPoints" ref="vPoints" initValue={JSON.stringify(problem.vPoints)} />
 
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
@@ -390,7 +391,8 @@ var ProblemEditor = React.createClass({
 			hints : problem.hints,
 			bonuses : problem.bonuses,
 			nextProblems: problem.nextProblems,
-			forHints: this.refs.forHints.getValue()
+			forHints: this.refs.forHints.getValue(),
+			vPoints: JSON.parse(this.refs.vPoints.getValue())
 
 		};
 

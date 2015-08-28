@@ -59,6 +59,7 @@ var schema = new Schema({
     iconTitle: String,
     vPoints:[
         {
+            _id: false,
             x:Number,
             y:Number
         }
@@ -80,9 +81,12 @@ schema.methods.checkBonuses = function(userBonus) {
 //activeProblem - instance of problemHistory
 schema.methods.getPublicFields = function(activeProblem) {
     var question = this.question;
+    var vPoints = this.vPoints;
+    
     var hints = [];
     if (activeProblem==undefined){
         question = undefined;
+        vPoints = undefined;
     }else{
         hints = _.filter(this.hints, function(hint) {
             return _.find(activeProblem.takenHints, function (takenHintId) {
@@ -105,7 +109,8 @@ schema.methods.getPublicFields = function(activeProblem) {
         // Icon on the map
         icon: this.icon,
         iconText: this.iconText,
-        iconTitle: this.iconTitle
+        iconTitle: this.iconTitle,
+        vPoints: vPoints
     };
 };
 

@@ -89,6 +89,8 @@ exports.updateProblem = function(req, res, next) {
 
         problem.forHints = body.forHints;
 
+        problem.vPoints = body.vPoints;
+
         problem.save(function(err){
             if (err){
                 logger.info(err);
