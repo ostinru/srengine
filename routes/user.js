@@ -46,7 +46,7 @@ exports.createUser = function(req, res, next) {
         problems: [],
         problemHistory: [],
         adminBonuses: [],
-        availebleHints: 0,
+        availableHints: 0,
         lastActivity: 0,
         numberOfAttempts: 0
     });
@@ -86,8 +86,8 @@ exports.updateUser = function(req, res, next) {
         }
         user.adminBonuses = req.body.adminBonuses;
         user.markModified('adminBonuses');
-        user.availebleHints = req.body.availebleHints;
-        user.markModified('availebleHints');
+        user.availableHints = req.body.availableHints;
+        user.markModified('availableHints');
         // takenHints
         // timeStart
         // timeFinishs

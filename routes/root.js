@@ -27,7 +27,7 @@ exports.get = function(req, res, next){
         var activeProblem = _.find(user.problemHistory,function(activeProblem){
             return activeProblem.problem._id.equals(problem._id);
         });
-        return problem.getPublicFields(activeProblem != undefined);
+        return problem.getPublicFields(activeProblem);
     })
 
     // TODO: remove this bullshit
@@ -46,10 +46,13 @@ exports.post = function(req, res, next) {
     var answer = req.body.answer;
     answer = normalizeAnswer(answer);
     if (!answer) {
+        logger.debug('[%s] empty answer', user.username);
         return res.sendHttpError(new HttpError(403, "Ответ не введен или он пустой")); //No answer
     }
 
     var topic = req.body.topic;
+
+    logger.debug('[%s] send answer \'%s\' on topic \'%s\'', user.username, answer, topic);
 
     var ph = _.find(user.problemHistory, function(problemHistory) {
         if (problemHistory.solved) {
@@ -68,16 +71,16 @@ exports.post = function(req, res, next) {
     //
     if (answer.indexOf(BONUS_KEY_WORD + ' ') == 0) {
         if (checkBruteForce(user)) {
+            logger.debug('[%s] banned', user.username);
             return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек")); //Too many requests
         }
         var bonusStr = answer.substring(BONUS_KEY_WORD.length + 1);
-            logger.debug('[%s] send bonus %s', user.username, bonusStr);
+            logger.debug('[%s] send bonus \'%s\'', user.username, bonusStr);
             var problem = ph.problem;
             // find bonus
             var bonus = problem.checkBonuses(bonusStr);
 
             if (bonus) {
-                logger.debug('[%s] got bonus %s', user.username, bonus.text);
                 if (!hasBonus(bonus._id, ph.takenBonuses)) {
                     ph.takenBonuses.push(bonus._id);
                     user.markModified('problemHistory');
@@ -87,8 +90,11 @@ exports.post = function(req, res, next) {
                         }
                         return res.json({ status : "Success", message: "зачислено:  " + bonusStr});
                     });
+                    logger.debug('[%s] got bonus \'%s\'', user.username, bonusStr);
+                    return;
                 }
                 else {
+                    logger.debug('[%s] dup bonus \'%s\'', user.username, bonusStr);
                     return res.json({ status : "Success", message: "Уже был зачислен:  " + bonusStr});
                 }
             }
@@ -99,6 +105,7 @@ exports.post = function(req, res, next) {
                     if (err)
                         return logger.log(err);
                 });
+                logger.debug('[%s] no bonus \'%s\'', user.username, bonusStr);
                 return res.sendHttpError(new HttpError(404, "Нет такого бонуса '"+bonusStr+"'"));//No such bonus
             }
     }
@@ -106,30 +113,42 @@ exports.post = function(req, res, next) {
     // check hints
     //
     else if (answer.indexOf(HINT_KEY_WORD) == 0) {
-        return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
-        /*
+
         var hintNumberStr = answer.substring(HINT_KEY_WORD.length + 1);
         var hintNumber = parseInt(hintNumberStr);
+        if(user.availableHints == 0) {
+            logger.debug('[%s] user havn\'t hints', user.username);
+            return res.sendHttpError(new HttpError(400,"У вас не достаточно подсказок"));
+        }
         if (isNaN(hintNumber)) {
+            logger.debug('[%s] no hint \'%s\'', user.username, hintNumber);
             return res.sendHttpError(new HttpError(500, "Нет номера подсказки '" + hintNumberStr + "'"));//Can't parse hint numer
         }
+        var problem = ph.problem;
+
         var hint = problem.hints[hintNumber - 1];
         if (hint === undefined) {
+            logger.debug('[%s] no such hint \'%s\'', user.username, hintNumber);
             return res.sendHttpError(new HttpError(404, "Нет такой подсказки")); //No such hint for this problem
         }
-        logger.debug('[%s] got hint #%s', user.username, hintNumber);
-        if (! hasHint(hint._id, problemHistory.takenHints)) {
-            problemHistory.takenHints.push(hint._id);
+        if (! hasHint(hint._id, ph.takenHints)) {
+            ph.takenHints.push(hint._id);
             user.markModified('problemHistory');
+            user.availableHints = user.availableHints - 1;
             user.save(function(err) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
                 }
-                return res.json({ status : "Success", hint : hint, message: "зачислено:  " + answer});
+                logger.debug('[%s] got hint #%s', user.username, hintNumber);
+                return res.json({ status : "Success", message: "зачислено:  " + answer});
             });
+            logger.debug('[%s] got hint \'%s\'', user.username, hintNumber);
+            return;
         }
-        return res.json({ status : "Success", hint : hint, message: "Уже был зачислен:  " + answer});
-        */
+        else {
+            logger.debug('[%s] dup hint \'%s\'', user.username, hintNumber);
+            return res.json({status: "Success", message: "Уже был зачислен:  " + answer});
+        }
     }
     //
     // skip problem
@@ -153,17 +172,18 @@ exports.post = function(req, res, next) {
     //
     else {
         if (checkBruteForce(user)) {
+            logger.debug('[%s] banned \'%s\'', user.username, answer);
             return res.sendHttpError(new HttpError(429, "Слишком много запросов, бан 3 сек"));
         }
 
         var problem = ph.problem;
         var correct = !! problem.check(answer);
 
-        logger.debug('[%s] send [%s] (%s):', user.username, answer, correct);
+        logger.debug('[%s] send \'%s\' corretc: %s', user.username, answer, correct);
 
         if (correct) {
 
-            logger.debug('[%s] problem answered.', user.username);
+            logger.debug('[%s] problem \'\' answered', user.username, topic);
 
             ph.solved = true;
             user.markModified('problemHistory');
@@ -172,14 +192,29 @@ exports.post = function(req, res, next) {
                 return ! item._id.equals(problem._id);
             });
 
-            _.each(problem.nextProblems, function(next) {
-                user.problems.push(next);
+            _.each(problem.nextProblems, function(nextId) {
+                // don't add duplicates:
+                var hasProblem = !! _.find(user.problems, function(item) {
+                    if (nextId.equals(item._id)) {
+                        return item;
+                    }
+                });
+                if (!hasProblem) {
+                    user.problems.push(nextId);
+                } else {
+                    logger.debug('Dup problem: ' + nextId);
+                }
                 return true;
             });
-            console.log(user.problems);
+
             user.markModified('problems');
 
             ph.timeFinish = Date.now();
+
+            if(problem.forHints) {
+                user.availableHints = user.availableHints + 1;
+            }
+
             user.save(function(err) {
                 if (err) {
                     return res.sendHttpError(new HttpError(500, err));
@@ -193,6 +228,7 @@ exports.post = function(req, res, next) {
                 if (err)
                     logger.log(err);
             });
+            logger.debug('[%s] incorrect answer \'%s\'', user.username, answer);
             return res.sendHttpError(new HttpError(404, " Ответ неверный '" + answer + "'"));//No such answer
         }
     }
@@ -215,7 +251,7 @@ hasHint = function(hintId, takenHints) {
         if (hintId.equals(item)) {
             return item;
         }
-});
+    });
 };
 
 checkBruteForce = function(user) {

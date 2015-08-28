@@ -138,9 +138,9 @@ var NewAdminBonus = React.createClass({
 		var me = this;
 		return (
 	    	<form className='form-inline' action="javascript:void(0);">
-	    		<Input label="Cost" type="number" ref="cost" />
 	    		<Input label="Message" type="text" ref="message" />
-	    		<Button onClick={me.addAdminBonus}>Add</Button>
+	    		<Input label="Cost" type="number" ref="cost" />
+	    		<Button onClick={me.addAdminBonus}><Glyphicon glyph='plus'/></Button>
 	    	</form>
 		);
 	},
@@ -168,8 +168,8 @@ var AdminBonusEditor = React.createClass({
 		var bonus = context.users.select(this.props.path).get();
 		return (
 			<form className='form-inline' action="javascript:void(0);" key={bonus._id}>
-    			<Input label="Cost" type="number" ref="cost" initValue={bonus.cost}/>
     			<Input label="Message" type="text" ref="message" initValue={bonus.message} />
+    			<Input label="Cost" type="number" ref="cost" initValue={bonus.cost}/>
     			<Button onClick={me.updateAdminBonus}><Glyphicon glyph='ok' /></Button>
     			<Button onClick={me.removeAdminBonus}><Glyphicon glyph='remove' /></Button>
 			</form>
@@ -178,7 +178,7 @@ var AdminBonusEditor = React.createClass({
 
 	updateAdminBonus: function() {
 		var cursor = context.users.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			cost : this.refs.cost.getValue(),
 			message : this.refs.message.getValue(),
 		});
@@ -200,7 +200,7 @@ var NewUser = React.createClass({
 				<Input label="Username" type="text" ref="username" />
 			    <Input label="Password" type="text" ref="password" />
 			    <Checkbox label="IsAdmin" ref="admin" initValue={false}/>
-			    <Button onClick={me.addUser} bsStyle='success'>Save</Button>
+			    <Button onClick={me.addUser} bsStyle='success'><Glyphicon glyph='plus'/> Add user</Button>
 			</Panel>
 		);
 	},
@@ -236,7 +236,7 @@ var UserEditor = React.createClass({
 				<Input label="Username" type="text" ref="username" initValue={user.username} />
 			    <Input label="Password" type="text" ref="password" initValue={user.password} />
 			    <Checkbox label="IsAdmin" ref="admin" initValue={user.admin} />
-			    <Panel header="Availeble Problems" >
+			    <Panel header="Available Problems" >
 			    	{user.problems && user.problems.map(function(problem, index) {
 		            	return (
 		            		<ProblemsEditor key={problem._id} path={buildPath(path, 'problems', index)} />
@@ -252,7 +252,7 @@ var UserEditor = React.createClass({
 			    	})}
 			    	<NewAdminBonus path={buildPath(path, 'adminBonuses')} />
 			    </Panel>
-			    <Input label="AvailebleHints" type="number" ref="availebleHints" initValue={user.availebleHints} />
+			    <Input label="AvailableHints" type="number" ref="availableHints" initValue={user.availableHints} />
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
 			</Panel>
@@ -271,7 +271,7 @@ var UserEditor = React.createClass({
 			admin : this.refs.admin.getValue(),
 			problems: user.problems,
 			adminBonuses: user.adminBonuses,
-			availebleHints: this.refs.availebleHints.getValue()
+			availableHints: this.refs.availableHints.getValue()
 		}
 
 		server.updateUser(user._id, request, function() {

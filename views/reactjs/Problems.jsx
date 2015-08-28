@@ -6,6 +6,7 @@ var Button = Bootstrap.Button;
 var Glyphicon = Bootstrap.Glyphicon;
 var Panel = Bootstrap.Panel;
 var Input = require('./controls/Input.jsx');
+var Checkbox = require('./controls/Checkbox.jsx');
 
 // FIXME: normal context!!
 var context = require('./context');
@@ -124,6 +125,7 @@ var NextProblemEditor = React.createClass({
 		var newValue = this.refs.nextProblemId.getValue();
 		if (newValue === null)
 			return;
+
 		cursor.set(
 			newValue
 		);
@@ -195,7 +197,7 @@ var BonusEditor = React.createClass({
 
 	updateBonus: function() {
 		var cursor = context.problems.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			text: this.refs.text.getValue(),
 			cost: this.refs.cost.getValue(),
 		});
@@ -256,7 +258,7 @@ var HintEditor = React.createClass({
 
 	updateHint: function() {
 		var cursor = context.problems.select(this.props.path);
-		cursor.set({
+		cursor.merge({
 			text: this.refs.text.getValue(),
 			cost: this.refs.cost.getValue(),
 		});
@@ -362,6 +364,8 @@ var ProblemEditor = React.createClass({
 			    <Input type="text" ref="iconText" label="iconText" initValue={problem.iconText} />
 			    <Input type="text" ref="iconTitle" label="iconTitle" initValue={problem.iconTitle} />
 
+			    <Checkbox label="forHints" ref="forHints" initValue={problem.forHints} />
+
 			    <Button onClick={me.save} bsStyle='success'>Save</Button>
 			    <Button onClick={me.remove} bsStyle='danger'>Remove</Button>
 		    </Panel>
@@ -386,6 +390,7 @@ var ProblemEditor = React.createClass({
 			hints : problem.hints,
 			bonuses : problem.bonuses,
 			nextProblems: problem.nextProblems,
+			forHints: this.refs.forHints.getValue()
 
 		};
 
@@ -421,7 +426,7 @@ var NewProblem = React.createClass({
 				<Input type='textarea' ref="question" label="Text" />
 				<Input type="number" ref="cost" label="Cost" />
 			    
-			    <Button onClick={me.addProblem}><Glyphicon glyph='plus'/> Add Problem</Button>
+			    <Button onClick={me.addProblem} bsStyle='success'><Glyphicon glyph='plus'/> Add Problem</Button>
 		    </Panel>
 		);
 	},
