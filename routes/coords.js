@@ -32,7 +32,7 @@ exports.post = function(req,res,next) {
 
     coords.save(function(err){
         if (err) {
-            logger.info('coords not saved');
+            logger.info('[%s] coords not saved', user.username);
             return res.json({status: 'Fail', userV: user.__v}); // ERROR
         }
 
