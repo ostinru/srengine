@@ -117,11 +117,11 @@ var Map = React.createClass({
 			DG.marker(
 					[ coord.x, coord.y],
 					{
-						icon: DG.icon({iconUrl: hasNote ? 'images/pony2.png' : 'images/pony.png', iconSize: [24,24]}),
+						icon: DG.icon({iconUrl: hasNote ? 'images/pony2.png' : 'images/pony.png', iconSize: [36,36]}),
 						title: nick
 					}
 				).addTo(markers)
-				//.bindPopup(coords.note)
+				.bindPopup(nick + ' ' + (coord.note || ''))
 				//.on('click', function (e) {})._popup.setHeaderContent(nick);
 		});
 	},
