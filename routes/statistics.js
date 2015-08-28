@@ -36,14 +36,14 @@ exports.get = function (req, res, next) {
                             var bonus = _.find(structProblem.problem.bonuses, function (bonus) {
                                 return bonusId.equals(bonus._id);
                             });
-                            return memo + !bonus===undefined ? bonus.cost : 0;
+                            return memo + ((bonus===undefined) ? 0 : bonus.cost);
                         }, 0);
 
                         var totalHint = _.reduce(structProblem.takenHints, function (memo, hintId) {
                             var hint = _.find(structProblem.problem.hints, function (hint) {
                                 return hintId.equals(hint._id);
                             });
-                            return memo + !hint===undefined ? hint.cost : 0;
+                            return memo + ((hint.cost===undefined) ? 0 : hint.cost);
                         }, 0);
 
                         var problemTotal = 0;
