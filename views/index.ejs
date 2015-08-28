@@ -63,7 +63,8 @@
 			});
 		}
 	function getHint(value) {
-		$.ajax({
+		if (confirm("Вы действительно хотите взять подсказку?")) {
+		 $.ajax({
 			type: "POST",
 			url: "/rest/",
 			data: {
@@ -78,8 +79,11 @@
 					}
 				}
 			}
-
-				});}
+		});
+		} else {
+	  
+		}
+	}
 	</script>
 
 <script type="text/javascript">
@@ -147,6 +151,7 @@ function testGeo(){
 			<span id="hints"></span></br>
 			<input class ="hintButton" id="" type="button" value="подсказка 1" onclick="getHint(this.value);">
 			<input class ="hintButton" id="" type="button" value="подсказка 2" onclick="getHint(this.value);">
+			</br>
 		</div>
  
 	<div class="tabs" id="tabs-3">
@@ -233,6 +238,7 @@ var updateAdminMessages = function() {
 			if (resp.length>0){
 			i = 0;
 			$('#adminMessage').html('');
+			$('#span3').html('Инфо <span class="wrong">('+resp.length+')</span>');
 			while (i<resp.length){
 				$('#adminMessage').html($('#adminMessage').html()+'<p>'+resp[i].message+'</p>');
 				i++;
@@ -280,10 +286,27 @@ markers.clearLayers();
                         $('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						$('#currentTask').html(e.target._popup.getHeaderContent());
 						$('#taskText').html(resp.question);
-						$('#answerStatus').html('');
-							} 
-
+						if (resp.topic[0] == "Я") {
+						
+							i = 0;
+							coords = [];
+							while (i<resp.vPoints.length) {
+								coords.push([resp.vPoints[i].x,resp.vPoints[i].y]);
 							}
+		
+							DG.polygon(coords, {color:"green"}).addTo(markers);
+						
+						}
+						$('#answerStatus').html('');
+							if (resp.hints.length > 0) {
+								i = 0;
+								$('#hints').html("");
+								while (i < resp.hints.length) {
+									$('#hints').html($('#hints').html()+'<p>' + resp.hints[i].text+'</p>');
+									}
+								}
+							} 
+						}
 						});
 						$('#taskText').html('');
 						$('.mainInput').attr('id',e.target._popup.getHeaderContent());
