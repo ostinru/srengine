@@ -286,17 +286,15 @@ markers.clearLayers();
                         $('.mainInput').attr('id',e.target._popup.getHeaderContent());
 						$('#currentTask').html(e.target._popup.getHeaderContent());
 						$('#taskText').html(resp.question);
-						if (resp.topic[0] == "Я") {
-						
 							i = 0;
 							coords = [];
 							while (i<resp.vPoints.length) {
 								coords.push([resp.vPoints[i].x,resp.vPoints[i].y]);
+								i++;
 							}
-		
-							DG.polygon(coords, {color:"green"}).addTo(markers);
-						
-						}
+							if (coords.length !== 0)
+								DG.polygon(coords, {color:"green"}).addTo(markers);
+
 						$('#answerStatus').html('');
 							if (resp.hints.length > 0) {
 								i = 0;
