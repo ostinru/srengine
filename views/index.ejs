@@ -228,7 +228,7 @@ setInterval(function () {
 				}
 			}
 		});  
-	}, 3000);
+	}, 5000);
 
 var updateAdminMessages = function() {
 	$.ajax({
@@ -302,6 +302,7 @@ markers.clearLayers();
 								while (i < resp.hints.length) {
 									$('#hints').html($('#hints').html()+'<p>' + resp.hints[i].text+'</p>');
 									}
+									i++;
 								}
 							} 
 						}

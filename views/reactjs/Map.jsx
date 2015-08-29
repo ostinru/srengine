@@ -82,7 +82,7 @@ var Map = React.createClass({
 					me.reload(Function.prototype, function(){
 						me.drawMarkers(markers);
 					})
-				}, 3000);
+				}, 5000);
 			});
 		}); // DG.then
 	},
