@@ -1,6 +1,5 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var Input = Bootstrap.Input;
+const React = require('react');
+const Bootstrap = require('react-bootstrap/lib/Input');
 
 module.exports = React.createClass({
 

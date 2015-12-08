@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var RouterMixin = require('react-mini-router').RouterMixin;
 var Menu = require('./Menu.jsx');
 var Times = require('./Times.jsx');
@@ -61,7 +62,7 @@ var Viewport = React.createClass({
 });
 
 
-React.render(
+ReactDOM.render(
     <Viewport/>,
     document.getElementById('react-content')
 );

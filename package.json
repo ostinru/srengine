@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "async": "*",
-    "baucis": "^1.6.1",
     "body-parser": "1.12.x",
     "connect-mongo": "*",
     "cookie-parser": "1.3.x",
@@ -35,19 +34,24 @@
     "morgan": "1.5.x",
     "nconf": "*",
     "serve-favicon": "2.2.x",
-    "underscore": "*",
+    "lodash": "*",
     "url": "*",
     "winston": "*"
   },
   "devDependencies": {
-    "jsx-loader": "*",
-    "react": "<0.14",
-    "react-bootstrap": "^0.20.2",
-    "react-tools": "<0.14",
-    "react-mini-router": "^1.1.2",
+    "babel-loader": "*",
+    "babel-core": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babel-runtime": "*",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-bootstrap": "^0.28.0",
+    "react-mini-router": "^2.0.0",
     "react-dnd": "^1.1.0",
     "baobab": "^1.1.0",
     "jquery": "^2.1.0",
-    "errorhandler": "^1.4.0"
+    "errorhandler": "^1.4.0",
+    "webpack": "^1.12.0"
   }
 }

@@ -1,27 +1,43 @@
+'use strict';
+
 var path = require('path');
 var rootDir = path.join(__dirname, '../..');
+var webpack = require('webpack');
 
 module.exports = {
-    entry: "./Viewport.js",
+    entry: {
+        main: "./Viewport.js",
+        demo: "./Archive.jsx"
+    },
     output: {
         path: rootDir + '/public/js',
-        filename: "bundle.js"
+        filename: "[name].bundle.js"
     },
 
     module: {
         loaders: [
-//            { test: /.*\.(jsx|js)$/, loader: 'babel-loader', exclude: /node_modules/ },
 //            { test: /.*\.css$/, loader: 'style-loader!css-loader' }
-            { test: /.*\.(jsx|js)$/, loader: 'jsx-loader', exclude: /node_modules/ },
+            {
+                 test: /.*\.(jsx|js)$/,
+                 loader: 'babel',
+                 exclude: /node_modules/,
+                 query: {
+                     presets: ['es2015', 'react']
+                }
+            },
         ]
     },
 
     devtool: "#source-map",
-/*
-    resolve: {
-        root: rootDir,
 
-        alias: {"actions/server.js": path.join(rootDir, '__test_page__', 'tree-store-mock.js')}
-    }
-    */
+    plugins: [
+        new webpack.NoErrorsPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                drop_console: true
+            }
+        })
+    ]
+
 };

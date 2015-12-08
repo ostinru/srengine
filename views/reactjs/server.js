@@ -5,7 +5,7 @@ module.exports = {
 	fetchTimes : superFetch('time'),
     postTime: superPost("time"),
 
-	fetchUsers : superFetch('user'),
+	fetchUsers : superFetch('archive_user'),
     addUser: superPost("user"),
     updateUser: superPut("user"),
     removeUser: superDelete("user"),

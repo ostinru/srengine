@@ -18,6 +18,28 @@ exports.get = function(req, res, next) {
     res.json(store);
 };
 
+exports.getArchive = function(req, res, next) {
+    if (!req.query.timestamp)
+        return res.sendHttpError(new HttpError(400, 'Invalid \'timestamp\' qury parameter\'s value'));
+
+    var timestamp = + req.query.timestamp;
+    var from = timestamp - 30*1000;
+    var to = timestamp;
+
+    Coords.find(
+        {timestamp : {"$gte":  from, "$lte": to }},
+        { _id: 0, userId: 1, x: 1, y: 1, timestamp: 1 },
+        {sort: {timestamp : 1}})
+        .populate('userId', 'username -_id')
+        .exec(function (err, coords) {
+            if (err) {
+                logger.error(err);
+                return next(err);
+            }
+            return res.json(coords);
+    });
+}
+
 exports.post = function(req,res,next) {
     var user = req.user;
 

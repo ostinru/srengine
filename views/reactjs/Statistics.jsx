@@ -1,9 +1,8 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Glyphicon = Bootstrap.Glyphicon;
-var Panel = Bootstrap.Panel;
-var Table = Bootstrap.Table;
+var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Panel = require('react-bootstrap/lib/Panel');
+var Table = require('react-bootstrap/lib/Table');
 var server = require('./server.js');
 
 var Team = React.createClass({

@@ -47,4 +47,9 @@ module.exports = function(app) {
 
     app.get(REST_PREFIX + '/time', checkAdmin, require('./game').get);
     app.post(REST_PREFIX + '/time', checkAdmin, require('./game').post);
+
+    // DEMO:
+    app.get('/archive', require('./archive').get);
+    app.get(REST_PREFIX + '/archive_coords', require('./coords').getArchive);
+    app.get(REST_PREFIX + '/archive_user', require('./user').getAllUsersList);
 }

@@ -14,6 +14,14 @@ exports.getAllUsers = function (req, res, next) {
         });
 };
 
+exports.getAllUsersList = function(req, res, next) {
+    User.find({}, {_id: 0, username: 1})
+        .exec(function (err, users) {
+            if (err) return next(err);
+            res.json(users);
+        });
+};
+
 exports.getUser = function(req, res, next){
     if (!req.params.userId) {
         return res.sendHttpError(new HttpError(400, "userId not set"));

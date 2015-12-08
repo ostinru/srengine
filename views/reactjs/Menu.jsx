@@ -1,9 +1,7 @@
 var React = require('react');
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var Navbar = Bootstrap.Navbar;
-var Nav = Bootstrap.Nav;
-var NavItem = Bootstrap.NavItem;
+var Navbar = require('react-bootstrap/lib/Navbar');
+var Nav = require('react-bootstrap/lib/Nav');
+var NavItem = require('react-bootstrap/lib/NavItem');
 
 var Menu = React.createClass({
 	render: function() {

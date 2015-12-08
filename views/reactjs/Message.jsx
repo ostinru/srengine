@@ -1,10 +1,9 @@
 var React = require('react');
 var server = require('./server');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Glyphicon = Bootstrap.Glyphicon;
-var Panel = Bootstrap.Panel;
-var Table = Bootstrap.Table;
+var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Panel = require('react-bootstrap/lib/Panel');
+var Table = require('react-bootstrap/lib/Table');
 var Input = require('./controls/Input.jsx');
 
 var Message = React.createClass({
@@ -61,7 +60,7 @@ var Message = React.createClass({
 		var value = this.refs.message.getValue();
 
 		console.log('Sending new admin message ', value);
-		
+
 		server.postMessage(
 			{ message: value },
 			function() { console.error("Faied to push message", arguments); },

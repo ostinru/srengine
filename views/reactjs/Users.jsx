@@ -1,9 +1,8 @@
 var React = require('react');
 var Baobab = require('baobab');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Panel = Bootstrap.Panel;
-var Glyphicon = Bootstrap.Glyphicon;
+var Button = require('react-bootstrap/lib/Button');
+var Panel = require('react-bootstrap/lib/Panel');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
 var Input = require('./controls/Input.jsx');
 var Checkbox = require('./controls/Checkbox.jsx');
 var server = require('./server.js');
@@ -31,7 +30,7 @@ var reload = function() {
     	function(result) {
     		context.users.root.set({users : result});
 	    });
-    
+
     server.fetchProblems(
     	function() {
     		console.error('failed to load problems', arguments);

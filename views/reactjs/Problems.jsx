@@ -1,10 +1,9 @@
 var React = require('react');
 var server = require('./server.js');
 var Baobab = require('baobab');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Glyphicon = Bootstrap.Glyphicon;
-var Panel = Bootstrap.Panel;
+var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Panel = require('react-bootstrap/lib/Panel');
 var Input = require('./controls/Input.jsx');
 var Checkbox = require('./controls/Checkbox.jsx');
 
@@ -320,7 +319,7 @@ var ProblemEditor = React.createClass({
 				<Input type="text" ref="topic" label="Topic" initValue={problem.topic} />
 				<Input type='textarea' ref="question" label="Question" initValue={problem.question} />
 				<Input type="number" ref="cost" label="Cost" initValue={problem.cost} />
-			    
+
     			<Panel header="Answers">
 	                {problem.answers && problem.answers.map(function(answer, index) {
 	                	return (
@@ -427,7 +426,7 @@ var NewProblem = React.createClass({
 				<Input type="text" ref="topic" label="Title" />
 				<Input type='textarea' ref="question" label="Text" />
 				<Input type="number" ref="cost" label="Cost" />
-			    
+
 			    <Button onClick={me.addProblem} bsStyle='success'><Glyphicon glyph='plus'/> Add Problem</Button>
 		    </Panel>
 		);

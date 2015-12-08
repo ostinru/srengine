@@ -1,15 +1,15 @@
 var React = require('react');
 var Input = require('./controls/Input.jsx');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Glyphicon = Bootstrap.Glyphicon;
-var Panel = Bootstrap.Panel;
+var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Panel = require('react-bootstrap/lib/Panel');
+
 var server = require('./server.js');
-var _ = require('underscore');
+var _ = require('lodash');
 var context = require('./context');
 
 var Map = React.createClass({
-      
+
     getInitialState: function() {
         return {
         	coords: []
@@ -18,7 +18,7 @@ var Map = React.createClass({
 
     loadUsers: function() {
 		var me = this;
-	    
+
 		server.fetchUsers(
 	    	function() {
 	    		console.error('failed to load users', arguments);
@@ -64,18 +64,18 @@ var Map = React.createClass({
 				//setView:true,
 				//enableHighAccuracy:true
 	        });
-			
+
 			DG.control.location({position:'bottomright'}).addTo(map);
 			DG.control.zoom({position:'bottomleft'}).addTo(map);
-				
+
 			markers = DG.featureGroup(); //marker group
 
 			me.drawMarkers(markers);
 
-			markers.addTo(map); //adding marker group to map 
+			markers.addTo(map); //adding marker group to map
 
 			map.setView([57.743586, 40.909781], 13);
-		
+
 			map.whenReady(function() {
 				// poll
 				setInterval(function() {
@@ -90,7 +90,7 @@ var Map = React.createClass({
 	_getUser: function(userId) {
 		if (!context.users)
 			return userId;
-		
+
 		var users = context.users.select('users').get();
 		if (!users || users.length == 0)
 			return userId;

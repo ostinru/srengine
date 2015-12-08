@@ -1,4 +1,4 @@
-var mongoose = require('../lib/mongoose'),
+var mongoose = require('lib/mongoose'),
     _ = require('underscore'),
     Schema = mongoose.Schema;
 
@@ -82,7 +82,7 @@ schema.methods.checkBonuses = function(userBonus) {
 schema.methods.getPublicFields = function(activeProblem) {
     var question = this.question;
     var vPoints = this.vPoints;
-    
+
     var hints = [];
     if (activeProblem==undefined){
         question = undefined;

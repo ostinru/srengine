@@ -1,13 +1,12 @@
 var React = require('react');
 var Input = require('./controls/Input.jsx');
-var Bootstrap = require('react-bootstrap');
-var Button = Bootstrap.Button;
-var Glyphicon = Bootstrap.Glyphicon;
-var Panel = Bootstrap.Panel;
+var Button = require('react-bootstrap/lib/Button');
+var Glyphicon = require('react-bootstrap/lib/Glyphicon');
+var Panel = require('react-bootstrap/lib/Panel');
 var server = require('./server.js');
 
 var Times = React.createClass({
-      
+
     getInitialState: function() {
         return {
             startTime: '',

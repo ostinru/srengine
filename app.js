@@ -1,5 +1,5 @@
 var config = require('./config');
-var logger = require('./lib/logger');
+var logger = require('lib/logger');
 var http = require('http');
 var path = require('path');
 var HttpError = require('error').HttpError;
@@ -39,10 +39,10 @@ app.use(cookieParser(config.get('cookie_secret')));
 app.use(expressSessions({
     secret: config.get('cookie_secret'),
     saveUninitialized: false, // don't create session until something stored
-    resave: false, //don't save session if unmodified 
+    resave: false, //don't save session if unmodified
     store: new MongoStore({
         url : config.get('mongoose:uri'),
-        touchAfter: 3600 // time period in seconds 
+        touchAfter: 3600 // time period in seconds
     }),
     cookie: {
 	maxAge: 200*3600000 // 200*hour
@@ -78,5 +78,3 @@ app.use(function (err, req, res, next) {
 http.createServer(app).listen(config.get('port'), function(){
     console.log('Express server listening on port ' + config.get('port'));
 });
-
-

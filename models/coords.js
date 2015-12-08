@@ -1,4 +1,4 @@
-var mongoose = require('../lib/mongoose'),
+var mongoose = require('lib/mongoose'),
     Schema = mongoose.Schema;
 
 var coords = new Schema({
@@ -8,7 +8,8 @@ var coords = new Schema({
     },
     userId: {
     	type: Schema.Types.ObjectId,
-    	required: true
+    	required: true,
+        ref: 'User'
     },
     x: {
     	type: Number,
