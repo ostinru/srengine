@@ -50,7 +50,7 @@ var Team = React.createClass({
             </tr>
         )
     }
-})
+});
 
 var Statistic = React.createClass({
     propTypes: {
@@ -72,12 +72,12 @@ var Statistic = React.createClass({
             },
             function(result) {
                 if (me.isMounted()) {
-                    me.setState({
-                        problems : result.problems,
-                        statistics : result.allStatistics
-                    });
+                    me.setState({ statistics : result.allStatistics });
                 }
             });
+        this.context.problems.on('update', () => {
+            this.setState({ problems: this.context.problems.get() });
+        })
     },
 
     render: function() {

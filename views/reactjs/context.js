@@ -1,20 +1,65 @@
 var Baobab = require('baobab');
+var server = require('./server');
 
-var problems = new Baobab({
-	problems: []
-	}, {
-	syncwrite: true,  // Applying modifications immediately
-	asynchronous:true // commit on next tick
+var store = new Baobab({
+    problems: [],
+    users: [],
+    messaes: [],
+    }, {
+    syncwrite: true,  // Applying modifications immediately
+    asynchronous:true // commit on next tick
 });
 
-var users = new Baobab({
-	users: []
-	}, {
-	syncwrite: true,  // Applying modifications immediately
-	asynchronous:true // commit on next tick
-});
+
+
+
+server.fetchMessages(
+    () => {
+        console.error('failed to load admin messages', arguments);
+    },
+    (result) => {
+        store.root.set('messages', result);
+    }
+);
+
+server.fetchProblems(
+    () => {
+        console.error('failed to load problems', arguments);
+    },
+    (result) => {
+        store.root.set('problems', result);
+    }
+);
+
+server.fetchUsers(
+    () => {
+        console.error('failed to load users', arguments);
+    },
+    (result) => {
+        store.set('users', result);
+    }
+);
+
+server.fetchTimes(
+    () => {
+        console.error('failed to load times', arguments);
+    },
+    (result) => {
+        store.set('game', {
+            startTime : result.startTime,
+            finishTime: result.finishTime,
+            loaded : true
+        });
+    }
+);
+
+
+
 
 module.exports = {
-	problems : problems,
-	users: users
+    store : store,
+
+    problems: store.select('problems'),
+    users: store.select('users'),
+    messages: store.select('messages')
 }

@@ -145,7 +145,7 @@ exports.get = function (req, res, next) {
                     }
                     return 0;
                 });
-                res.json({problems: problems, allStatistics: allStatistic});
+                res.json({allStatistics: allStatistic});
             })
         })
 }
