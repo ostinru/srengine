@@ -1,8 +1,105 @@
 body {
-  padding: 50px;
+  padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+img[title="testuser"] {
+    -webkit-filter: hue-rotate(0deg);
+    filter: hue-rotate(0deg);
+}
+img[title="jenpsaki"] {
+    -webkit-filter: hue-rotate(10deg);
+    filter: hue-rotate(10deg);
+}
+img[title="snusmumrik"] {
+    -webkit-filter: hue-rotate(20deg);
+    filter: hue-rotate(20deg);
+}
+img[title="shtopor"] {
+    -webkit-filter: hue-rotate(30deg);
+    filter: hue-rotate(30deg);
+}
+img[title="zhelezo"] {
+    -webkit-filter: hue-rotate(40deg);
+    filter: hue-rotate(40deg);
+}
+img[title="highvoltage"] {
+    -webkit-filter: hue-rotate(50deg);
+    filter: hue-rotate(50deg);
+}
+img[title="zaitsy"] {
+    -webkit-filter: hue-rotate(60deg);
+    filter: hue-rotate(60deg);
+}
+img[title="alpaltus"] {
+    -webkit-filter: hue-rotate(70deg);
+    filter: hue-rotate(70deg);
+}
+img[title="fullbug"] {
+    -webkit-filter: hue-rotate(80deg);
+    filter: hue-rotate(80deg);
+}
+img[title="yoshking"] {
+    -webkit-filter: hue-rotate(90deg);
+    filter: hue-rotate(90deg);
+}
+img[title="iamengineer"] {
+    -webkit-filter: hue-rotate(100deg);
+    filter: hue-rotate(100deg);
+}
+img[title="partizany"] {
+    -webkit-filter: hue-rotate(110deg);
+    filter: hue-rotate(110deg);
+}
+img[title="hrundeli"] {
+    -webkit-filter: hue-rotate(120deg);
+    filter: hue-rotate(120deg);
+}
+img[title="begizamnoi"] {
+    -webkit-filter: hue-rotate(120deg);
+    filter: hue-rotate(120deg);
+}
+img[title="madfoxes"] {
+    -webkit-filter: hue-rotate(130deg);
+    filter: hue-rotate(130deg);
+}
+img[title="abam"] {
+    -webkit-filter: hue-rotate(140deg);
+    filter: hue-rotate(140deg);
+}
+img[title="ressora"] {
+    -webkit-filter: hue-rotate(150deg);
+    filter: hue-rotate(150deg);
+}
+img[title="valenki"] {
+    -webkit-filter: hue-rotate(160deg);
+    filter: hue-rotate(160deg);
+}
+img[title="klony"] {
+    -webkit-filter: hue-rotate(170deg);
+    filter: hue-rotate(170deg);
+}
+img[title="dedmazai"] {
+    -webkit-filter: hue-rotate(180deg);
+    filter: hue-rotate(180deg);
+}
+img[title="manumba"] {
+    -webkit-filter: hue-rotate(190deg);
+    filter: hue-rotate(190deg);
+}
+img[title="pepsi"] {
+    -webkit-filter: hue-rotate(200deg);
+    filter: hue-rotate(200deg);
+}
+img[title="banda"] {
+    -webkit-filter: hue-rotate(210deg);
+    filter: hue-rotate(210deg);
+}
+img[title="butylka"] {
+    -webkit-filter: hue-rotate(220deg);
+    filter: hue-rotate(220deg);
 }

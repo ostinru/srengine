@@ -4,14 +4,12 @@ var server = require('./server');
 var store = new Baobab({
     problems: [],
     users: [],
-    messaes: [],
+    messages: [],
+    game: {}
     }, {
     syncwrite: true,  // Applying modifications immediately
     asynchronous:true // commit on next tick
 });
-
-
-
 
 server.fetchMessages(
     () => {
@@ -61,5 +59,6 @@ module.exports = {
 
     problems: store.select('problems'),
     users: store.select('users'),
-    messages: store.select('messages')
+    messages: store.select('messages'),
+    game: store.select('game')
 }

@@ -5,7 +5,7 @@ module.exports = {
 	fetchTimes : superFetch('time'),
     postTime: superPost("time"),
 
-	fetchUsers : superFetch('archive_user'),
+	fetchUsers : superFetch('user'),
     addUser: superPost("user"),
     updateUser: superPut("user"),
     removeUser: superDelete("user"),
@@ -18,6 +18,9 @@ module.exports = {
 	fetchStatistics: superFetch('statistics'),
 
 	fetchCoords : superFetch('coords'),
+    fetchArchiveCoords: fetchArchiveCoords,
+//    fetchArchiveUsers: superFetch('archive_users'),
+    fetchArchiveProblems: superFetch('archive_problem')
 }
 
 var $ = require('jquery');
@@ -78,6 +81,13 @@ function superDelete(urlsfx) {
 	}
 }
 
+function fetchArchiveCoords(timestamp, onError = defaultOnError, onSuccess = defaultOnSuccess) {
+    $.ajax(REST_PREFIX + '/' + 'archive_coords' + '?' + 'timestamp=' + timestamp, {
+        success: onSuccess,
+        error: onError,
+    });
+}
+
 function defaultOnSuccess() {
 	console.log("success", arguments);
 }
@@ -118,5 +128,5 @@ function getArguments(args, noData) {
 			result.path.unshift(arg);
 		}
 	}
-	return result;	
+	return result;
 }

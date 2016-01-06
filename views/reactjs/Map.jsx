@@ -37,7 +37,8 @@ var Map = React.createClass({
         var me = this;
 
         DG.then(function () {
-            map = DG.map('users-map', {
+            var DG = window.DG;
+            var map = DG.map('users-map', {
                 center: [57.77, 40.90],
                 zoom: 13,
                 fullscreenControl: false,
@@ -55,7 +56,7 @@ var Map = React.createClass({
             DG.control.location({position:'bottomright'}).addTo(map);
             DG.control.zoom({position:'bottomleft'}).addTo(map);
 
-            markers = DG.featureGroup(); //marker group
+            var markers = DG.featureGroup(); //marker group
 
             me.drawMarkers(markers);
 

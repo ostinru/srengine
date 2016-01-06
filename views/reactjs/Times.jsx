@@ -5,6 +5,8 @@ var Glyphicon = require('react-bootstrap/lib/Glyphicon');
 var Panel = require('react-bootstrap/lib/Panel');
 var server = require('./server.js');
 
+const context = require('./context');
+
 var Times = React.createClass({
 
     getInitialState: function() {
@@ -16,13 +18,13 @@ var Times = React.createClass({
     },
 
     componentDidMount: function() {
-        this.context.game.on('update', () => {
+        context.game.on('update', () => {
             this.setState(this._getState());
         } )
     },
 
     _getState: function() {
-        var gameOpts = this.context.store.get('game');
+        var gameOpts = context.store.get('game');
         this.setState({
             startTime : gameOpts.startTime,
             finishTime: gameOpts.finishTime,
@@ -56,7 +58,7 @@ var Times = React.createClass({
             },
             function() { console.error("Faied to push times", arguments); },
             function() {
-                var cursor = this.context.store.select('game');
+                var cursor = context.game;
                 // FIXME: from response!
                 cursor.set('startTime', this.refs.startTime.getValue());
                 cursor.set('finishTime', this.refs.finishTime.getValue());

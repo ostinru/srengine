@@ -5,6 +5,8 @@ var Panel = require('react-bootstrap/lib/Panel');
 var Table = require('react-bootstrap/lib/Table');
 var server = require('./server.js');
 
+const context = require('./context');
+
 var Team = React.createClass({
     render:function() {
         var team = this.props.team;
@@ -75,8 +77,8 @@ var Statistic = React.createClass({
                     me.setState({ statistics : result.allStatistics });
                 }
             });
-        this.context.problems.on('update', () => {
-            this.setState({ problems: this.context.problems.get() });
+        context.problems.on('update', () => {
+            this.setState({ problems: context.problems.get() });
         })
     },
 

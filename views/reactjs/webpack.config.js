@@ -6,7 +6,7 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        main: "./Viewport.js",
+        main: "./Viewport.jsx",
         demo: "./Archive.jsx"
     },
     output: {

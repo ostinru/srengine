@@ -16,7 +16,7 @@ module.exports = function(app) {
     // Gamer's URLs
     app.get('/', checkAuth, checkTime, checkFinished, require('./root').renderPage);
     // Gamer's REST API
-    // FIXME: add checkREST 
+    // FIXME: add checkREST
     app.post(REST_PREFIX + '/coords',checkAuth, checkTime, checkFinished, require('./coords').post);
     app.get(REST_PREFIX + '/message', checkAuth, checkTime, require('./message').get);
     app.get(REST_PREFIX + '/', checkAuth, checkTime, checkFinished, require('./root').get);
@@ -32,7 +32,7 @@ module.exports = function(app) {
     app.post(REST_PREFIX + '/user', checkAdmin,  require('./user').createUser);
     app.put(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').updateUser);
 //    app.delete(REST_PREFIX + '/user/:userId', checkAdmin, require('./user').deleteUser);
-    
+
     app.get(REST_PREFIX + '/problem', checkAdmin, require('./problem').getAllProblems);
     app.get(REST_PREFIX + '/problem/:problemId', checkAdmin, require('./problem').get);
     app.post(REST_PREFIX + '/problem', checkAdmin, require('./problem').createProblem);
@@ -51,5 +51,6 @@ module.exports = function(app) {
     // DEMO:
     app.get('/archive', require('./archive').get);
     app.get(REST_PREFIX + '/archive_coords', require('./coords').getArchive);
-    app.get(REST_PREFIX + '/archive_user', require('./user').getAllUsersList);
+    // app.get(REST_PREFIX + '/archive_user', require('./user').getAllUsersList);
+    app.get(REST_PREFIX + '/archive_problem', require('./problem').getAllProblems);
 }

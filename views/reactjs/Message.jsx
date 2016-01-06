@@ -6,28 +6,34 @@ var Panel = require('react-bootstrap/lib/Panel');
 var Table = require('react-bootstrap/lib/Table');
 var Input = require('./controls/Input.jsx');
 
+const context = require('./context');
+
 var Message = React.createClass({
 
     getInitialState: function() {
-        return [];
+        return {
+            messages: []
+        };
     },
 
     componentDidMount: function() {
-        this.context.messages.on('update', () => {
+        context.messages.on('update', () => {
             this.setState(this._getState());
         });
     },
 
     componentWillUnmount: function() {
-        this.context.messages.off();
+        context.messages.off();
     },
 
     _getState: function() {
-        return this.context.messages.get();
+        return {
+            messages: context.messages.get()
+        };
     },
 
     render: function() {
-        var messages = this.state;
+        var messages = this.state.messages;
         return (
             <Panel header="Administarator's messages" >
                 <form className='form-inline' action="javascript:void(0);">
@@ -64,7 +70,7 @@ var Message = React.createClass({
             },
             (resp) => {
                 console.log("Ok");
-                this.context.messages.push(resp); // FIXME: check REST API
+                context.messages.push(resp); // FIXME: check REST API
             }
         );
     }

@@ -7,6 +7,8 @@ var Panel = require('react-bootstrap/lib/Panel');
 var Input = require('./controls/Input.jsx');
 var Checkbox = require('./controls/Checkbox.jsx');
 
+const context = require('./context');
+
 var buildPath = function() {
     if (arguments.length === 0)
         throw 'No arguments!';
@@ -27,7 +29,7 @@ var AnswerEditor = React.createClass({
 
     render: function() {
         var path = this.props.path;
-        var answer = this.context.problems.select(path).get();
+        var answer = context.problems.select(path).get();
         // FIXME: KEY!!
         return (
             <form className='form-inline' action="javascript:void(0);" key={answer}>
@@ -39,7 +41,7 @@ var AnswerEditor = React.createClass({
     },
 
     updateAnswer: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.set(
             this.refs.answer.getValue()
         );
@@ -48,7 +50,7 @@ var AnswerEditor = React.createClass({
     removeAnswer: function() {
         var path = this.props.path;
         var index = path[path.length - 1];
-        var cursor = this.context.problems.select(path);
+        var cursor = context.problems.select(path);
         cursor.up().splice([index, 1]);
     }
 });
@@ -70,7 +72,7 @@ var NewAnswer = React.createClass({
     },
 
     addAnswer: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.push(
             this.refs.answer.getValue()
         );
@@ -87,8 +89,8 @@ var NextProblemEditor = React.createClass({
 
     render: function() {
         var path = this.props.path;
-        var nextProblemId = this.context.problems.select(path).get();
-        var problems = this.context.problems.get();
+        var nextProblemId = context.problems.select(path).get();
+        var problems = context.problems.get();
         // FIXME: KEY!!
         return (
             <form className='form-inline' action="javascript:void(0);" key={nextProblemId}>
@@ -107,7 +109,7 @@ var NextProblemEditor = React.createClass({
     },
 
     updateNextProblemId: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         var newValue = this.refs.nextProblemId.getValue();
         if (newValue === null)
             return;
@@ -120,7 +122,7 @@ var NextProblemEditor = React.createClass({
     removeNextProblemId: function() {
         var path = this.props.path;
         var index = path[path.length - 1];
-        var cursor = this.context.problems.select(path);
+        var cursor = context.problems.select(path);
         cursor.up().splice([index, 1]);
     }
 });
@@ -133,7 +135,7 @@ var NewNextProblem = React.createClass({
     },
 
     render: function() {
-        var problems = this.context.problems.get();
+        var problems = context.problems.get();
         return (
             <form className='form-inline' action="javascript:void(0);">
                 <Input type="select" ref="nextProblemId" initValue={null} >
@@ -150,7 +152,7 @@ var NewNextProblem = React.createClass({
     },
 
     addNextProblemId: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         var newValue = this.refs.nextProblemId.getValue();
         if (newValue === null)
             return;
@@ -169,7 +171,7 @@ var BonusEditor = React.createClass({
 
     render: function() {
         var path = this.props.path;
-        var bonus = this.context.problems.select(path).get();
+        var bonus = context.problems.select(path).get();
 
         return (
             <form className='form-inline' action="javascript:void(0);">
@@ -182,7 +184,7 @@ var BonusEditor = React.createClass({
     },
 
     updateBonus: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.merge({
             text: this.refs.text.getValue(),
             cost: this.refs.cost.getValue(),
@@ -191,7 +193,7 @@ var BonusEditor = React.createClass({
     removeBonus: function() {
         var path = this.props.path;
         var index = path[path.length - 1];
-        var cursor = this.context.problems.select(path);
+        var cursor = context.problems.select(path);
         cursor.up().splice([index, 1]);
     },
 });
@@ -213,7 +215,7 @@ var NewBonus = React.createClass({
     },
 
     addBonus: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.push({
             text: this.refs.text.getValue(),
             cost: this.refs.cost.getValue(),
@@ -231,7 +233,7 @@ var HintEditor = React.createClass({
 
     render: function() {
         var path = this.props.path;
-        var hint = this.context.problems.select(path).get();
+        var hint = context.problems.select(path).get();
         return (
             <form className='form-inline' action="javascript:void(0);">
                 <Input type="text" ref="text" initValue={hint.text}/>
@@ -243,7 +245,7 @@ var HintEditor = React.createClass({
     },
 
     updateHint: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.merge({
             text: this.refs.text.getValue(),
             cost: this.refs.cost.getValue(),
@@ -253,7 +255,7 @@ var HintEditor = React.createClass({
     removeHint: function() {
         var path = this.props.path;
         var index = path[path.length - 1];
-        var cursor = this.context.problems.select(path);
+        var cursor = context.problems.select(path);
         cursor.up().splice([index, 1]);
     },
 
@@ -278,7 +280,7 @@ var NewHint = React.createClass({
     },
 
     addHint: function() {
-        var cursor = this.context.problems.select(this.props.path);
+        var cursor = context.problems.select(this.props.path);
         cursor.push({
             text: this.refs.text.getValue(),
             cost: this.refs.cost.getValue(),
@@ -304,7 +306,7 @@ var ProblemEditor = React.createClass({
     render: function() {
         var me = this;
         var path = this.props.path;
-        var problem = this.context.problems.select(path).get();
+        var problem = context.problems.select(path).get();
 
         return (
             <Panel header={problem.topic}  key={problem._id} collapsible expanded={this.state.expanded} onClick={() => this.setState({ expanded: !this.state.expanded })}>
@@ -367,7 +369,7 @@ var ProblemEditor = React.createClass({
 
     save: function(serial) {
         var path = this.props.path;
-        var problem = this.context.problems.select(path).get();
+        var problem = context.problems.select(path).get();
 
         var request = {
             __v : problem.__v,
@@ -397,10 +399,10 @@ var ProblemEditor = React.createClass({
     remove: function(serial) {
         var path = this.props.path;
         // var index = path[path.length - 1];
-        // var cursor = this.context.problems.select(path);
+        // var cursor = context.problems.select(path);
         // cursor.up().splice([index, 1]);
 
-        var problem = this.context.problems.select(path).get();
+        var problem = context.problems.select(path).get();
 
         server.removeProblem(problem._id, function() {
             alert("Failed to remove");
@@ -444,11 +446,13 @@ var NewProblem = React.createClass({
 var Problems = React.createClass({
 
     getInitialState: function() {
-        return [];
+        return {
+            problems: context.problems.get()
+        };
     },
 
     componentDidMount: function() {
-        var store = this.context.store;
+        var store = context.store;
 
         store.on('update', () => {
             this.setState({
@@ -458,16 +462,16 @@ var Problems = React.createClass({
     },
 
     componentWillUnmount: function() {
-        this.context.store.off();
+        context.store.off();
     },
 
     render: function() {
         var me = this;
-        var problems = this.state.problems.get();
+        var problems = this.state.problems;
         return (
             <div className='problems'>
                 {problems.map(function(problem, index) {
-                    var problem_path = ['problems', index];
+                    var problem_path = [index];
                     return (
                         <ProblemEditor key={problem._id} path={problem_path} />
                     );

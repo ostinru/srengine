@@ -3,149 +3,131 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const Input = require('react-bootstrap/lib/Input');
 
+const server = require('./server');
 const context = require('./context');
 
-const server = {
+const hashCode = function(str){
+    var hash = 0;
+    if (str.length == 0) return hash;
+    for (var i = 0; i < str.length; i++) {
+        var char = str.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
 
-};
+const ArchiveMap = React.createClass({
 
-const reload = function() {
-    server.fetchUsers(
-    	() => {
-    		console.error('failed to load users', arguments);
-    	},
-    	(result) => {
-    		context.store.select('users').set(result);
-	    });
-/*
-    server.fetchCoords(
-    	() => {
-    		console.error('failed to load coords', arguments);
-    	},
-    	(result) => {
-    		context.store.select('coords').set(result);
-	    });
-*/
-};
-
-const onError = function() {
-	console.log("error", arguments);
-};
-
-var ArchiveMap = React.createClass({
+    map: null,
+    markers: null,
 
     propTypes: {
         timestamp: React.PropTypes.number.isRequired
     },
 
-    loadUsers: function() {
-        var me = this;
-
-        server.fetchUsers(
-            () => {
-                console.error('failed to load users', arguments);
-            },
-            (result) => {
-                context.users.root.set({users : result});
-            });
+    getInitialState: function() {
+        return {
+            coords: []
+        };
     },
 
     reload: function(err, cb) {
-        var me = this;/*
+        var me = this;
         server.fetchArchiveCoords(
             this.props.timestamp,
-            function() {
+            () => {
                 console.error('failed to load coords', arguments);
-                err();
+                if (typeof err === 'function') {
+                    err();
+                };
             },
-            function(result) {
-                if (me.isMounted()) {
-                    me.setState({
+            (result) => {
+                if (this.isMounted()) {
+                    this.setState({
                         coords: result
+                    }, function() {
+                        me.drawMarkers(me.markers);
                     });
                 }
-                cb();
-        });*/
+                if (typeof cb === 'function') {
+                    cb(result);
+                };
+        });
     },
 
     startMap: function() {
         var DG = window.DG;
         var me = this;
 
-        DG.then(function () {
-            map = DG.map('users-map', {
+        DG.then(() => {
+            var DG = window.DG;
+            me.map = DG.map('users-map', {
                 center: [57.77, 40.90],
                 zoom: 13,
                 fullscreenControl: false,
-                minZoom: 13,
+                minZoom: 10,
                 maxBounds: [
                     [57.700070, 40.676097],
                     [57.829414, 41.052981]
                 ],
                 zoomControl: false,
-                //watch:true,
-                //setView:true,
-                //enableHighAccuracy:true
+                watch:true,
+                setView:true,
+                enableHighAccuracy:true
             });
 
-            DG.control.location({position:'bottomright'}).addTo(map);
-            DG.control.zoom({position:'bottomleft'}).addTo(map);
+            DG.control.location({position:'bottomright'}).addTo(me.map);
+            DG.control.zoom({position:'bottomleft'}).addTo(me.map);
 
-            markers = DG.featureGroup(); //marker group
+            me.markers = DG.featureGroup(); //marker group
+            me.drawMarkers(me.markers);
+            me.markers.addTo(me.map); //adding marker group to map
 
-            me.drawMarkers(markers);
+            me.map.setView([57.743586, 40.909781], 13);
 
-            markers.addTo(map); //adding marker group to map
-
-            map.setView([57.743586, 40.909781], 13);
-
-            map.whenReady(function() {
-                // poll
-                setInterval(function() {
-                    me.reload(Function.prototype, function(){
-                        me.drawMarkers(markers);
-                    })
-                }, 5000);
+            server.fetchArchiveProblems(() => {
+                console.error('Failed to load problems');
+            }, (problems) => {
+                problems.forEach((problem) => {
+					DG.marker(
+						[ problem.x, problem.y],
+						{ icon: DG.icon({iconUrl: problem.icon, iconSize: [24,24]})}
+					).addTo(me.map)
+					.bindPopup(problem.topic);
+					DG.circle([problem.x, problem.y], 50, {color: 'black', fillColor:'yellow', clickable:'false'}).addTo(me.map);
+				}); // forEach
             });
+        }, () => {
+            console.error('Failed to load 2gis');
         }); // DG.then
-    },
-
-    _getUser: function(userId) {
-        if (!context.users)
-            return userId;
-
-        var users = context.users.select('users').get();
-        if (!users || users.length == 0)
-            return userId;
-
-        var user = _.find(users, function(user) {
-            return user._id === userId;
-        });
-
-        if (!user) {
-            console.log('user ' + userId + ' not found');
-            return userId;
-        }
-        return user.username;
     },
 
     drawMarkers: function (markers){
         var me = this;
-        var coords = this.state.coords;
+        var coords = this.state.coords || [];
 
         markers.clearLayers();
-        _.each(coords, function(coord) {
-            var nick = me._getUser(coord.userId);
-            var hasNote = !!coord.note;
+
+        coords.forEach((coord) => {
+            var nick = coord.username;
+            var last = coord.points[coord.points.length-1];
+            var timestamp = new Date(last.timestamp);
+            timestamp = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getMilliseconds()}`;
+
+            // marker
             DG.marker(
-                    [ coord.x, coord.y],
+                    [ last.x, last.y],
                     {
-                        icon: DG.icon({iconUrl: hasNote ? 'images/pony2.png' : 'images/pony.png', iconSize: [36,36]}),
+                        icon: DG.icon({iconUrl: 'images/pony.png', iconSize: [42,42]}),
                         title: nick
                     }
                 ).addTo(markers)
-                .bindPopup(nick + ' ' + (coord.note || ''))
-                //.on('click', function (e) {})._popup.setHeaderContent(nick);
+                .bindPopup(nick + '<br/>' + (timestamp || ''))
+            // trace
+            var colors = ['red', 'coral', 'cyan', 'orange', 'salmon', 'pink', 'blue', 'gold', 'green'];
+            var color = colors[ hashCode(nick) % colors.length ];
+            DG.polyline(coord.points.map((point) => [point.x, point.y]), {color: color}).addTo(markers);
         });
     },
 
@@ -159,13 +141,18 @@ var ArchiveMap = React.createClass({
         this.reload(newProps.timestamp);
     },
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // do not re-render original div
+        return false;
+    },
+
     render: function() {
         return (
             <div id="users-map" style={{
                 'position': 'absolute',
                 'left': '0px',
                 'right': '0px',
-                'top': '120px',
+                'top': '60px',
                 'bottom': '0px'
             }}>
             </div>
@@ -177,9 +164,11 @@ var ArchiveMap = React.createClass({
 
 var Archive = React.createClass({
 
+    delayed: null,
+
     getInitialState: function() {
         return {
-        	timestamp: 1440432480
+        	timestamp: 1440872100
         };
     },
 
@@ -192,19 +181,26 @@ var Archive = React.createClass({
                     ref="slider"
                     type="range"
                     value={this.state.timestamp}
-                    min={1440417600}
-                    max={1440432480}
-                    onInput={me.handleTimestampChange}
-                    step={5} />
+                    min={1440872100}
+                    max={1440904500}
+                    onChange={me.handleTimestampChange}
+                    step={60} />
 
             	<ArchiveMap timestamp={this.state.timestamp} />
             </div>
         );
     },
     handleTimestampChange: function() {
-        this.setState({
-            timestamp: this.refs.slider.getValue()
-        })
+        var newValue = +this.refs.slider.value;
+        if (this.delayed) {
+            clearTimeout(this.delayed);
+            this.delayed = null;
+        }
+        this.delayed = setTimeout(() => {
+            this.setState({
+                timestamp: newValue
+            })
+        }, 500);
     }
 });
 

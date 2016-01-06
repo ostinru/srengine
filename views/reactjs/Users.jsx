@@ -7,7 +7,7 @@ var Input = require('./controls/Input.jsx');
 var Checkbox = require('./controls/Checkbox.jsx');
 var server = require('./server.js');
 
-var context = require('./context');
+const context = require('./context');
 
 var buildPath = function() {
     if (arguments.length === 0)
@@ -35,7 +35,7 @@ var ProblemsEditor = React.createClass({
     render: function() {
         var path = this.props.path;
         var problemId = context.users.select(path).get();
-        var problems = context.problems.select('problems').get();
+        var problems = context.problems.get();
         // FIXME: KEY!!
         return (
             <form className='form-inline' action="javascript:void(0);" key={problemId}>
@@ -79,7 +79,7 @@ var NewProblems = React.createClass({
     },
 
     render: function() {
-        var problems = context.problems.select('problems').get();
+        var problems = context.problems.get();
         return (
             <form className='form-inline' action="javascript:void(0);">
                 <Input type="select" ref="newProblem" initValue={null}>
@@ -291,17 +291,17 @@ var Users = React.createClass({
     },
 
     componentWillUnmount: function() {
-        this.context.users.off();
-        this.context.problems.off();
+        context.users.off();
+        context.problems.off();
     },
 
     render: function() {
         var me = this;
-        var users = context.users.root.get().users;
+        var users = context.users.get();
         return (
             <div className='users'>
                 {users.map(function(user, index) {
-                    var users_path = ['users', index];
+                    var users_path = [index];
                     return (
                         <UserEditor key={user._id} path={users_path} />
                     );

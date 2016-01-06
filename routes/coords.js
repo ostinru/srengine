@@ -20,15 +20,17 @@ exports.get = function(req, res, next) {
 
 exports.getArchive = function(req, res, next) {
     if (!req.query.timestamp)
-        return res.sendHttpError(new HttpError(400, 'Invalid \'timestamp\' qury parameter\'s value'));
+        return res.sendHttpError(new HttpError(400, 'Invalid \'timestamp\' query parameter\'s value'));
 
-    var timestamp = + req.query.timestamp;
-    var from = timestamp - 30*1000;
+    var timestamp = + req.query.timestamp * 1000;
+    var from = timestamp - 120*1000;
     var to = timestamp;
+
+    // logger.info(`Fetching archiv coords from ${from} to ${to}`);
 
     Coords.find(
         {timestamp : {"$gte":  from, "$lte": to }},
-        { _id: 0, userId: 1, x: 1, y: 1, timestamp: 1 },
+        { _id: 0, userId: 1, x: 1, y: 1, timestamp: 1, sessionID: 1 },
         {sort: {timestamp : 1}})
         .populate('userId', 'username -_id')
         .exec(function (err, coords) {
@@ -36,7 +38,24 @@ exports.getArchive = function(req, res, next) {
                 logger.error(err);
                 return next(err);
             }
-            return res.json(coords);
+            var r = {};
+            _.each(coords, function(coord) {
+                var name = coord.userId.username;
+                var sessionID = coord.sessionID;
+                var obj = r[sessionID];
+                if (!obj) {
+                    obj = r[sessionID] = {
+                         username: name,
+                         points: []
+                    };
+                }
+                obj.points.push({
+                     x: coord.x,
+                     y: coord.y,
+                     timestamp: timestamp
+                });
+            });
+            return res.json(_.values(r));
     });
 }
 
