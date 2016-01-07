@@ -1,5 +1,5 @@
 var mongoose = require('lib/mongoose'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     Schema = mongoose.Schema;
 
 var schema = new Schema({

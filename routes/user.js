@@ -3,7 +3,7 @@ var logger = require('lib/logger')(module);
 var User = require('models/user').User;
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
-var _ = require('underscore');
+var _ = require('lodash');
 var mongoose = require('lib/mongoose.js');
 
 exports.getAllUsers = function (req, res, next) {

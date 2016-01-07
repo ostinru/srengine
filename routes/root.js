@@ -2,7 +2,7 @@ var async = require('async');
 var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
-var _ = require('underscore');
+var _ = require('lodash');
 var config = require('../config');
 
 var checkFinished = require('middleware/checkFinished');

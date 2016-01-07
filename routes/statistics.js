@@ -4,7 +4,7 @@ var Problem = require('models/problem').Problem;
 var config = require('../config');
 var logger = require('lib/logger')(module);
 var startTime = new Date(config.get('startTime'));
-var _ = require('underscore');
+var _ = require('lodash');
 var dateFormat = require('dateformat');
 
 exports.get = function (req, res, next) {

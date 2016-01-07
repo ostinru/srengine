@@ -2,7 +2,7 @@ var async = require('async');
 var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
 var HttpError = require('error').HttpError;
-var _ = require('underscore');
+var _ = require('lodash');
 var mongoose = require('lib/mongoose.js');
 
 exports.getAllProblems = function(req, res, next){
@@ -63,14 +63,14 @@ exports.updateProblem = function(req, res, next) {
         // Rely on mongoose validation
         problem.__v = body.__v;
         problem.topic = body.topic;
-        
+
         problem.question = body.question;
-        
+
         problem.answers = body.answers;
         problem.markModified('answers');
-        
+
         problem.cost = body.cost;
-        
+
         problem.bonuses = body.bonuses;
         problem.markModified('bonuses');
 
@@ -109,7 +109,7 @@ exports.deleteProblem = function(req, res, next) {
         if(!problem){
             return res.sendHttpError(new HttpError(400, err));
         }
-        
+
 
         problem.remove(function(err){
             if (err){

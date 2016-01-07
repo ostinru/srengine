@@ -3,7 +3,7 @@ var HttpError = require('error').HttpError;
 var User = require('models/user').User;
 var Coords = require('models/coords').Coords;
 var Problem = require('models/problem').Problem;
-var _ = require('underscore');
+var _ = require('lodash');
 var aDistance = require('../config').get("aDistance");
 var logger = require('lib/logger')(module);
 

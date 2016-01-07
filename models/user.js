@@ -1,7 +1,7 @@
 var crypto = require('crypto'),
 	mongoose = require('lib/mongoose'),
     Schema = mongoose.Schema,
-    _ = require('underscore');
+    _ = require('lodash');
 var config = require('../config');
 var defaultTime = new Date(config.get('startTime')); // FIXME: ???
 

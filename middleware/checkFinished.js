@@ -1,6 +1,6 @@
 var logger = require('lib/logger')(module);
 var Problem = require('models/problem').Problem;
-var _ = require('underscore');
+var _ = require('lodash');
 
 module.exports = function (req, res, next) {
     var toSolve = _.reduce(req.user.problems, function(memo, problem) {
