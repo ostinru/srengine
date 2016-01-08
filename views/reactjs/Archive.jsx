@@ -7,6 +7,10 @@ const Glyphicon = require('react-bootstrap/lib/Glyphicon');
 const server = require('./server');
 const context = require('./context');
 
+const TIMESTAMP_STEP = 60;
+const MIN_TIMESTAMP = 1440872100;
+const MAX_TIMESTAMP = 1440904500;
+
 const hashCode = function(str){
     var hash = 0;
     if (str.length == 0) return hash;
@@ -191,7 +195,8 @@ var Archive = React.createClass({
 
     getInitialState: function() {
         return {
-        	timestamp: getQueryVariable('ts') || 1440872100
+        	timestamp: getQueryVariable('ts') || 1440872100,
+            isAutoPlay: false
         };
     },
 
@@ -199,18 +204,20 @@ var Archive = React.createClass({
         var me = this;
         var state = this.state;
         var time = new Date(this.state.timestamp * 1000);
-        const step = 60;
         return (
             <div>
             	<input
                     ref="slider"
                     type="range"
                     value={this.state.timestamp}
-                    min={1440872100}
-                    max={1440904500}
+                    min={MIN_TIMESTAMP}
+                    max={MAX_TIMESTAMP}
                     onChange={me.handleTimestampChange}
-                    step={step} />
+                    step={TIMESTAMP_STEP} />
                 <div id="controls">
+                    <Button bsStyle="primary" bsSize="xsmall" onClick={this.playPauseClick}>
+                        <Glyphicon glyph={this.state.isAutoPlay ? 'pause' : 'play'}></Glyphicon>
+                    </Button>
                     <span>{`${time.getHours()}:${time.getMinutes()}:${time.getMilliseconds()}`}</span>
                     <Button bsStyle="primary" bsSize="xsmall" onClick={this.copyLinkDialog}>Get link</Button>
                 </div>
@@ -218,6 +225,31 @@ var Archive = React.createClass({
             	<ArchiveMap timestamp={this.state.timestamp} />
             </div>
         );
+    },
+
+    playPauseClick() {
+        if (this.state.isAutoPlay) {
+            // pause clicked:
+            this.setState({
+                isAutoPlay: false
+            });
+        } else {
+            this.setState({
+                isAutoPlay: true,
+            });
+            var playID = setInterval(() => {
+                if (this.state.isAutoPlay && this.state.timestamp < MAX_TIMESTAMP) {
+                    this.setState({
+                        timestamp: this.state.timestamp + TIMESTAMP_STEP
+                    });
+                } else {
+                    clearInterval(playID);
+                    this.setState({
+                        isAutoPlay: false
+                    });
+                }
+            }, 2500);
+        }
     },
 
     copyLinkDialog() {
@@ -235,7 +267,7 @@ var Archive = React.createClass({
         this.delayed = setTimeout(() => {
             this.setState({
                 timestamp: newValue
-            })
+            });
         }, 500);
     }
 });
