@@ -221,7 +221,8 @@ var Archive = React.createClass({
     },
 
     copyLinkDialog() {
-        var url = "http://ostinru.name/archive?ts=" + this.state.timestamp;
+        var loc = window.location;
+        var url = loc.protocol + '//' + loc.host + loc.pathname + '?ts=' + this.state.timestamp;
         window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
     },
 
