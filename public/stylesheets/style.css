@@ -41,25 +41,13 @@ img[title="zhelezo"] {
     -webkit-filter: hue-rotate(40deg);
     filter: hue-rotate(40deg);
 }
-img[title="highvoltage"] {
-    -webkit-filter: hue-rotate(50deg);
-    filter: hue-rotate(50deg);
-}
-img[title="zaitsy"] {
+img[title="fullbug"] {
     -webkit-filter: hue-rotate(60deg);
     filter: hue-rotate(60deg);
 }
-img[title="alpaltus"] {
-    -webkit-filter: hue-rotate(70deg);
-    filter: hue-rotate(70deg);
-}
-img[title="fullbug"] {
+img[title="yoshking"] {
     -webkit-filter: hue-rotate(80deg);
     filter: hue-rotate(80deg);
-}
-img[title="yoshking"] {
-    -webkit-filter: hue-rotate(90deg);
-    filter: hue-rotate(90deg);
 }
 img[title="iamengineer"] {
     -webkit-filter: hue-rotate(100deg);
@@ -68,10 +56,6 @@ img[title="iamengineer"] {
 img[title="partizany"] {
     -webkit-filter: hue-rotate(110deg);
     filter: hue-rotate(110deg);
-}
-img[title="hrundeli"] {
-    -webkit-filter: hue-rotate(120deg);
-    filter: hue-rotate(120deg);
 }
 img[title="begizamnoi"] {
     -webkit-filter: hue-rotate(120deg);

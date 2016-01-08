@@ -158,7 +158,11 @@ const ArchiveMap = React.createClass({
             pepsi: 'pepsi.png',
             madfoxes: 'madfox.gif',
             shtopor: 'shtopor.png',
-            klony: 'klony.png'
+            klony: 'klony.png',
+            alpaltus: 'alpaltus.png',
+            highvoltage: 'highvoltage.png',
+            hrundeli: 'hrundeli.png',
+            zaitsy: 'zaitsy.png'
         };
         if (icons[nick]) {
             return icons[nick];
