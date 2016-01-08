@@ -19,10 +19,6 @@ img[title="snusmumrik"] {
     -webkit-filter: hue-rotate(20deg);
     filter: hue-rotate(20deg);
 }
-img[title="shtopor"] {
-    -webkit-filter: hue-rotate(30deg);
-    filter: hue-rotate(30deg);
-}
 img[title="zhelezo"] {
     -webkit-filter: hue-rotate(40deg);
     filter: hue-rotate(40deg);
@@ -63,10 +59,6 @@ img[title="begizamnoi"] {
     -webkit-filter: hue-rotate(120deg);
     filter: hue-rotate(120deg);
 }
-img[title="madfoxes"] {
-    -webkit-filter: hue-rotate(130deg);
-    filter: hue-rotate(130deg);
-}
 img[title="abam"] {
     -webkit-filter: hue-rotate(140deg);
     filter: hue-rotate(140deg);
@@ -90,10 +82,6 @@ img[title="dedmazai"] {
 img[title="manumba"] {
     -webkit-filter: hue-rotate(190deg);
     filter: hue-rotate(190deg);
-}
-img[title="pepsi"] {
-    -webkit-filter: hue-rotate(200deg);
-    filter: hue-rotate(200deg);
 }
 img[title="banda"] {
     -webkit-filter: hue-rotate(210deg);

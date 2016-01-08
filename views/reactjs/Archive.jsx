@@ -2,7 +2,8 @@ const _ = require('lodash');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Input = require('react-bootstrap/lib/Input');
-
+const Button = require('react-bootstrap/lib/Button');
+const Glyphicon = require('react-bootstrap/lib/Glyphicon');
 const server = require('./server');
 const context = require('./context');
 
@@ -15,6 +16,17 @@ const hashCode = function(str){
         hash = hash & hash; // Convert to 32bit integer
     }
     return hash;
+}
+
+const getQueryVariable = function(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
 }
 
 const ArchiveMap = React.createClass({
@@ -119,7 +131,7 @@ const ArchiveMap = React.createClass({
             DG.marker(
                     [ last.x, last.y],
                     {
-                        icon: DG.icon({iconUrl: 'images/pony.png', iconSize: [42,42]}),
+                        icon: DG.icon({iconUrl: 'images/'+ this.getIcon(nick), iconSize: [42,42]}),
                         title: nick
                     }
                 ).addTo(markers)
@@ -131,6 +143,17 @@ const ArchiveMap = React.createClass({
         });
     },
 
+    getIcon(nick) {
+        var icons = {
+            pepsi: 'pepsi.png',
+            madfoxes: 'madfox.gif',
+            shtopor: 'shtopor.png'
+        };
+        if (icons[nick]) {
+            return icons[nick];
+        }
+        return 'pony.png'
+    },
 
     componentDidMount: function() {
         this.reload(this.props.timestamp);
@@ -152,7 +175,7 @@ const ArchiveMap = React.createClass({
                 'position': 'absolute',
                 'left': '0px',
                 'right': '0px',
-                'top': '60px',
+                'top': '65px',
                 'bottom': '0px'
             }}>
             </div>
@@ -168,13 +191,15 @@ var Archive = React.createClass({
 
     getInitialState: function() {
         return {
-        	timestamp: 1440872100
+        	timestamp: getQueryVariable('ts') || 1440872100
         };
     },
 
     render: function () {
         var me = this;
         var state = this.state;
+        var time = new Date(this.state.timestamp * 1000);
+        const step = 60;
         return (
             <div>
             	<input
@@ -184,12 +209,22 @@ var Archive = React.createClass({
                     min={1440872100}
                     max={1440904500}
                     onChange={me.handleTimestampChange}
-                    step={60} />
+                    step={step} />
+                <div id="controls">
+                    <span>{`${time.getHours()}:${time.getMinutes()}:${time.getMilliseconds()}`}</span>
+                    <Button bsStyle="primary" bsSize="xsmall" onClick={this.copyLinkDialog}>Get link</Button>
+                </div>
 
             	<ArchiveMap timestamp={this.state.timestamp} />
             </div>
         );
     },
+
+    copyLinkDialog() {
+        var url = "http://ostinru.name/archive?ts=" + this.state.timestamp;
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
+    },
+
     handleTimestampChange: function() {
         var newValue = +this.refs.slider.value;
         if (this.delayed) {
