@@ -7,6 +7,11 @@ a {
   color: #00B7FF;
 }
 
+#controls>span {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 img[title="testuser"] {
     -webkit-filter: hue-rotate(0deg);
     filter: hue-rotate(0deg);
