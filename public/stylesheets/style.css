@@ -12,6 +12,19 @@ a {
     margin-right: 10px;
 }
 
+#controls .radio, #controls .checkbox  {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+#controls .label {
+    margin-bottom: 0px;
+}
+
+#controls ul.multiselect-container.dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
 img[title="testuser"] {
     -webkit-filter: hue-rotate(0deg);
     filter: hue-rotate(0deg);

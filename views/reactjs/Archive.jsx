@@ -4,6 +4,7 @@ const ReactDOM = require('react-dom');
 const Input = require('react-bootstrap/lib/Input');
 const Button = require('react-bootstrap/lib/Button');
 const Glyphicon = require('react-bootstrap/lib/Glyphicon');
+const Multiselect = require('react-bootstrap-multiselect');
 const server = require('./server');
 const context = require('./context');
 
@@ -127,6 +128,11 @@ const ArchiveMap = React.createClass({
 
         coords.forEach((coord) => {
             var nick = coord.username;
+            // look for visible/hidden:
+            var team = _.find(this.props.teams, {value: nick});
+            if (!team.selected)
+                return;
+
             var last = coord.points[coord.points.length-1];
             var timestamp = new Date(last.timestamp);
             timestamp = `${timestamp.getHours()}:${timestamp.getMinutes()}:${timestamp.getMilliseconds()}`;
@@ -180,7 +186,7 @@ const ArchiveMap = React.createClass({
                 'position': 'absolute',
                 'left': '0px',
                 'right': '0px',
-                'top': '65px',
+                'top': '75px',
                 'bottom': '0px'
             }}>
             </div>
@@ -197,7 +203,32 @@ var Archive = React.createClass({
     getInitialState: function() {
         return {
         	timestamp: getQueryVariable('ts') || 1440872100,
-            isAutoPlay: false
+            isAutoPlay: false,
+            teams: [
+                { value : "jenpsaki" , selected: true , selected: true },
+                { value : "snusmumrik" , selected: true },
+                { value : "shtopor" , selected: true },
+                { value : "zhelezo" , selected: true },
+                { value : "highvoltage" , selected: true },
+                { value : "zaitsy" , selected: true },
+                { value : "alpaltus" , selected: true },
+                { value : "yoshking" , selected: true },
+                { value : "fullbug" , selected: true },
+                { value : "iamengineer" , selected: true },
+                { value : "partizany" , selected: true },
+                { value : "hrundeli" , selected: true },
+                { value : "begizamnoi" , selected: true },
+                { value : "madfoxes" , selected: true },
+                { value : "abam" , selected: true },
+                { value : "ressora" , selected: true },
+                { value : "valenki" , selected: true },
+                { value : "klony" , selected: true },
+                { value : "dedmazai" , selected: true },
+                { value : "manumba" , selected: true },
+                { value : "pepsi" , selected: true },
+                { value : "banda" , selected: true },
+                { value : "butylka" , selected: true }
+            ]
         };
     },
 
@@ -221,11 +252,38 @@ var Archive = React.createClass({
                     </Button>
                     <span>{`${time.getHours()}:${time.getMinutes()}:${time.getMilliseconds()}`}</span>
                     <Button bsStyle="primary" bsSize="xsmall" onClick={this.copyLinkDialog}>Get link</Button>
+                    <Multiselect
+                        ref="teams"
+                        multiple
+                        onChange={this.showHideTeamsChange}
+                        data={this.state.teams}
+                        maxHeight={200}
+                        buttonText={() => "Show/Hide teams"}>
+                    </Multiselect>
                 </div>
 
-            	<ArchiveMap timestamp={this.state.timestamp} />
+            	<ArchiveMap timestamp={this.state.timestamp} teams={this.state.teams}/>
             </div>
         );
+    },
+
+    showHideTeamsChange(change) {
+        var change = change[0];
+        var value = change.value;
+
+        var teams = this.state.teams;
+        var newTeams = teams.map((team) => {
+            if (team.value == value) {
+                return {
+                    value: team.value,
+                    selected: !team.selected
+                }
+            }
+            return team;
+        });
+        this.setState({
+            teams: newTeams
+        });
     },
 
     playPauseClick() {

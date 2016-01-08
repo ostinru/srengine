@@ -47,6 +47,7 @@
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "react-bootstrap": "^0.28.0",
+    "react-bootstrap-multiselect": "*",
     "react-mini-router": "^2.0.0",
     "react-dnd": "^1.1.0",
     "baobab": "^1.1.0",
