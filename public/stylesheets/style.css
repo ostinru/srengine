@@ -76,10 +76,6 @@ img[title="valenki"] {
     -webkit-filter: hue-rotate(160deg);
     filter: hue-rotate(160deg);
 }
-img[title="klony"] {
-    -webkit-filter: hue-rotate(170deg);
-    filter: hue-rotate(170deg);
-}
 img[title="dedmazai"] {
     -webkit-filter: hue-rotate(180deg);
     filter: hue-rotate(180deg);

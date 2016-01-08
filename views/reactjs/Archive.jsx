@@ -151,7 +151,8 @@ const ArchiveMap = React.createClass({
         var icons = {
             pepsi: 'pepsi.png',
             madfoxes: 'madfox.gif',
-            shtopor: 'shtopor.png'
+            shtopor: 'shtopor.png',
+            klony: 'klony.png'
         };
         if (icons[nick]) {
             return icons[nick];
